@@ -1,0 +1,29 @@
+sps_type,study_category,category_decision,offence_rows,incidents,offence_rows_cbd,fixed_address_midnight
+Assault,assault,conditional,732,683,78,0
+Fraud,fraud,excluded,523,467,30,0
+Controlled Drug and Substance Act,drug_offences,excluded,86,68,4,0
+Sexual Violation,sexual_assault,excluded,75,70,4,0
+Homicide,homicide,excluded,2,2,0,0
+Mischief/Willful Damage,mischief_vandalism,included,730,727,69,0
+Theft From Vehicle,theft_from_vehicle,included,635,631,72,0
+Break and Enter - Residential,break_and_enter,included,359,356,1,0
+Theft of Motor Vehicle,auto_theft,included,215,215,5,0
+Break and Enter - Non Residential,break_and_enter,included,162,162,9,0
+Robbery,street_robbery,included,105,104,16,0
+Graffiti,mischief_vandalism,included,44,44,7,0
+Other Provincial,,not_selected,1733,1720,446,0
+Other Criminal Code,,not_selected,1673,824,914,938
+Other Theft Under $5000,,not_selected,1385,1377,99,0
+Provincial Traffic Safety Act,,not_selected,397,397,28,0
+Weapons Possession Cont to Order/Conceal,,not_selected,261,234,37,0
+Criminal Code Traffic Violation,,not_selected,163,124,8,0
+Uttering Threats,,not_selected,127,127,4,0
+Possession of Stolen Property,,not_selected,92,89,9,0
+Theft Over $5000,,not_selected,56,56,2,0
+Criminal Harassment (Stalking),,not_selected,34,34,2,0
+Arson,,not_selected,25,25,2,0
+Other Crimes Against the Person,,not_selected,19,19,1,0
+Kidnapping/Hostage Taking/Abduction,,not_selected,8,8,0,0
+Firearms Related,,not_selected,5,5,0,0
+Alcohol Gaming Regulations Act,,not_selected,2,2,1,0
+Commodification of Sex Activity,,not_selected,2,2,0,0

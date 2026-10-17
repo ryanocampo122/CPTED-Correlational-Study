@@ -40,7 +40,7 @@ places; it does not predict crime or label communities.
 | C6 | CPTED indicators per segment | to write | — | planned |
 | C7 | Validation against ~150 hand-labelled images | `validation_template_blind.csv` | — | started (10) |
 | K1 | Crime categories | work plan p. 4; `Docs/crime_data.md` | — | done |
-| K2 | SPS data, counts per segment, hot spots (Nov) | to write | — | data obtained; to be added to `Data/` |
+| K2 | SPS data: clean, then counts per segment, hot spots (Nov) | `Scripts/crime_data/clean_sps_crime.py`; counts to write | `Data/sps_crime_2026-06-01_2026-08-31/02_cleaned/` | cleaned (9,650 records, 2,982 in the study categories); counts per segment next |
 | L1 | Lighting and noise layers (Dec–Jan) | to write | — | planned |
 | I1 | Integration: join on segments/zones; Spearman, bivariate Moran's I, LISA, perception–crime gap (Feb–Mar) | to write | — | planned |
 | V | Verification of everything above | `Scripts/verification/verify_october_2026.py` | `Docs/verification/` | done for October |
@@ -56,6 +56,9 @@ From the repository root, with the environment from `requirements.txt` (`python3
 .venv/bin/python Scripts/reddit_collection/reddit_scraper.py --start 2026-06-01 --end 2026-08-31
 bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31
 bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31 --publish
+
+# Crime: clean the SPS extract (offline; raw file is checked by hash, outputs reproduce byte for byte)
+.venv/bin/python Scripts/crime_data/clean_sps_crime.py
 
 # Points, imagery coverage, pilot (network for points/coverage/images)
 .venv/bin/python Scripts/cv_pilot/pilot.py points   --out Data/cv_pilot_2026-10/cbd
@@ -83,7 +86,8 @@ reproduces nor overwrites it.
 **Related data, outside this pipeline.** `Data/climate_2010_2025/`, `Data/crime/` and `Data/reddit_2009_2025/` hold
 data collected for the related Sentinel climate–crime research (2010–2025, four prairie cities), with their scripts
 in `Scripts/reddit_collection/reddit_acquistion_2025/` and `Scripts/sentiment_analysis_2025/`. None of the commands
-above use or regenerate them. `Data/crime/` is Statistics Canada annual counts, not the SPS extract for step K2.
+above use or regenerate them. `Data/crime/` is Statistics Canada annual counts, not the SPS extract for step K2
+(`Data/sps_crime_2026-06-01_2026-08-31/`).
 
 ## Conventions
 

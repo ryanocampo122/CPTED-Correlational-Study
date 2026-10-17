@@ -1,0 +1,7 @@
+study_category,category_decision,crime_group,sps_types,offence_rows,incidents,offence_rows_cbd,incidents_cbd
+break_and_enter,included,property,Break and Enter - Non Residential; Break and Enter - Residential,521,518,10,10
+theft_from_vehicle,included,property,Theft From Vehicle,635,631,72,72
+auto_theft,included,property,Theft of Motor Vehicle,215,215,5,5
+mischief_vandalism,included,property,Graffiti; Mischief/Willful Damage,774,771,76,76
+street_robbery,included,street_personal,Robbery,105,104,16,16
+assault,conditional,street_personal,Assault,732,683,78,75

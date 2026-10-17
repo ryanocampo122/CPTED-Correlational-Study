@@ -1,0 +1,52 @@
+{
+  "script": "Scripts/crime_data/clean_sps_crime.py",
+  "raw_file": "Data/sps_crime_2026-06-01_2026-08-31/01_raw_collection/sps_criminal_offences_june_1_2026_to_august_31_2026.csv",
+  "raw_sha256": "912c3b25bee66d40e5a0cb18c31b7c5d07a61cb2c4100ef7893ce1c743f21df1",
+  "raw_rows": 9650,
+  "reported_at_min": "2026-06-01T00:00:00-06:00",
+  "reported_at_max": "2026-08-31T23:59:00-06:00",
+  "rows_outside_window": 0,
+  "rows_by_decision": {
+    "not_selected": 5982,
+    "included": 2250,
+    "conditional": 732,
+    "excluded": 686
+  },
+  "rows_by_study_category": {
+    "break_and_enter": 521,
+    "theft_from_vehicle": 635,
+    "auto_theft": 215,
+    "mischief_vandalism": 774,
+    "street_robbery": 105,
+    "assault": 732
+  },
+  "incidents": 7701,
+  "location_type": {
+    "block": 8738,
+    "intersection": 912
+  },
+  "neighbourhood_missing": 39,
+  "in_cbd_polygon": 1848,
+  "sps_neighbourhood_cbd": 1856,
+  "cbd_polygon_vs_sps_neighbourhood_disagree": 36,
+  "rows_in_identical_groups": 1460,
+  "identical_extra_rows": 1075,
+  "midnight_rows": 949,
+  "fixed_address_midnight_rows": 938,
+  "fixed_address_midnight_addresses": {
+    "10 BLOCK 25TH ST E": 136,
+    "100 BLOCK 3RD AVE N": 129,
+    "200 BLOCK 19TH ST E": 673
+  },
+  "fixed_address_midnight_by_type": {
+    "Other Criminal Code": 938
+  },
+  "fixed_address_midnight_in_cbd": 802,
+  "fields_absent_from_extract": [
+    "occurrence date/time (only Reported Date)",
+    "UCR / violation code",
+    "premise or location type",
+    "founded/unfounded status",
+    "incident or file number"
+  ]
+}

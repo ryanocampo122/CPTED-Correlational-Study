@@ -30,8 +30,10 @@ stigmatization: Wacquant 2007; Meade 2021; Schwarze 2023, in `Reference/Literatu
 
 ## Police data
 
-- The SPS public map prohibits commercial use and disclaims accuracy and comparison over time. An incident-level
-  extract will come with its own terms; record them here when received.
+- The SPS public map prohibits commercial use and disclaims accuracy and comparison over time.
+- The June–August 2026 extract (`Data/sps_crime_2026-06-01_2026-08-31/`, received 17 Oct 2026) holds no names or
+  exact addresses: locations are hundred-blocks or intersections. No terms of use are recorded yet; record SPS's terms
+  here, and until then share only aggregated counts outside the team.
 
 ## Credentials and sharing
 

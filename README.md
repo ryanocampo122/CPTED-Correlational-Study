@@ -23,7 +23,7 @@ segments in Downtown/CBD.
 
 | October task (work plan p. 5) | Status |
 |---|---|
-| Finalize crime categories | **Done**: 5 included, assault conditional, 4 excluded; crime data obtained, to be added (`Docs/crime_data.md`) |
+| Finalize crime categories | **Done**: 5 included, assault conditional, 4 excluded; SPS June–August 2026 extract added and cleaned: 9,650 records, 2,982 in the study categories (`Docs/crime_data.md`) |
 | Extend Reddit to June–August 2026 | **Done, verified**: 195 posts, 6,452 comments; every table reproduces byte-for-byte; 30 checks pass |
 | Generate sample points | **In progress**: 423 points on 218 street segments generated and checked; being refined (about two more weeks), not yet reported |
 | Collect street-level images | **Done: method validated**: 10 Mapillary images sourced and read by CLIP ViT-B/32 in the pipeline; no June–August 2026 imagery exists yet (newest 2020/2023), so the full set is sourced next |
@@ -38,11 +38,13 @@ Docs/            detailed documentation, verification checks, figures, history
 Data/
   reddit_2026-06-01_2026-08-31/   CURRENT  study-period Reddit: raw, cleaned, tables, audits, charts
   reddit_2025-06-11_2026-06-11/   earlier  12-month collection behind the July/August reports (corrected)
+  sps_crime_2026-06-01_2026-08-31/ CURRENT  SPS recorded crime (Y1): raw extract, cleaned rows, category counts
   cv_pilot_2026-10/               CURRENT  CBD sample points, imagery coverage audit, 10-image pilot
   boundaries/                              CBD polygon (interim, from OSM) and map context
 Scripts/
   reddit_collection/   Reddit collector (reddit_scraper.py)
   reddit_analysis/     cleaning, tagging, analysis and self-checks (run_all.sh <dataset>)
+  crime_data/          cleans the SPS extract into study categories (clean_sps_crime.py)
   cv_pilot/            sample points, Mapillary imagery, CLIP scoring, Reddit link (pilot.py)
   verification/        independent checks of every October claim
   reporting/           figures, report numbers, the October .docx builder
@@ -61,6 +63,7 @@ the most used:
 
 ```bash
 bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31            # Reddit analysis (scratch)
+.venv/bin/python Scripts/crime_data/clean_sps_crime.py                            # clean the SPS crime extract
 .venv/bin/python Scripts/cv_pilot/pilot.py coverage --out Data/cv_pilot_2026-10/cbd
 .venv/bin/python Scripts/verification/verify_october_2026.py                      # re-check October claims
 .venv/bin/python Scripts/reporting/make_figures.py                                # rebuild figures
