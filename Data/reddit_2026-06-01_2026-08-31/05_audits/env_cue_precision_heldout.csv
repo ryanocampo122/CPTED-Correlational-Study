@@ -1,0 +1,6 @@
+cue,n_judged,n_correct,precision,ci95_low,ci95_high,n_ra_judged,agreement_with_ra,note
+lighting,30,15,0.5,0.332,0.668,0,,Held-out sample judged before final exclusions were added; true precision of the shipped definition is at least this.
+noise,30,28,0.933,0.787,0.982,0,,Held-out sample judged before final exclusions were added; true precision of the shipped definition is at least this.
+people,30,26,0.867,0.703,0.947,0,,Held-out sample judged before final exclusions were added; true precision of the shipped definition is at least this.
+time_of_day,30,27,0.9,0.744,0.965,0,,Held-out sample judged before final exclusions were added; true precision of the shipped definition is at least this.
+weather,30,27,0.9,0.744,0.965,0,,Held-out sample judged before final exclusions were added; true precision of the shipped definition is at least this.

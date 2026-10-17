@@ -1,0 +1,5 @@
+season,post_count,post_count_utc_season,mean_sentiment,mean_ci95_low,mean_ci95_high,pct_negative,mean_sentiment_vader_original
+spring,0,0,,,,,
+summer,195,195,0.219,0.128,0.311,33.3,0.244
+fall,0,0,,,,,
+winter,0,0,,,,,

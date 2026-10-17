@@ -1,0 +1,11 @@
+record_type,cue,original,word_boundary_only,corrected,pct_of_original_not_confirmed,added_by_inflections
+posts,lighting,84,12,10,88.1,0
+posts,noise,15,14,14,6.7,0
+posts,weather,172,42,46,73.8,1
+posts,time_of_day,76,39,51,32.9,0
+posts,people,24,23,24,0.0,0
+comments,lighting,1457,214,201,86.2,0
+comments,noise,199,168,177,11.1,0
+comments,weather,2528,639,715,72.2,13
+comments,time_of_day,735,347,319,57.8,9
+comments,people,469,411,426,9.2,0

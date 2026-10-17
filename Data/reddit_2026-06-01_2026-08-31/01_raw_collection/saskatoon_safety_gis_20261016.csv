@@ -1,0 +1,43 @@
+id,neighbourhood,created_date,year,month,season,time_of_day,score,num_comments,n_env_cues,sentiment_compound,sentiment_category,sentiment_adj_compound,sentiment_adj_category
+1vdi5l4,Downtown / CBD,2026-08-02 13:30:06+00:00,2026,8,summer,morning,106,130,0,0.4215,positive,0.0,neutral
+1uf7yej,Riverbank / Meewasin,2026-06-25 11:58:19+00:00,2026,6,summer,morning,46,63,0,0.4215,positive,0.0,neutral
+1v3ydkc,Downtown / CBD,2026-07-23 00:35:33+00:00,2026,7,summer,evening,1983,177,1,0.9895,positive,0.9879,positive
+1uo58ls,Riverbank / Meewasin,2026-07-05 15:36:43+00:00,2026,7,summer,morning,68,19,0,-0.0258,neutral,-0.4404,negative
+1vb4tfc,Downtown / CBD,2026-07-30 20:12:39+00:00,2026,7,summer,afternoon,132,250,0,0.5859,positive,0.25,positive
+1vrylx7,Downtown / CBD,2026-08-18 19:02:12+00:00,2026,8,summer,afternoon,65,50,0,0.9941,positive,0.9935,positive
+1vrubhl,Pleasant Hill,2026-08-18 16:33:18+00:00,2026,8,summer,morning,10,35,1,0.9673,positive,0.9523,positive
+1vrubhl,King George,2026-08-18 16:33:18+00:00,2026,8,summer,morning,10,35,1,0.9673,positive,0.9523,positive
+1vrubhl,Downtown / CBD,2026-08-18 16:33:18+00:00,2026,8,summer,morning,10,35,1,0.9673,positive,0.9523,positive
+1vyi0jg,Sutherland,2026-08-26 00:48:13+00:00,2026,8,summer,evening,0,15,0,0.6738,positive,0.5621,positive
+1vokdov,Downtown / CBD,2026-08-14 21:38:54+00:00,2026,8,summer,afternoon,15,7,0,0.9917,positive,0.9906,positive
+1vokdov,Riverbank / Meewasin,2026-08-14 21:38:54+00:00,2026,8,summer,afternoon,15,7,0,0.9917,positive,0.9906,positive
+1v4qgxh,Riverbank / Meewasin,2026-07-23 20:56:20+00:00,2026,7,summer,afternoon,15,46,0,0.2755,positive,0.2755,positive
+1vtlzwx,Nutana,2026-08-20 15:03:36+00:00,2026,8,summer,morning,28,122,0,0.3546,positive,0.3546,positive
+1uwepfm,Riverbank / Meewasin,2026-07-14 17:07:25+00:00,2026,7,summer,morning,0,57,0,0.931,positive,0.931,positive
+1ury367,Nutana,2026-07-09 18:07:01+00:00,2026,7,summer,afternoon,0,46,0,0.9582,positive,0.9582,positive
+1ury367,Riverbank / Meewasin,2026-07-09 18:07:01+00:00,2026,7,summer,afternoon,0,46,0,0.9582,positive,0.9582,positive
+1ury367,Arbor Creek,2026-07-09 18:07:01+00:00,2026,7,summer,afternoon,0,46,0,0.9582,positive,0.9582,positive
+1vy5bxg,Riverbank / Meewasin,2026-08-25 16:51:13+00:00,2026,8,summer,morning,47,7,0,0.9796,positive,0.9796,positive
+1ve7pax,Downtown / CBD,2026-08-03 08:38:41+00:00,2026,8,summer,night,8,11,0,0.4215,positive,0.4215,positive
+1um54qv,Riverbank / Meewasin,2026-07-03 05:09:18+00:00,2026,7,summer,night,69,2,0,0.4939,positive,0.4939,positive
+1tzc5il,Downtown / CBD,2026-06-07 13:27:35+00:00,2026,6,summer,morning,4,13,1,0.7052,positive,0.7052,positive
+1w3qmja,Downtown / CBD,2026-08-31 20:52:45+00:00,2026,8,summer,afternoon,78,107,1,0.9546,positive,0.9268,positive
+1u8ijp9,Riverbank / Meewasin,2026-06-17 18:35:49+00:00,2026,6,summer,afternoon,7,17,0,0.9728,positive,0.9694,positive
+1vm3nhz,Downtown / CBD,2026-08-12 04:09:17+00:00,2026,8,summer,night,26,101,0,0.0,neutral,0.0,neutral
+1vuaail,Downtown / CBD,2026-08-21 08:22:46+00:00,2026,8,summer,night,0,18,0,0.7096,positive,0.7096,positive
+1u72pkk,Stonebridge,2026-06-16 03:52:28+00:00,2026,6,summer,night,89,12,1,0.0276,neutral,0.0276,neutral
+1ua2imv,Place Riel / USask,2026-06-19 13:48:35+00:00,2026,6,summer,morning,5,22,1,0.9658,positive,0.9658,positive
+1vu3qve,Place Riel / USask,2026-08-21 02:32:50+00:00,2026,8,summer,evening,11,39,0,0.8153,positive,0.8153,positive
+1vm1xq0,Broadway,2026-08-12 02:44:43+00:00,2026,8,summer,evening,37,11,0,-0.3736,negative,-0.3736,negative
+1uzjml8,Riverbank / Meewasin,2026-07-18 02:32:18+00:00,2026,7,summer,evening,1,11,0,-0.2617,negative,-0.2617,negative
+1vichdv,Downtown / CBD,2026-08-07 20:53:25+00:00,2026,8,summer,afternoon,13,6,0,0.9259,positive,0.9259,positive
+1vid6fw,Stonebridge,2026-08-07 21:21:19+00:00,2026,8,summer,afternoon,151,124,0,-0.9442,negative,-0.9442,negative
+1updk7t,Downtown / CBD,2026-07-06 23:12:11+00:00,2026,7,summer,evening,41,83,1,0.8641,positive,0.8641,positive
+1uw9vgf,Downtown / CBD,2026-07-14 14:12:47+00:00,2026,7,summer,morning,31,39,1,-0.3818,negative,-0.3818,negative
+1uz0bdf,Riverbank / Meewasin,2026-07-17 13:49:39+00:00,2026,7,summer,morning,67,8,0,-0.3004,negative,-0.3004,negative
+1vbfa5w,Mount Royal,2026-07-31 03:31:00+00:00,2026,7,summer,night,0,5,0,-0.5267,negative,-0.5267,negative
+1vpdu30,Downtown / CBD,2026-08-15 20:53:39+00:00,2026,8,summer,afternoon,38,3,0,0.6996,positive,0.6996,positive
+1uvjnmx,Downtown / CBD,2026-07-13 18:21:52+00:00,2026,7,summer,afternoon,22,3,1,-0.9803,negative,-0.9803,negative
+1vz575g,Downtown / CBD,2026-08-26 18:21:58+00:00,2026,8,summer,afternoon,97,124,0,-0.7003,negative,-0.7003,negative
+1ufizig,Downtown / CBD,2026-06-25 18:52:38+00:00,2026,6,summer,afternoon,99,24,0,0.1248,positive,0.1248,positive
+1vm5rj8,Nutana,2026-08-12 06:03:17+00:00,2026,8,summer,night,220,111,0,-0.0516,negative,-0.0516,negative

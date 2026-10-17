@@ -1,0 +1,31 @@
+# OS / editor clutter
+.DS_Store
+.*.sw?
+*~
+~$*
+
+# Python / Node build artefacts
+__pycache__/
+*.pyc
+node_modules/
+package-lock.json
+
+# R
+.Rhistory
+.RData
+
+# Secrets — never commit credentials
+.env
+*.env
+secrets.*
+
+# Scratch pipeline runs (re-created by run_all.sh; published outputs live in Data/<dataset>/)
+Scripts/reddit_analysis/output/
+Scripts/reddit_analysis/scripts/output
+Scripts/reporting/node_modules/
+
+# Reddit snippets kept only for local precision checks (contain user text)
+Data/cv_pilot_2026-10/**/_local_audit_do_not_share/
+
+# Project virtual environment
+.venv/

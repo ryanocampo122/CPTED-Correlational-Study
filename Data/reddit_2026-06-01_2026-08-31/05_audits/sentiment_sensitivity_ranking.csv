@@ -1,0 +1,29 @@
+spec,rank_by_pct_negative,neighbourhood,pct_negative,mentions
+A_original,1,Riverbank / Meewasin,40.0,155
+A_original,2,Nutana,40.0,15
+A_original,3,Sutherland,36.8,19
+A_original,4,Broadway,30.8,39
+A_original,5,Downtown / CBD,30.3,238
+A_original,6,Stonebridge,13.6,22
+A_original,7,Place Riel / USask,0.0,19
+B_adjusted,1,Riverbank / Meewasin,41.9,155
+B_adjusted,2,Nutana,40.0,15
+B_adjusted,3,Sutherland,36.8,19
+B_adjusted,4,Broadway,33.3,39
+B_adjusted,5,Downtown / CBD,31.9,238
+B_adjusted,6,Stonebridge,13.6,22
+B_adjusted,7,Place Riel / USask,0.0,19
+C_adjusted_case,1,Riverbank / Meewasin,41.9,155
+C_adjusted_case,2,Nutana,40.0,15
+C_adjusted_case,3,Sutherland,36.8,19
+C_adjusted_case,4,Broadway,33.3,39
+C_adjusted_case,5,Downtown / CBD,31.9,238
+C_adjusted_case,6,Stonebridge,13.6,22
+C_adjusted_case,7,Place Riel / USask,0.0,19
+D_masked,1,Nutana,46.7,15
+D_masked,2,Riverbank / Meewasin,41.9,155
+D_masked,3,Sutherland,36.8,19
+D_masked,4,Broadway,33.3,39
+D_masked,5,Downtown / CBD,32.8,238
+D_masked,6,Stonebridge,13.6,22
+D_masked,7,Place Riel / USask,0.0,19

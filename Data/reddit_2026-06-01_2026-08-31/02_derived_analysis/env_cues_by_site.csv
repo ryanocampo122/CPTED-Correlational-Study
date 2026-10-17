@@ -1,0 +1,9 @@
+neighbourhood,n_negative_comments,lighting,noise,weather,time_of_day,people
+Citywide (all comments),2045,1.5,1.2,1.7,2.9,3.3
+Downtown / CBD,73,1.4,2.7,4.1,13.7,12.3
+Riverbank / Meewasin,62,0.0,1.6,3.2,0.0,1.6
+Broadway,12,0.0,16.7,0.0,0.0,8.3
+Stonebridge,2,0.0,0.0,0.0,0.0,0.0
+Sutherland,7,0.0,0.0,0.0,0.0,0.0
+Place Riel / USask,0,,,,,
+Nutana,5,0.0,0.0,0.0,0.0,20.0

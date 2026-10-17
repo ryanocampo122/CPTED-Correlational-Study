@@ -1,0 +1,33 @@
+Dataset: reddit_2026-06-01_2026-08-31  (collection version 2026-10)
+[PASS] collection used the same neighbourhood vocabulary as this analysis
+[PASS] collection used the same cue definitions as this analysis
+[PASS] collection used the same sentiment lexicon adjustments as this analysis
+[PASS] posts: stored env_lighting == corrected cue definition
+[PASS] posts: stored env_noise == corrected cue definition
+[PASS] posts: stored env_weather == corrected cue definition
+[PASS] posts: stored env_time_of_day == corrected cue definition
+[PASS] posts: stored env_people == corrected cue definition
+[PASS] posts: stored loc_* == whole-word match for all 22 areas
+[PASS] posts: stored sentiment_adj_compound == adjusted VADER(cleaned_text)
+[PASS] posts: stored sentiment_compound == stock VADER(cleaned_text)
+[PASS] comments: stored env_lighting == corrected cue definition
+[PASS] comments: stored env_noise == corrected cue definition
+[PASS] comments: stored env_weather == corrected cue definition
+[PASS] comments: stored env_time_of_day == corrected cue definition
+[PASS] comments: stored env_people == corrected cue definition
+[PASS] comments: stored loc_* == whole-word match for all 22 areas
+[PASS] comments: stored sentiment_adj_compound == adjusted VADER(cleaned_text)
+[PASS] comments: stored sentiment_compound == stock VADER(cleaned_text)
+[PASS] every post was created inside the window (2026-06-01 to 2026-08-31, America/Regina)
+[PASS] comment_in_window agrees with comment timestamps (6,403 of 6,452 inside)
+[PASS] post and comment ids are unique
+[PASS] every comment belongs to a collected post
+[PASS] cleaned row counts equal raw (195 / 6,452)
+[PASS] every original posts column unchanged in cleaned file
+[PASS] every original comments column unchanged in cleaned file
+[PASS] neighbourhood_summary reconciles with cleaned rows for all 22 areas 
+[PASS] no pending other-city review decisions
+[PASS] all 17 'exclude' decisions are reflected in vloc_* tags
+[PASS] no quote sample contains an excluded record 
+
+All hard checks passed.

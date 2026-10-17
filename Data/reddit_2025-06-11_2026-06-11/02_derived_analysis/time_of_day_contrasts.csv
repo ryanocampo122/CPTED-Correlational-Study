@@ -1,0 +1,12 @@
+neighbourhood,n_night,n_other,mean_night,mean_other,night_minus_other,ci95_low,ci95_high,ci_excludes_zero
+Citywide (all comments),2697,12192,0.075,0.09,-0.015,-0.051,0.022,False
+Downtown / CBD,40,249,-0.016,0.067,-0.084,-0.3,0.179,False
+Riverbank / Meewasin,15,98,0.21,0.311,-0.101,-0.433,0.253,False
+Sutherland,10,38,-0.005,0.108,-0.113,-0.537,0.217,False
+Broadway,9,37,0.5,0.421,0.08,-0.445,0.451,False
+Place Riel / USask,4,38,-0.064,0.313,-0.377,-1.041,0.337,False
+Caswell Hill,4,42,-0.213,0.264,-0.477,-0.949,0.58,False
+Stonebridge,8,35,0.146,0.255,-0.109,-0.532,0.32,False
+Nutana,3,12,-0.052,0.336,-0.389,-0.745,0.142,False
+Riversdale,3,13,0.077,0.14,-0.063,-0.688,0.499,False
+Pleasant Hill,1,16,0.511,0.28,0.23,,,

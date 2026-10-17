@@ -1,0 +1,53 @@
+2026-06-11 14:48:01,507 | INFO | PRAW initialized in read-only mode for r/saskatoon
+2026-06-11 14:48:01,516 | INFO | VADER sentiment analyzer initialized
+2026-06-11 14:48:01,516 | INFO | ======================================================================
+2026-06-11 14:48:01,516 | INFO | UrbanSentinel-Prairie | Reddit Safety Perception Collection
+2026-06-11 14:48:01,516 | INFO | Scope:  r/saskatoon
+2026-06-11 14:48:01,516 | INFO | Window: 2025-06-11 – 2026-06-11
+2026-06-11 14:48:01,516 | INFO | Seeds:  safety, safe, unsafe, danger, dangerous, sketchy, scary, afraid, nervous, worried, is it safe, feel safe
+2026-06-11 14:48:01,516 | INFO | ======================================================================
+2026-06-11 14:48:01,517 | INFO | Collection window: 2025-06-11 – 2026-06-11
+2026-06-11 14:48:01,517 | INFO | Search: 'safety'
+2026-06-11 14:48:05,817 | INFO | Search: 'safe'
+2026-06-11 14:48:10,310 | INFO | Search: 'unsafe'
+2026-06-11 14:48:13,353 | INFO | Search: 'danger'
+2026-06-11 14:48:16,538 | INFO | Search: 'dangerous'
+2026-06-11 14:48:19,847 | INFO | Search: 'sketchy'
+2026-06-11 14:48:22,784 | INFO | Search: 'scary'
+2026-06-11 14:48:25,873 | INFO | Search: 'afraid'
+2026-06-11 14:48:28,764 | INFO | Search: 'nervous'
+2026-06-11 14:48:31,660 | INFO | Search: 'worried'
+2026-06-11 14:48:35,168 | INFO | Search: 'is it safe'
+2026-06-11 14:48:38,460 | INFO | Search: 'feel safe'
+2026-06-11 14:48:41,508 | INFO | Listing: top/year
+2026-06-11 14:48:48,372 | INFO |   Listing top/year yielded 3 new posts
+2026-06-11 14:48:50,878 | INFO | Listing: new
+2026-06-11 14:49:02,576 | INFO |   Listing new yielded 0 new posts
+2026-06-11 14:49:05,083 | INFO | Retrieval complete. Unique posts captured: 428
+2026-06-11 14:49:05,083 | INFO | Collecting comments for 428 posts
+2026-06-11 14:49:55,215 | INFO |   Comment progress: 25 / 428 posts
+2026-06-11 14:50:46,115 | INFO |   Comment progress: 50 / 428 posts
+2026-06-11 14:51:30,672 | INFO |   Comment progress: 75 / 428 posts
+2026-06-11 14:52:20,076 | INFO |   Comment progress: 100 / 428 posts
+2026-06-11 14:53:13,476 | INFO |   Comment progress: 125 / 428 posts
+2026-06-11 14:54:00,698 | INFO |   Comment progress: 150 / 428 posts
+2026-06-11 14:54:45,724 | INFO |   Comment progress: 175 / 428 posts
+2026-06-11 14:55:30,064 | INFO |   Comment progress: 200 / 428 posts
+2026-06-11 14:56:14,700 | INFO |   Comment progress: 225 / 428 posts
+2026-06-11 14:57:00,885 | INFO |   Comment progress: 250 / 428 posts
+2026-06-11 14:57:50,056 | INFO |   Comment progress: 275 / 428 posts
+2026-06-11 14:58:38,291 | INFO |   Comment progress: 300 / 428 posts
+2026-06-11 14:59:25,880 | INFO |   Comment progress: 325 / 428 posts
+2026-06-11 15:00:12,510 | INFO |   Comment progress: 350 / 428 posts
+2026-06-11 15:01:00,688 | INFO |   Comment progress: 375 / 428 posts
+2026-06-11 15:01:46,576 | INFO |   Comment progress: 400 / 428 posts
+2026-06-11 15:02:31,816 | INFO |   Comment progress: 425 / 428 posts
+2026-06-11 15:02:40,145 | INFO | Comments collected: 15975 across 428 posts
+2026-06-11 15:02:41,550 | INFO | Posts saved: output/saskatoon_safety_posts_20260611.csv (426 rows)
+2026-06-11 15:02:41,652 | INFO | Comments saved: output/saskatoon_safety_comments_20260611.csv (14889 rows)
+2026-06-11 15:02:41,653 | INFO | Metadata saved: output/saskatoon_safety_metadata_20260611.json
+2026-06-11 15:02:41,655 | INFO | GIS export saved: output/saskatoon_safety_gis_20260611.csv (90 neighbourhood-mentions)
+2026-06-11 15:02:41,656 | INFO | Summary saved: output/saskatoon_safety_summary_20260611.txt
+2026-06-11 15:02:41,656 | INFO | ======================================================================
+2026-06-11 15:02:41,656 | INFO | Collection complete.
+2026-06-11 15:02:41,656 | INFO | ======================================================================

@@ -1,0 +1,87 @@
+{
+  "collection_run_utc": "2026-10-16T21:17:13.620500+00:00",
+  "scraper_version": "2026-10",
+  "subreddit": "saskatoon",
+  "window_local": [
+    "2026-06-01",
+    "2026-08-31"
+  ],
+  "window_timezone": "America/Regina",
+  "window_utc": [
+    "2026-06-01T06:00:00+00:00",
+    "2026-09-01T05:59:59+00:00"
+  ],
+  "seed_sets": {
+    "safety": [
+      "safety",
+      "safe",
+      "unsafe",
+      "danger",
+      "dangerous",
+      "sketchy",
+      "scary",
+      "afraid",
+      "nervous",
+      "worried",
+      "is it safe",
+      "feel safe"
+    ],
+    "crime": [
+      "crime",
+      "stolen",
+      "theft",
+      "broken into",
+      "break in",
+      "vandalism",
+      "vandalized",
+      "graffiti",
+      "catalytic converter",
+      "car stolen",
+      "smashed window",
+      "robbed",
+      "robbery",
+      "mugged",
+      "assault",
+      "assaulted",
+      "attacked",
+      "stabbed",
+      "stabbing"
+    ]
+  },
+  "search_sorts": [
+    "relevance",
+    "new",
+    "top",
+    "comments"
+  ],
+  "search_time_filter": "year",
+  "tagging": "whole-word matching; vocabularies from analysis_code/scripts/common.py",
+  "n_neighbourhoods_tracked": 22,
+  "n_environmental_cue_categories": 5,
+  "vader_lexicon_adjustments": {
+    "safety": 0.0,
+    "unsafe": -1.9,
+    "afraid": -1.9,
+    "sketchy": -1.5
+  },
+  "time_fields": "local time (America/Regina)",
+  "author_hash": "HMAC-SHA-256 with private salt, first 16 hex chars",
+  "replace_more_limit": 0,
+  "max_comment_depth": 4,
+  "max_comments_per_post": 200,
+  "posts_collected": 195,
+  "comments_collected": 6452,
+  "comments_in_window": 6403,
+  "posts_by_seed_set_found": {
+    "safety": 120,
+    "crime": 60,
+    "crime;safety": 15
+  },
+  "posts_by_month": {
+    "6": 51,
+    "7": 65,
+    "8": 79
+  },
+  "posts_mentioning_a_neighbourhood": 37,
+  "sentiment_available": true
+}

@@ -1,0 +1,125 @@
+seed_set,term,query,sort,results_returned,in_window_new_or_repeat
+safety,safety,safety,relevance,98,30
+safety,safety,safety,new,79,23
+safety,safety,safety,top,79,23
+safety,safety,safety,comments,79,23
+safety,safe,safe,relevance,184,58
+safety,safe,safe,new,147,42
+safety,safe,safe,top,147,42
+safety,safe,safe,comments,147,42
+safety,unsafe,unsafe,relevance,16,4
+safety,unsafe,unsafe,new,13,4
+safety,unsafe,unsafe,top,13,4
+safety,unsafe,unsafe,comments,13,4
+safety,danger,danger,relevance,49,17
+safety,danger,danger,new,38,14
+safety,danger,danger,top,38,14
+safety,danger,danger,comments,38,14
+safety,dangerous,dangerous,relevance,49,17
+safety,dangerous,dangerous,new,38,14
+safety,dangerous,dangerous,top,38,14
+safety,dangerous,dangerous,comments,38,14
+safety,sketchy,sketchy,relevance,22,3
+safety,sketchy,sketchy,new,12,2
+safety,sketchy,sketchy,top,12,2
+safety,sketchy,sketchy,comments,12,2
+safety,scary,scary,relevance,22,3
+safety,scary,scary,new,9,1
+safety,scary,scary,top,9,1
+safety,scary,scary,comments,9,1
+safety,afraid,afraid,relevance,21,5
+safety,afraid,afraid,new,10,1
+safety,afraid,afraid,top,10,1
+safety,afraid,afraid,comments,10,1
+safety,nervous,nervous,relevance,20,8
+safety,nervous,nervous,new,20,8
+safety,nervous,nervous,top,20,8
+safety,nervous,nervous,comments,20,8
+safety,worried,worried,relevance,73,22
+safety,worried,worried,new,47,17
+safety,worried,worried,top,47,17
+safety,worried,worried,comments,47,17
+safety,is it safe,is it safe,relevance,73,24
+safety,is it safe,is it safe,new,70,23
+safety,is it safe,is it safe,top,70,23
+safety,is it safe,is it safe,comments,70,23
+safety,feel safe,feel safe,relevance,23,7
+safety,feel safe,feel safe,new,21,5
+safety,feel safe,feel safe,top,21,5
+safety,feel safe,feel safe,comments,21,5
+crime,crime,crime,relevance,77,27
+crime,crime,crime,new,0,0
+crime,crime,crime,top,0,0
+crime,crime,crime,comments,37,12
+crime,stolen,stolen,relevance,57,15
+crime,stolen,stolen,new,46,11
+crime,stolen,stolen,top,46,11
+crime,stolen,stolen,comments,46,11
+crime,theft,theft,relevance,24,7
+crime,theft,theft,new,17,5
+crime,theft,theft,top,17,5
+crime,theft,theft,comments,17,5
+crime,broken into,"""broken into""",relevance,7,0
+crime,broken into,"""broken into""",new,7,0
+crime,broken into,"""broken into""",top,7,0
+crime,broken into,"""broken into""",comments,7,0
+crime,break in,"""break in""",relevance,7,2
+crime,break in,"""break in""",new,7,2
+crime,break in,"""break in""",top,7,2
+crime,break in,"""break in""",comments,7,2
+crime,vandalism,vandalism,relevance,11,6
+crime,vandalism,vandalism,new,10,6
+crime,vandalism,vandalism,top,10,6
+crime,vandalism,vandalism,comments,10,6
+crime,vandalized,vandalized,relevance,11,6
+crime,vandalized,vandalized,new,10,6
+crime,vandalized,vandalized,top,10,6
+crime,vandalized,vandalized,comments,10,6
+crime,graffiti,graffiti,relevance,4,2
+crime,graffiti,graffiti,new,4,2
+crime,graffiti,graffiti,top,4,2
+crime,graffiti,graffiti,comments,4,2
+crime,catalytic converter,"""catalytic converter""",relevance,0,0
+crime,catalytic converter,"""catalytic converter""",new,0,0
+crime,catalytic converter,"""catalytic converter""",top,0,0
+crime,catalytic converter,"""catalytic converter""",comments,0,0
+crime,car stolen,"""car stolen""",relevance,2,0
+crime,car stolen,"""car stolen""",new,2,0
+crime,car stolen,"""car stolen""",top,2,0
+crime,car stolen,"""car stolen""",comments,2,0
+crime,smashed window,"""smashed window""",relevance,1,0
+crime,smashed window,"""smashed window""",new,1,0
+crime,smashed window,"""smashed window""",top,1,0
+crime,smashed window,"""smashed window""",comments,1,0
+crime,robbed,robbed,relevance,12,2
+crime,robbed,robbed,new,6,0
+crime,robbed,robbed,top,6,0
+crime,robbed,robbed,comments,6,0
+crime,robbery,robbery,relevance,6,4
+crime,robbery,robbery,new,3,1
+crime,robbery,robbery,top,3,1
+crime,robbery,robbery,comments,3,1
+crime,mugged,mugged,relevance,5,3
+crime,mugged,mugged,new,3,1
+crime,mugged,mugged,top,3,1
+crime,mugged,mugged,comments,3,1
+crime,assault,assault,relevance,30,6
+crime,assault,assault,new,27,5
+crime,assault,assault,top,27,5
+crime,assault,assault,comments,27,5
+crime,assaulted,assaulted,relevance,30,6
+crime,assaulted,assaulted,new,27,5
+crime,assaulted,assaulted,top,27,5
+crime,assaulted,assaulted,comments,27,5
+crime,attacked,attacked,relevance,16,5
+crime,attacked,attacked,new,13,5
+crime,attacked,attacked,top,13,5
+crime,attacked,attacked,comments,13,5
+crime,stabbed,stabbed,relevance,25,11
+crime,stabbed,stabbed,new,15,6
+crime,stabbed,stabbed,top,15,6
+crime,stabbed,stabbed,comments,15,6
+crime,stabbing,stabbing,relevance,25,11
+crime,stabbing,stabbing,new,15,6
+crime,stabbing,stabbing,top,15,6
+crime,stabbing,stabbing,comments,15,6

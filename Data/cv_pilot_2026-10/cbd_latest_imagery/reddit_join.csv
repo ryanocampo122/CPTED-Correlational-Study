@@ -1,0 +1,11 @@
+point_id,segment_id,image_id,reddit_join_level,reddit_n_records,reddit_mean_sentiment_adj,reddit_pct_negative,typology_top1,typology_top1_prob
+P0123,251587648_0,3717716658328910,neighbourhood: Downtown / CBD,238,0.21,31.9,road_corridor,0.523
+P0168,277744016_0,4307270402657782,neighbourhood: Downtown / CBD,238,0.21,31.9,road_corridor,0.445
+P0273,4332886_0,138898284896240,neighbourhood: Downtown / CBD,238,0.21,31.9,road_corridor,0.695
+P0024,1389078156_0,211180241672734,neighbourhood: Downtown / CBD,238,0.21,31.9,surface_parking,0.569
+P0052,1539648897_0,3990149157738196,neighbourhood: Downtown / CBD,238,0.21,31.9,park_open_space,0.744
+P0198,427624850_0,1120560471763155,neighbourhood: Downtown / CBD,238,0.21,31.9,transit_node,0.562
+P0420,79277936_0,229662713016681,neighbourhood: Downtown / CBD,238,0.21,31.9,surface_parking,0.762
+P0060,165531565_0,303016901485277,neighbourhood: Downtown / CBD,238,0.21,31.9,park_open_space,0.95
+P0364,547699885_0,176057597781855,neighbourhood: Downtown / CBD,238,0.21,31.9,road_corridor,0.733
+P0134,256496806_1,142466331160372,neighbourhood: Downtown / CBD,238,0.21,31.9,surface_parking,0.589

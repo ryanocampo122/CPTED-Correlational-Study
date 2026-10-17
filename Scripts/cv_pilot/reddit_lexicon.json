@@ -1,0 +1,30 @@
+{
+  "_readme": "Used by 'pilot.py reddit'. Three blocks. (1) audited_cues: existing, hand-audited cue columns from the Reddit analysis (Data/reddit_*/04_cleaned_datasets, 'venv_*'); their held-out precision is read from 05_audits/env_cue_precision_heldout.csv at run time and printed beside the number. NOTE the audited 'lighting' cue has only ~50% precision (it fires on 'traffic lights'/'stop lights'), so it must be fixed before it is used for H3. (2) physical_cues: NEW, EXPLORATORY whole-word patterns for PHYSICAL features of places only, mapped to the CLIP cue they are compared with. They contain no words describing people or groups (work plan: describe places, do not label communities; Wacquant 2007, Meade 2021). Precision is unchecked: treat counts as indicative. (3) place_anchors: streets/landmarks used only to show how sparse sub-neighbourhood Reddit data is; they carry no coordinates, so they are NOT used to place posts on the map.",
+  "audited_cues": {
+    "lighting": {"column": "venv_lighting", "compare_with": []},
+    "people": {"column": "venv_people", "compare_with": ["cue_people_present"]}
+  },
+  "physical_cues": {
+    "graffiti_vandalism": {"pattern": "graffiti|tagging|vandali[sz]m|vandali[sz]ed", "compare_with": ["cue_graffiti"]},
+    "litter_garbage": {"pattern": "litter|garbage|trash|needles?|syringes?|dumpsters?", "compare_with": ["cue_litter"]},
+    "vacancy_disrepair": {"pattern": "vacant|abandoned|boarded[- ]up|broken windows?|smashed windows?|derelict|empty (?:lot|building|storefront)s?", "compare_with": ["cue_vacant_lot", "cue_boarded_windows"]},
+    "parking": {"pattern": "parking lots?|parkades?|parking garages?|parking structures?", "compare_with": ["typ_surface_parking"]},
+    "transit": {"pattern": "bus (?:stops?|terminals?|stations?|shelters?)|transit (?:terminals?|stations?|mall)|downtown terminal", "compare_with": ["typ_transit_node"]}
+  },
+  "place_anchors": {
+    "20th Street": "\\b20th st(?:reet)?\\b",
+    "21st Street": "\\b21st st(?:reet)?\\b",
+    "22nd Street": "\\b22nd st(?:reet)?\\b",
+    "23rd Street": "\\b23rd st(?:reet)?\\b",
+    "2nd Avenue": "\\b2nd ave(?:nue)?\\b",
+    "Idylwyld": "\\bidylwyld\\b",
+    "Midtown (Plaza)": "\\bmidtown\\b",
+    "River Landing": "\\briver landing\\b",
+    "Bus/transit terminal": "\\b(?:bus|transit) (?:terminal|station)\\b|\\bdowntown terminal\\b",
+    "City Hall": "\\bcity hall\\b",
+    "Remai Modern": "\\bremai\\b",
+    "Spadina": "\\bspadina\\b",
+    "Central Library": "\\b(?:central )?library\\b",
+    "Broadway (ambiguous: avenue or neighbourhood)": "\\bbroadway\\b"
+  }
+}

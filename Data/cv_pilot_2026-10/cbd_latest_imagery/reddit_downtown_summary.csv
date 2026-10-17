@@ -1,0 +1,4 @@
+group,n_posts,n_comments,n_records,n_threads,mean_sentiment_adj,mean_ci95_low,mean_ci95_high,n_negative,pct_negative,pct_neg_ci95_low,pct_neg_ci95_high
+Downtown / CBD (validated tag),18,220,238,51,0.21,0.135,0.285,76,31.9,26.3,38.1
+Rest of study corpus,177,6183,6360,195,0.084,0.072,0.097,2034,32.0,30.8,33.1
+All records,195,6403,6598,195,0.089,0.076,0.101,2110,32.0,30.9,33.1

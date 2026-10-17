@@ -1,0 +1,48 @@
+======================================================================
+UrbanSentinel-Prairie | Reddit Safety Perception Collection
+r/saskatoon | 2025-06-11 – 2026-06-11
+======================================================================
+
+Posts: 426
+Comments: 14889
+
+--- Posts by season ---
+  summer    126
+  spring    114
+  winter    104
+  fall      82
+
+--- Posts by time-of-day (local) ---
+  afternoon   131
+  morning     113
+  evening     106
+  night       76
+
+--- Posts by neighbourhood mentioned ---
+  Riverbank / Meewasin          46
+  Downtown / CBD                17
+  Place Riel / USask            6
+  Broadway                      5
+  Nutana                        5
+  Riversdale                    2
+  Market Mall                   2
+  Briarwood                     1
+  Meadowgreen                   1
+  Downtown Terminal             1
+  Lakeridge                     1
+  King George                   1
+  Caswell Hill                  1
+  Stonebridge                   1
+
+--- Environmental cues mentioned ---
+  lighting        84
+  noise           15
+  weather         172
+  time_of_day     76
+  people          24
+
+--- Sentiment ---
+  positive   260
+  negative   132
+  neutral    34
+  mean compound: 0.246

@@ -1,0 +1,22 @@
+neighbourhood,posts,comments,total_mentions,mean_sentiment,pct_negative,n_negative
+Downtown / CBD,17,303,320,0.059,40.3,129
+Riverbank / Meewasin,8,114,122,0.325,22.1,27
+Broadway,5,46,51,0.48,15.7,8
+Place Riel / USask,6,42,48,0.382,18.8,9
+Caswell Hill,1,46,47,0.267,25.5,12
+Stonebridge,1,43,44,0.222,29.5,13
+Nutana,5,15,20,0.429,20.0,4
+Riversdale,2,16,18,0.101,38.9,7
+Pleasant Hill,0,17,17,0.312,29.4,5
+Lakeridge,1,10,11,-0.01,45.5,5
+Meadowgreen,1,9,10,0.245,20.0,2
+Briarwood,1,7,8,0.278,25.0,2
+Downtown Terminal,1,7,8,0.078,37.5,3
+King George,1,6,7,0.375,28.6,2
+Mount Royal,0,4,4,0.475,0.0,0
+Market Mall,2,2,4,-0.172,50.0,2
+Westmount,0,3,3,0.304,33.3,1
+Silverspring,0,3,3,0.607,0.0,0
+Mayfair,0,3,3,0.488,33.3,1
+Confederation Mall,0,2,2,0.753,0.0,0
+Arbor Creek,0,1,1,0.0,0.0,0

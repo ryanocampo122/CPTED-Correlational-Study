@@ -1,0 +1,73 @@
+{
+  "points": {
+    "boundary_source": "Data/boundaries/central_business_district_osm.geojson (match='central business', 1 polygon(s))",
+    "roads_source": "https://overpass-api.de/api/interpreter",
+    "highway_filter": "motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|pedestrian",
+    "step_m": 50.0,
+    "n_ways": 254,
+    "n_street_segments": 354,
+    "n_points": 423,
+    "n_segments_with_points": 218,
+    "bbox": [
+      -106.6702366,
+      52.1220374,
+      -106.6504642,
+      52.1339474
+    ]
+  },
+  "last_updated_utc": "2026-10-17T02:19:21+00:00",
+  "git_commit": "804ad46",
+  "coverage": {
+    "radius_m": 30.0,
+    "points": 423,
+    "points_with_any_image": 397,
+    "points_with_study_period_image": 0,
+    "points_with_study_period_flat": 0,
+    "images_found": 19139,
+    "years_checked": "<= 2026",
+    "by_year": [
+      {
+        "year": 2014,
+        "images_flat": 13707,
+        "images_360": 2907,
+        "points_with_flat": 371,
+        "points_with_360": 369
+      },
+      {
+        "year": 2017,
+        "images_flat": 105,
+        "images_360": 17,
+        "points_with_flat": 13,
+        "points_with_360": 0
+      },
+      {
+        "year": 2018,
+        "images_flat": 303,
+        "images_360": 0,
+        "points_with_flat": 35,
+        "points_with_360": 0
+      },
+      {
+        "year": 2019,
+        "images_flat": 172,
+        "images_360": 0,
+        "points_with_flat": 38,
+        "points_with_360": 0
+      },
+      {
+        "year": 2020,
+        "images_flat": 0,
+        "images_360": 1606,
+        "points_with_flat": 0,
+        "points_with_360": 264
+      },
+      {
+        "year": 2023,
+        "images_flat": 0,
+        "images_360": 322,
+        "points_with_flat": 0,
+        "points_with_360": 27
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+# UrbanSentinel-Prairie — Python environment (Python 3.14)
+#   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# Versions are pinned to the ones that produced the published outputs, so
+# re-running the pipeline reproduces them byte-for-byte.
+
+# Reddit collection + analysis
+pandas==2.3.3
+numpy==2.3.4
+matplotlib==3.10.7
+openpyxl==3.1.5
+vaderSentiment==3.3.2
+praw==7.8.1
+prawcore==2.4.0
+requests==2.32.5
+python-dateutil==2.9.0.post0
+tzdata==2025.2
+
+# Street-imagery framework (sampling geometry)
+shapely>=2.1
+pyproj>=3.7
+
+# Reports (Markdown -> PDF)
+reportlab==4.4.9
+
+# Computer-vision pilot (Scripts/cv_pilot); already present in .venv
+pillow>=12
+torch>=2.9
+transformers>=4.57

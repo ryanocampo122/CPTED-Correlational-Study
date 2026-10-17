@@ -1,0 +1,4 @@
+year,month,post_count,mean_sentiment,mean_ci95_low,mean_ci95_high,pct_negative,mean_sentiment_vader_original
+2026,6,51,0.198,0.021,0.368,33.3,0.214
+2026,7,65,0.16,-0.011,0.338,41.5,0.187
+2026,8,79,0.282,0.146,0.415,26.6,0.311

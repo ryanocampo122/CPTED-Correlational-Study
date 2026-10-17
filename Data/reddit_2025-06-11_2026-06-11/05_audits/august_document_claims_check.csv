@@ -1,0 +1,13 @@
+document,claim,as_reported,verified_value
+Master report / memo,comment false hits from 'driver'/'drivers',542,543
+Memo,raw Riverbank comments mean sentiment,+0.01,-0.009
+Master report,other priority categories 0-2% affected,0-2%,Downtown Terminal comments 12.5% (1 of 8)
+July briefing,avg comments per post,39.5,35.0 collected (39.5 is Reddit's num_comments field)
+July briefing,median post score,18,17.5
+July briefing,posts+comments tagged to a neighbourhood,"1,212",1212 raw; 665 after all corrections
+July briefing,number of seed terms,11,12
+July briefing / Findings,lighting cue: posts / comments,"84 / 1,457",10 / 201 corrected
+July briefing / Findings,weather cue: posts / comments,"172 / 2,528",46 / 715 corrected
+Master report / slides,Downtown lighting in negative comments,17.8%,4.3% corrected
+Master report / slides,Downtown negative only at night,"night -0.004, the only negative bucket","night minus other -0.084, 95% CI -0.300 to +0.179 (not distinguishable from 0)"
+Master report,quote 'We've had to lock all washrooms...',Downtown/CBD (Saskatoon),comment mxg71xr is about downtown Regina

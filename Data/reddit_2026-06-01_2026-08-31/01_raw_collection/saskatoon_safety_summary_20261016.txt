@@ -1,0 +1,43 @@
+======================================================================
+UrbanSentinel-Prairie | Reddit Crime & Safety Narrative Collection
+r/saskatoon | 2026-06-01 – 2026-08-31 (local time) | scraper 2026-10
+======================================================================
+
+Posts: 195
+Comments: 6452 (6403 posted inside the window)
+
+--- Posts by seed set that found them ---
+  safety           120
+  crime            60
+  crime;safety     15
+
+--- Posts by month (local) ---
+   6  51
+   7  65
+   8  79
+
+--- Posts by neighbourhood mentioned ---
+  Downtown / CBD               18
+  Riverbank / Meewasin         11
+  Nutana                       3
+  Stonebridge                  2
+  Place Riel / USask           2
+  Pleasant Hill                1
+  King George                  1
+  Sutherland                   1
+  Arbor Creek                  1
+  Broadway                     1
+  Mount Royal                  1
+
+--- Environmental cues mentioned (posts) ---
+  lighting       6
+  noise          8
+  weather        3
+  time_of_day    13
+  people         4
+
+--- Sentiment (posts, adjusted VADER) ---
+  positive  109
+  negative  65
+  neutral   21
+  mean compound: 0.219

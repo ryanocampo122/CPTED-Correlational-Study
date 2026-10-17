@@ -1,0 +1,5 @@
+spec,posts_mean,posts_pct_negative,posts_pct_positive,comments_mean,comments_pct_negative,downtown_cbd_mean,downtown_cbd_pct_negative,riverbank_meewasin_mean,riverbank_meewasin_pct_negative,sutherland_mean,sutherland_pct_negative
+A_original,0.244,32.3,57.9,0.09,31.4,0.232,30.3,0.121,40.0,0.094,36.8
+B_adjusted,0.219,33.3,55.9,0.085,31.9,0.21,31.9,0.101,41.9,0.088,36.8
+C_adjusted_case,0.224,32.8,56.4,0.085,32.0,0.212,31.9,0.099,41.9,0.088,36.8
+D_masked,0.184,33.8,54.9,0.079,32.1,0.187,32.8,0.092,41.9,0.088,36.8

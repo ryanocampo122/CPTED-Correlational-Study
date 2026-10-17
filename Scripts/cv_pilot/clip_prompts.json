@@ -1,0 +1,29 @@
+{
+  "_readme": "Zero-shot CLIP prompt sets for the October 2026 pilot. Edit here, not in code. Each cue is scored as P(positive prompt) vs its negative contrast; each typology label is scored against the other labels. Scores are UNCALIBRATED and must be validated against the ~150 hand-labelled images before they are used as measurements. Lighting is deliberately NOT here: CLIP cannot reliably see small objects such as light poles, so streetlight presence/spacing comes from the segmentation/object-detection steps (work plan, steps 3-4).",
+  "templates": [
+    "a street-level photo of {}.",
+    "a photo of {}, taken from the street."
+  ],
+  "typology": {
+    "_note": "Seven CPTED land-use types from the Phase 1 briefing (parks, linear parks/walkways, surface parking, commercial streets, transit nodes, residential, institutional) plus 'road_corridor', added because much of Downtown is traffic-dominated road space that fits none of the seven.",
+    "surface_parking": ["a surface parking lot with parked cars", "an open paved parking lot"],
+    "transit_node": ["a bus stop or transit terminal", "a bus shelter beside a city street"],
+    "commercial_street": ["a commercial street with storefronts and shops", "a downtown street lined with businesses"],
+    "riverfront_walkway": ["a paved walking path beside a river", "a riverside promenade"],
+    "park_open_space": ["a park with grass and trees", "an open green space"],
+    "residential": ["a residential street with houses or apartment buildings"],
+    "institutional": ["a large public building such as a city hall, library or school"],
+    "road_corridor": ["a wide road or intersection dominated by traffic", "a city road with no shops or pedestrians"]
+  },
+  "cues": {
+    "graffiti": {"principle": "maintenance", "positive": ["graffiti or tagging on a wall"], "negative": ["a clean wall with no graffiti"]},
+    "litter": {"principle": "maintenance", "positive": ["litter and garbage on the ground"], "negative": ["a clean sidewalk with no litter"]},
+    "boarded_windows": {"principle": "maintenance", "positive": ["boarded-up or broken windows on a building"], "negative": ["a building with intact windows"]},
+    "vacant_lot": {"principle": "maintenance", "positive": ["an empty vacant lot or an abandoned building"], "negative": ["a well-used, occupied building"]},
+    "active_storefront": {"principle": "activity_support", "positive": ["an open storefront with shop windows and signs"], "negative": ["a blank wall with no shopfront"]},
+    "windows_overlook_street": {"principle": "natural_surveillance", "positive": ["a building with many windows facing the street"], "negative": ["a building with no windows facing the street"]},
+    "people_present": {"principle": "natural_surveillance", "positive": ["people walking on the sidewalk"], "negative": ["an empty street with no people"]},
+    "fences_barriers": {"principle": "access_control_territoriality", "positive": ["a fence, gate or barrier along the edge of the property"], "negative": ["an open, unfenced property edge"]},
+    "seating": {"principle": "activity_support", "positive": ["benches or outdoor seating"], "negative": ["a sidewalk with no benches"]}
+  }
+}

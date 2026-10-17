@@ -1,0 +1,25 @@
+neighbourhood,time_of_day,mean_sentiment,n
+Downtown / CBD,morning,0.065,111
+Downtown / CBD,afternoon,0.093,114
+Downtown / CBD,evening,0.079,38
+Downtown / CBD,night,-0.004,40
+Riverbank / Meewasin,morning,0.497,36
+Riverbank / Meewasin,afternoon,0.295,34
+Riverbank / Meewasin,evening,0.135,29
+Riverbank / Meewasin,night,0.24,15
+Caswell Hill,morning,0.41,14
+Caswell Hill,afternoon,0.313,22
+Caswell Hill,evening,-0.015,6
+Caswell Hill,night,-0.213,4
+Stonebridge,morning,0.53,12
+Stonebridge,afternoon,0.066,15
+Stonebridge,evening,0.241,8
+Stonebridge,night,0.146,8
+Riversdale,morning,0.112,2
+Riversdale,afternoon,0.154,8
+Riversdale,evening,0.279,3
+Riversdale,night,0.077,3
+Pleasant Hill,morning,-0.116,3
+Pleasant Hill,afternoon,0.459,7
+Pleasant Hill,evening,0.321,6
+Pleasant Hill,night,0.511,1

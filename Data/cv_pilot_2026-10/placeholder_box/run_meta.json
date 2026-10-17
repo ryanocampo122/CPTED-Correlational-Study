@@ -1,0 +1,66 @@
+{
+  "points": {
+    "boundary_source": "PLACEHOLDER bounding box (-106.665, 52.124, -106.635, 52.136) inherited from the earlier prototype (replace with the City neighbourhood polygon via --boundary-geojson)",
+    "roads_source": "https://overpass-api.de/api/interpreter",
+    "highway_filter": "motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|pedestrian",
+    "step_m": 50.0,
+    "n_ways": 215,
+    "n_street_segments": 341,
+    "n_points": 595,
+    "n_segments_with_points": 291,
+    "bbox": [
+      -106.665,
+      52.124,
+      -106.635,
+      52.136
+    ]
+  },
+  "last_updated_utc": "2026-10-16T23:11:11+00:00",
+  "git_commit": "dd4401c",
+  "coverage": {
+    "radius_m": 30.0,
+    "points": 595,
+    "points_with_any_image": 564,
+    "points_with_study_period_image": 0,
+    "points_with_study_period_flat": 0,
+    "images_found": 24095,
+    "years_checked": "<= 2026",
+    "by_year": [
+      {
+        "year": 2014,
+        "images_flat": 16955,
+        "images_360": 3628,
+        "points_with_flat": 503,
+        "points_with_360": 502
+      },
+      {
+        "year": 2017,
+        "images_flat": 105,
+        "images_360": 0,
+        "points_with_flat": 13,
+        "points_with_360": 0
+      },
+      {
+        "year": 2018,
+        "images_flat": 44,
+        "images_360": 0,
+        "points_with_flat": 1,
+        "points_with_360": 0
+      },
+      {
+        "year": 2020,
+        "images_flat": 0,
+        "images_360": 1905,
+        "points_with_flat": 0,
+        "points_with_360": 295
+      },
+      {
+        "year": 2023,
+        "images_flat": 0,
+        "images_360": 1458,
+        "points_with_flat": 0,
+        "points_with_360": 59
+      }
+    ]
+  }
+}

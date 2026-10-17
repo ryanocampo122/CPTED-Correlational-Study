@@ -1,0 +1,35 @@
+area,check,result,status,evidence
+Reddit Jun-Aug 2026,Posts dated inside 1 Jun - 31 Aug 2026 (Saskatoon time),"195 of 195 posts; first 2026-06-01, last 2026-08-31",PASS,Data/reddit_2026-06-01_2026-08-31/01_raw_collection
+Reddit Jun-Aug 2026,Comments posted after 31 Aug flagged and left out of analysis,"6,403 of 6,452 comments inside the window; 49 later comments flagged (comment_in_window)",PASS,comment_in_window column
+Reddit Jun-Aug 2026,Months covered,"Jun: 51 posts, Jul: 65 posts, Aug: 79 posts",INFO,
+Reddit Jun-Aug 2026,Days in the window with at least one post,80 of 92 days,INFO,
+Reddit Jun-Aug 2026,No duplicate records; every comment links to a collected post,"195 unique posts, 6,452 unique comments",PASS,
+Reddit Jun-Aug 2026,Usernames removed (salted hashes); no emails/phone numbers in cleaned_text,author column absent; 0 emails/phone numbers found,PASS,
+Reddit Jun-Aug 2026,No search query hit Reddit's ~250-result cap (would truncate recall),124 queries (31 terms x 4 sort orders); largest returned 184 results,PASS,Data/reddit_2026-06-01_2026-08-31/01_raw_collection/search_query_log_20261016.csv
+Reddit Jun-Aug 2026,Comment threads collected vs Reddit's own comment count,"6,452 of 7,703 (84%); 'load more' stubs not expanded, depth <= 4, <= 200 per post, deleted comments dropped",WARN,reddit_scraper.py ScraperConfig
+Reddit Jun-Aug 2026,Re-finds the June collection's posts for the overlapping days (1-10 Jun 2026),"12 of 14 re-found; 8 additional posts found for those days (crime seeds, more sorts)",PASS,Data/reddit_2025-06-11_2026-06-11
+Reddit Jun-Aug 2026,Posts whose own title/body contains a seed term,"117 of 195 (60%); Reddit search also matches other fields, so 40% of threads may be off-topic",WARN,text_has_safety_term / text_has_crime_term
+Reddit Jun-Aug 2026,"Downtown/CBD records (whole-word tag, other cities removed, in-window)","238 records (18 posts, 220 comments, 51 threads); 31.9% negative (95% CI 24.9-39.7, thread bootstrap)",INFO,Data/reddit_2026-06-01_2026-08-31/02_derived_analysis/neighbourhood_summary.csv
+Reddit Jun-Aug 2026,Downtown share negative if off-topic threads are dropped (sensitivity),192 of 238 Downtown records are in seed-term threads; 31.2% negative vs 31.9% for all,INFO,
+Reddit Jun-Aug 2026,What the 'people' cue measures Downtown,"26 Downtown records; 16 of them via 'homeless'/'homelessness' (top terms: homeless 13, empty 5, homelessness 4, alone 3)",WARN,mixes presence of people with mentions of a social group; split it before H4
+Reddit Jun-Aug 2026,"Environmental-cue precision (hand-checked held-out sample, June records)",lighting 50%; noise 93%; people 87%; time_of_day 90%; weather 90%. Lighting fires on traffic/car lights,WARN,Data/reddit_2026-06-01_2026-08-31/05_audits/env_cue_precision_heldout.csv
+Reddit Jun-Aug 2026,Pipeline self-checks (08_verify_outputs.py),"30 passed, 0 failed",PASS,Data/reddit_2026-06-01_2026-08-31/05_audits/verification_report.txt
+Reddit Jun-Aug 2026,Published tables reproduce from raw data (reddit_2026-06-01_2026-08-31),22 of 22 CSV outputs byte-identical; pipeline exit code 0,PASS,run_all.sh
+Reddit Jun 2025-Jun 2026,Published tables reproduce from raw data (reddit_2025-06-11_2026-06-11),23 of 23 CSV outputs byte-identical; pipeline exit code 0,PASS,run_all.sh
+Sample points,Points generated inside the CBD polygon (work plan step 1),423 points on 218 street segments from 254 OSM ways (9 road classes),INFO,Data/cv_pilot_2026-10/cbd/sample_points.csv
+Sample points,Every CBD point lies inside the boundary,423 of 423,PASS,Data/boundaries/central_business_district_osm.geojson
+Sample points,Spacing between consecutive points on the same segment (target ~50 m),"median 45.6 m, 90% between 42 and 59 m (n = 205 gaps); segments shorter than 75 m get one midpoint",PASS,
+Sample points,No duplicate points (minimum separation 10 m),closest pair 10.1 m apart,PASS,
+Sample points,Points per street segment,"median 2, max 6; 107 of 218 segments have a single point",INFO,
+Sample points,"Earlier run used a placeholder box, not the CBD boundary",only 212 of 595 placeholder points (36%) fall inside the CBD; the box missed 208 of 423 CBD points (49%),FAIL,Data/cv_pilot_2026-10/placeholder_box (superseded by Data/cv_pilot_2026-10/cbd)
+Sample points,Road classes sampled,"tertiary 155, secondary 151, primary 50, residential 37, unclassified 23, motorway 7",INFO,
+Sample points,Points on bridges or freeways (no building frontage to measure),"9 on bridges, 7 on motorway/trunk roads (11 in total, 3%)",WARN,Data/cv_pilot_2026-10/cbd/osm_bridge_way_ids.json; decide whether to drop them
+Street-level images,CBD points with a Mapillary image captured 1 Jun - 31 Aug 2026 (study period),0 of 423 points (within 30 m),FAIL,Data/cv_pilot_2026-10/cbd/coverage_points.csv
+Street-level images,CBD points with any Mapillary image,397 of 423,INFO,
+Street-level images,"Most recent image at each CBD point, by capture year","2014: 88, 2017: 1, 2018: 10, 2019: 10, 2020: 261, 2023: 27, none: 26",WARN,Data/cv_pilot_2026-10/cbd/coverage_points.csv
+Street-level images,Points whose newest image is 2020 or later (<= 6 years before the study period),288 of 423 (68%); all 360-degree captures,WARN,
+Street-level images,Study-period download attempt (60 spread points),0 images found; every miss logged,FAIL,Data/cv_pilot_2026-10/cbd/pilot_attempts.csv
+Street-level images,Validation run on the newest imagery (any date): images sourced,"10 of 10 spread points; capture years 2014: 1, 2019: 1, 2020: 6, 2023: 2",PASS,Data/cv_pilot_2026-10/cbd_latest_imagery
+Street-level images,Validation images taken on the point's own street (camera within 30 deg of the road),7 of 10; 2 were captured on the cross street,WARN,fix: require heading alignment in choose_image()
+Street-level images,CLIP ViT-B/32 land-use labels on the validation images,1 of 10 low-confidence; not yet compared with hand labels,WARN,Data/cv_pilot_2026-10/cbd_latest_imagery/validation_template_blind.csv
+Street-level images,Independent re-query: any Mapillary image over the CBD captured 2024 to 16 Oct 2026,0 images in 12 of 12 bbox tiles queried on 2026-10-17,FAIL,Mapillary API v4 /images

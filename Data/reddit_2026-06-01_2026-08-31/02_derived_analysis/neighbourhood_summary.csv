@@ -1,0 +1,23 @@
+neighbourhood,posts,comments,total_mentions,n_threads,mean_sentiment,mean_ci95_low,mean_ci95_high,pct_negative,pct_neg_ci95_low,pct_neg_ci95_high,n_negative,mean_sentiment_vader_original,pct_negative_vader_original,small_sample
+Downtown / CBD,18,220,238,51,0.21,0.116,0.319,31.9,24.9,39.7,76,0.232,30.3,False
+Riverbank / Meewasin,11,144,155,35,0.101,-0.029,0.248,41.9,32.2,50.5,65,0.121,40.0,False
+Broadway,1,38,39,22,0.076,-0.091,0.262,33.3,20.0,46.7,13,0.102,30.8,False
+Stonebridge,2,20,22,12,0.375,0.044,0.57,13.6,0.0,38.5,3,0.375,13.6,True
+Sutherland,1,18,19,11,0.088,-0.199,0.416,36.8,0.0,66.7,7,0.094,36.8,True
+Place Riel / USask,2,17,19,6,0.687,0.241,0.835,0.0,0.0,0.0,0,0.687,0.0,True
+Nutana,3,12,15,6,0.02,-0.253,0.68,40.0,0.0,57.1,6,0.02,40.0,True
+King George,1,9,10,2,0.544,0.496,0.974,10.0,0.0,11.1,1,0.545,10.0,True
+Mayfair,0,5,5,5,0.22,-0.346,0.763,40.0,0.0,80.0,2,0.425,20.0,True
+Pleasant Hill,1,3,4,2,0.437,-0.741,0.829,25.0,0.0,100.0,1,0.44,25.0,True
+Market Mall,0,3,3,3,0.341,0.221,0.44,0.0,0.0,0.0,0,0.341,0.0,True
+Downtown Terminal,0,3,3,2,0.244,0.202,0.265,0.0,0.0,0.0,0,0.244,0.0,True
+Caswell Hill,0,2,2,2,0.323,0.0,0.646,0.0,0.0,0.0,0,0.323,0.0,True
+Riversdale,0,2,2,1,0.655,,,0.0,,,0,0.655,0.0,True
+Mount Royal,1,1,2,2,-0.559,-0.591,-0.527,100.0,100.0,100.0,2,-0.559,100.0,True
+Lakeridge,0,1,1,1,0.748,,,0.0,,,0,0.748,0.0,True
+Arbor Creek,1,0,1,1,0.958,,,0.0,,,0,0.958,0.0,True
+Confederation Mall,0,0,0,0,,,,,,,0,,,True
+Westmount,0,0,0,0,,,,,,,0,,,True
+Meadowgreen,0,0,0,0,,,,,,,0,,,True
+Briarwood,0,0,0,0,,,,,,,0,,,True
+Silverspring,0,0,0,0,,,,,,,0,,,True

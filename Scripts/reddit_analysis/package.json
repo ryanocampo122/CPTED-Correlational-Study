@@ -1,0 +1,8 @@
+{
+  "name": "urbansentinel-report-builders",
+  "private": true,
+  "description": "docx report builders for the UrbanSentinel-Prairie August deliverable",
+  "dependencies": {
+    "docx": "^8.5.0"
+  }
+}

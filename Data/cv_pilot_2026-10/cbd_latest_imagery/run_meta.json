@@ -1,0 +1,123 @@
+{
+  "points": {
+    "boundary_source": "Data/boundaries/central_business_district_osm.geojson (match='central business', 1 polygon(s))",
+    "roads_source": "https://overpass-api.de/api/interpreter",
+    "highway_filter": "motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|pedestrian",
+    "step_m": 50.0,
+    "n_ways": 254,
+    "n_street_segments": 354,
+    "n_points": 423,
+    "n_segments_with_points": 218,
+    "bbox": [
+      -106.6702366,
+      52.1220374,
+      -106.6504642,
+      52.1339474
+    ]
+  },
+  "last_updated_utc": "2026-10-17T02:20:59+00:00",
+  "git_commit": "804ad46",
+  "coverage": {
+    "radius_m": 30.0,
+    "points": 423,
+    "points_with_any_image": 397,
+    "points_with_study_period_image": 0,
+    "points_with_study_period_flat": 0,
+    "images_found": 19139,
+    "years_checked": "<= 2026",
+    "by_year": [
+      {
+        "year": 2014,
+        "images_flat": 13707,
+        "images_360": 2907,
+        "points_with_flat": 371,
+        "points_with_360": 369
+      },
+      {
+        "year": 2017,
+        "images_flat": 105,
+        "images_360": 17,
+        "points_with_flat": 13,
+        "points_with_360": 0
+      },
+      {
+        "year": 2018,
+        "images_flat": 303,
+        "images_360": 0,
+        "points_with_flat": 35,
+        "points_with_360": 0
+      },
+      {
+        "year": 2019,
+        "images_flat": 172,
+        "images_360": 0,
+        "points_with_flat": 38,
+        "points_with_360": 0
+      },
+      {
+        "year": 2020,
+        "images_flat": 0,
+        "images_360": 1606,
+        "points_with_flat": 0,
+        "points_with_360": 264
+      },
+      {
+        "year": 2023,
+        "images_flat": 0,
+        "images_360": 322,
+        "points_with_flat": 0,
+        "points_with_360": 27
+      }
+    ]
+  },
+  "images": {
+    "selection_rule": "points ordered by deterministic farthest-point spread (start nearest centroid); first N with a usable image kept; per point: within radius; 360-degree panoramas allowed and cropped to two side-on views; ranked most recent year > Jun-Aug > flat > nearest",
+    "capture_window": null,
+    "in_study_period": 0,
+    "panoramas_used": 8,
+    "radius_m": 30.0,
+    "target_n": 10,
+    "points_attempted": 10,
+    "points_with_image": 10,
+    "hit_rate": 1.0,
+    "n_images": 10,
+    "summer_captures": 2,
+    "capture_years": {
+      "2014": 1,
+      "2019": 1,
+      "2020": 6,
+      "2023": 2
+    },
+    "mapillary_license": "CC BY-SA 4.0 (attribute Mapillary and contributors; share-alike on derivatives)"
+  },
+  "score": {
+    "model": "openai/clip-vit-base-patch32",
+    "device": "mps",
+    "views_per_image": 3,
+    "prompts_file": "Scripts/cv_pilot/clip_prompts.json",
+    "libs": {
+      "python": "3.14.0",
+      "numpy": "2.3.4",
+      "pandas": "2.3.3",
+      "PIL": "12.3.0",
+      "requests": "2.32.5",
+      "torch": "2.9.1",
+      "transformers": "4.57.6"
+    },
+    "caveat": "uncalibrated zero-shot probabilities; not validated; n<=10"
+  },
+  "reddit": {
+    "posts_file": "saskatoon_safety_posts_20261016_CLEANED_v2.csv",
+    "comments_file": "saskatoon_safety_comments_20261016_CLEANED_v2.csv",
+    "n_posts": 195,
+    "n_comments_total": 6452,
+    "n_comments_in_window": 6403,
+    "reddit_dir": "Data/reddit_2026-06-01_2026-08-31",
+    "window": "2026-06-01..2026-08-31 (America/Regina)",
+    "downtown_definition": "vloc_downtown_cbd (hand-validated tag; other-city mentions removed)",
+    "n_downtown_records": 238
+  },
+  "report": {
+    "file": "pilot_report.md"
+  }
+}

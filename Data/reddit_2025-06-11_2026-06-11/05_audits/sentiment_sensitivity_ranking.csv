@@ -1,0 +1,41 @@
+spec,rank_by_pct_negative,neighbourhood,pct_negative,mentions
+A_original,1,Downtown / CBD,39.9,306
+A_original,2,Riversdale,38.9,18
+A_original,3,Sutherland,37.7,53
+A_original,4,Stonebridge,29.5,44
+A_original,5,Pleasant Hill,29.4,17
+A_original,6,Caswell Hill,25.5,47
+A_original,7,Riverbank / Meewasin,22.3,121
+A_original,8,Nutana,20.0,20
+A_original,9,Place Riel / USask,18.8,48
+A_original,10,Broadway,15.7,51
+B_adjusted,1,Downtown / CBD,41.8,306
+B_adjusted,2,Riversdale,38.9,18
+B_adjusted,3,Sutherland,37.7,53
+B_adjusted,4,Stonebridge,29.5,44
+B_adjusted,5,Pleasant Hill,29.4,17
+B_adjusted,6,Caswell Hill,27.7,47
+B_adjusted,7,Riverbank / Meewasin,23.1,121
+B_adjusted,8,Place Riel / USask,22.9,48
+B_adjusted,9,Nutana,20.0,20
+B_adjusted,10,Broadway,15.7,51
+C_adjusted_case,1,Downtown / CBD,41.8,306
+C_adjusted_case,2,Sutherland,39.6,53
+C_adjusted_case,3,Riversdale,38.9,18
+C_adjusted_case,4,Stonebridge,29.5,44
+C_adjusted_case,5,Pleasant Hill,29.4,17
+C_adjusted_case,6,Caswell Hill,27.7,47
+C_adjusted_case,7,Riverbank / Meewasin,23.1,121
+C_adjusted_case,8,Place Riel / USask,22.9,48
+C_adjusted_case,9,Nutana,20.0,20
+C_adjusted_case,10,Broadway,15.7,51
+D_masked,1,Downtown / CBD,42.5,306
+D_masked,2,Riversdale,38.9,18
+D_masked,3,Sutherland,37.7,53
+D_masked,4,Stonebridge,29.5,44
+D_masked,5,Pleasant Hill,29.4,17
+D_masked,6,Caswell Hill,25.5,47
+D_masked,7,Riverbank / Meewasin,24.0,121
+D_masked,8,Place Riel / USask,20.8,48
+D_masked,9,Nutana,20.0,20
+D_masked,10,Broadway,15.7,51

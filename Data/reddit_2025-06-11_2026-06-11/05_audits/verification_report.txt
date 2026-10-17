@@ -1,0 +1,28 @@
+Dataset: reddit_2025-06-11_2026-06-11  (collection version 2026-06)
+[PASS] NEIGHBOURHOODS_ORIGINAL matches the scraper that produced the June data
+[PASS] ENV_CUES_ORIGINAL matches the scraper that produced the June data
+[PASS] posts: stored env_lighting == substring match of original vocabulary
+[PASS] posts: stored env_noise == substring match of original vocabulary
+[PASS] posts: stored env_weather == substring match of original vocabulary
+[PASS] posts: stored env_time_of_day == substring match of original vocabulary
+[PASS] posts: stored env_people == substring match of original vocabulary
+[PASS] posts: stored sentiment_compound == stock VADER(cleaned_text)
+[PASS] comments: stored env_lighting == substring match of original vocabulary
+[PASS] comments: stored env_noise == substring match of original vocabulary
+[PASS] comments: stored env_weather == substring match of original vocabulary
+[PASS] comments: stored env_time_of_day == substring match of original vocabulary
+[PASS] comments: stored env_people == substring match of original vocabulary
+[PASS] comments: stored sentiment_compound == stock VADER(cleaned_text)
+[PASS] August neighbourhood_summary_corrected.csv reproduces (identical values; only tied rows ordered differently)
+[PASS] August env_cues_by_site.csv reproduces byte-for-byte
+[PASS] August time_of_day_by_site.csv reproduces byte-for-byte
+[PASS] August seasonal_trend.csv reproduces byte-for-byte
+[PASS] cleaned row counts equal raw (426 / 14,889)
+[PASS] every original posts column unchanged in cleaned file
+[PASS] every original comments column unchanged in cleaned file
+[PASS] neighbourhood_summary reconciles with cleaned rows for all 22 areas 
+[PASS] no pending other-city review decisions
+[PASS] all 15 'exclude' decisions are reflected in vloc_* tags
+[PASS] no quote sample contains an excluded record 
+
+All hard checks passed.
