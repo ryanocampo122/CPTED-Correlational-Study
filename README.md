@@ -1,8 +1,8 @@
-# UrbanSentinel-Prairie
+# CPTED Computer Vision and Correlational Sentiment analysis of Public Safety - A Study on Crime Patterns - Saskatoon
 
 USask AIRI 2026 project on CPTED, crime and perceived safety in Saskatoon.
 Co-leads Dr. Varuni Jayasooriya (SENS) and Dr. Timothy Kang (Sociology); collaborators Dr. Khan Wahid (ECE) and
-Elisabeth Miller (City of Saskatoon, Neighbourhood Safety and CPTED); graduate RA Ryan Ocampo.
+Elisabeth Miller (City of Saskatoon, Neighbourhood Safety and CPTED); RA Ryan Ocampo.
 
 The study follows the **revised work plan** (`Plan/workplan_revised_2026-10.pdf`): a cross-sectional, correlational
 study on open secondary data for **1 June – 31 August 2026**. CPTED features measured from street-level imagery (X) are
@@ -13,7 +13,7 @@ segments in Downtown/CBD.
 
 | You want | Open |
 |---|---|
-| The latest update for supervisors | `Deliverables/2026-10_october_update/UrbanSentinel_October2026_Progress_Report.docx` |
+| The latest update for supervisors | `Deliverables/2026-10_october_update/` |
 | How the whole study fits together, and how to run it | `Docs/workflow.md` |
 | What has been checked, and how | `Docs/verification/october_2026_checks.md` |
 | Open decisions and known problems | `Docs/decisions_and_issues.md` |
@@ -72,4 +72,3 @@ bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31            
 - Numbers in deliverables come from scripts (`Scripts/reporting/report_numbers.py`), not by hand.
 - Reddit text is not quoted outside the team; images credit Mapillary (CC BY-SA 4.0); maps credit OpenStreetMap.
   See `Docs/data_ethics.md`.
-- Work is tracked in git on a branch, one commit per logical step; `.env` is never committed.
