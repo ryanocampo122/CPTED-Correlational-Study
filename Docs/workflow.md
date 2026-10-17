@@ -60,6 +60,11 @@ bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31 --publish
 # Points, imagery coverage, pilot (network for points/coverage/images)
 .venv/bin/python Scripts/cv_pilot/pilot.py points   --out Data/cv_pilot_2026-10/cbd
 .venv/bin/python Scripts/cv_pilot/pilot.py coverage --out Data/cv_pilot_2026-10/cbd
+.venv/bin/python Scripts/cv_pilot/pilot.py images   --out Data/cv_pilot_2026-10/cbd    # study period: 0 found
+# 10-image validation on the newest imagery (cbd_latest_imagery/ already holds a copy of the points and run_meta.json)
+for s in images score reddit report; do
+  .venv/bin/python Scripts/cv_pilot/pilot.py $s --any-date --out Data/cv_pilot_2026-10/cbd_latest_imagery
+done
 
 # Checks, figures, report
 .venv/bin/python Scripts/verification/verify_october_2026.py [--rerun-pipeline] [--network]
@@ -70,6 +75,15 @@ bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31 --publish
 # Tests (offline)
 .venv/bin/python Scripts/cv_pilot/tests/test_pilot.py
 ```
+
+The report build writes the generated base, `Deliverables/2026-10_october_update/UrbanSentinel_October2026_Progress_Report.docx`.
+The report as sent, `CPTED_ComputerVis_2026.docx` (and its PDF), was edited by hand after that, so a rebuild neither
+reproduces nor overwrites it.
+
+**Related data, outside this pipeline.** `Data/climate_2010_2025/`, `Data/crime/` and `Data/reddit_2009_2025/` hold
+data collected for the related Sentinel climate–crime research (2010–2025, four prairie cities), with their scripts
+in `Scripts/reddit_collection/reddit_acquistion_2025/` and `Scripts/sentiment_analysis_2025/`. None of the commands
+above use or regenerate them. `Data/crime/` is Statistics Canada annual counts, not the SPS extract for step K2.
 
 ## Conventions
 
