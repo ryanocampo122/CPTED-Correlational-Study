@@ -20,7 +20,7 @@ segments in Downtown/CBD.
 | Open decisions and known problems | `Docs/decisions_and_issues.md` |
 | Any other documentation | `Docs/README.md` |
 
-## Status (17 October 2026)
+## Status
 
 | October task (work plan p. 5) | Status |
 |---|---|
@@ -35,7 +35,7 @@ segments in Downtown/CBD.
 
 ```
 Plan/            governing documents: revised work plan, grant application
-Docs/            detailed documentation, verification checks, figures, the literature review
+Docs/            detailed documentation, verification checks, figures, history, the literature review
 Data/
   reddit_2026-06-01_2026-08-31/   CURRENT  study-period Reddit: raw, cleaned, tables, audits, charts
   reddit_2025-06-11_2026-06-11/   earlier  12-month collection behind the July/August reports (corrected)
@@ -74,7 +74,7 @@ with the published outputs) into a new `RESULTS_FINAL/EXECUTION-<n>/` and nothin
 `FLIGHT_SUMMARY.md` first. Details and options: `Docs/workflow.md` ("One command") and `./flight --help`.
 
 Environment: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt` (Python 3.14; the flight does
-this itself, and fetches the pinned CLIP model listed in `requirements.txt`). Credentials are in `.env` at the root (committed to the private repository; a copy is in
+this itself). Credentials are in `.env` at the root (committed to the private repository; a copy is in
 `.venv/keys.txt`): `PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`, `COMPUTERVISION_SENTINEL_HASH_SALT`,
 `MAPILLARY_TOKEN`. Single steps, to run one on its own, are listed in `Docs/workflow.md`; the most used:
 
