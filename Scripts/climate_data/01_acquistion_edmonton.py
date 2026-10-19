@@ -32,9 +32,7 @@ Methodological Notes
 
 import requests
 import pandas as pd
-from datetime import date
 from io import StringIO
-import numpy as np
 
 # --- CONFIGURATION (Edmonton) ---
 CITY_NAME = "Edmonton"
@@ -175,7 +173,7 @@ def download_raw_data(station_id, year, month, timeframe):
     url = BASE_URL.format(station_id=station_id, year=year, month=month, timeframe=timeframe)
 
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=30)
         response.raise_for_status()
 
         raw_text = response.text

@@ -198,7 +198,7 @@ def load_boundary(geojson_path: str | None = None, name_match: str | None = None
         return bbox_polygon(bbox), bbox, (
             f"PLACEHOLDER bounding box {bbox} inherited from the earlier prototype "
             "(replace with the City neighbourhood polygon via --boundary-geojson)")
-    obj = json.loads(Path(geojson_path).read_text())
+    obj = json.loads(Path(geojson_path).read_text(encoding="utf-8"))
     polys = []
     for props, geom in _geojson_geometries(obj, name_match):
         if not geom:
@@ -274,7 +274,7 @@ def fetch_roads_overpass(bbox: tuple, highway_regex: str = DEFAULT_HIGHWAYS, ses
 
 def load_roads_geojson(path: str) -> list[dict]:
     """Local (Multi)LineString GeoJSON -> way dicts in the same shape as parse_overpass."""
-    obj = json.loads(Path(path).read_text())
+    obj = json.loads(Path(path).read_text(encoding="utf-8"))
     ways = []
     for i, (props, geom) in enumerate(_geojson_geometries(obj, None)):
         if not geom:
@@ -560,7 +560,7 @@ class MapillaryClient:
             r.raise_for_status()
             time.sleep(self.pause_s)
             return r.json().get("data", [])
-        except SystemExit:
+        except SystemExit:  # pylint: disable=try-except-raise  # let it past the broad handler below
             raise
         except Exception as exc:                          # noqa: BLE001
             raise RuntimeError(scrub(str(exc), self.token)) from None
@@ -718,7 +718,7 @@ def git_commit() -> str:
     """Short hash of HEAD, or 'n/a' outside a git checkout."""
     import subprocess
     try:
-        return subprocess.run(["git", "-C", str(REPO_ROOT), "rev-parse", "--short", "HEAD"],
+        return subprocess.run(["git", "-C", str(REPO_ROOT), "rev-parse", "--short", "HEAD"], check=False,
                               capture_output=True, text=True, timeout=5).stdout.strip() or "n/a"
     except Exception:                                      # noqa: BLE001
         return "n/a"

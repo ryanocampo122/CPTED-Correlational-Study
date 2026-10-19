@@ -3,7 +3,6 @@ Run from the repo root:  .venv/bin/python Scripts/cv_pilot/tests/test_pilot.py  
 from __future__ import annotations
 
 import json
-import math
 import sys
 import tempfile
 from pathlib import Path

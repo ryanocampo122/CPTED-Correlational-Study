@@ -45,7 +45,6 @@ USAGE
 """
 
 import pandas as pd
-
 import common as c
 
 
@@ -56,14 +55,10 @@ ENV_LOG_COLS = ["record_type", "record_id", "cue", "original_tag", "corrected_ta
 
 
 def excerpt(text, n: int = 180) -> str:
-    """First n chars, whitespace collapsed (change-log previews)."""
     return " ".join(str(text)[:n].split()) if isinstance(text, str) else ""
 
 
 def build(df: pd.DataFrame, record_type: str, text_col: str, id_col: str):
-    """Add validated tags to one record type: vloc_* places, venv_* cues, adjusted
-    sentiment, local time and thread_id. Returns (df, location change log, cue change log);
-    each log row is one tag that differs from the raw file's."""
     df = df.copy()
     c.neighbourhood_tags(df, text_col, id_col, record_type)
     vcols = [c.slug(n, "vloc_") for n in c.NEIGHBOURHOODS]
@@ -132,7 +127,6 @@ def build(df: pd.DataFrame, record_type: str, text_col: str, id_col: str):
 
 
 def add_thread_tags(comments: pd.DataFrame, posts: pd.DataFrame) -> None:
-    """thread_vloc_* = the comment or its parent post is tagged. Modifies comments in place."""
     for name in c.NEIGHBOURHOODS:
         col = c.slug(name, "vloc_")
         tagged_posts = set(posts.loc[posts[col], "id"].astype(str))

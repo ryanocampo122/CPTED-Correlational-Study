@@ -1,0 +1,53 @@
+# Linter settings only (this repository is not a Python package). Read by the VS Code Pylint and Pylance
+# extensions and by `pylint` / `pyright` on the command line. Flake8 cannot read this file: see .flake8.
+
+[tool.pylint.main]
+# Scripts import their sibling modules (pilot_lib, pilot, common) after adding these folders to sys.path at
+# run time; give Pylint the same folders so a single open file still resolves them.
+init-hook = """
+import os, sys
+from pylint.config import find_default_config_files
+root = os.path.dirname(os.path.abspath(next(find_default_config_files())))
+sys.path[:0] = [os.path.join(root, 'Scripts', 'cv_pilot'), os.path.join(root, 'Scripts', 'reddit_analysis', 'scripts')]
+"""
+# Kept exactly as collected or as sent; never edited, so not linted.
+ignore-paths = ['(^|.*/)(Data|Deliverables|Reference|RESULTS_FINAL)/.*']
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint."messages control"]
+disable = [
+    # documentation and layout (same as the editor settings)
+    "missing-module-docstring", "missing-class-docstring", "missing-function-docstring",
+    "line-too-long", "trailing-whitespace", "import-outside-toplevel", "unused-variable",
+    "logging-fstring-interpolation",
+    # naming and style conventions this codebase does not follow
+    "invalid-name",                     # short names (F, S, L, A) for the flight, step and checks objects
+    "wrong-import-position",            # imports after the sys.path set-up for sibling modules
+    "wrong-import-order",
+    "multiple-statements",              # compact one-liners in the 2010-2025 climate scripts
+    "superfluous-parens", "consider-iterating-dictionary", "consider-using-f-string", "use-maxsplit-arg",
+    "unnecessary-lambda-assignment", "unnecessary-direct-lambda-call", "no-else-break", "use-dict-literal",
+    "expression-not-assigned",          # make_figures.py groups axis calls in a tuple on one line
+    # size and duplication (analysis scripts are long, linear and deliberately self-contained)
+    "duplicate-code", "too-many-locals", "too-many-statements", "too-many-branches", "too-many-arguments",
+    "too-many-positional-arguments", "too-many-instance-attributes", "too-many-return-statements",
+    "too-many-boolean-expressions",
+    # intentional patterns, each checked
+    "broad-exception-caught",           # a failing step is reported and the run goes on, never a crash
+    "global-statement",                 # CLI options override module-level default paths
+    "cell-var-from-loop",               # every case is a lambda run inside its own iteration (.map/.apply/sorted)
+    "protected-access",                 # internal helpers shared between this project's own modules
+    "unused-argument",                  # test fakes keep the real signatures; legacy climate `timeframe`
+]
+
+[tool.pyright]
+# Pylance (VS Code) and pyright: same sibling-module folders as above, the project environment, and no
+# diagnostics for data and archived deliverables. Type checking stays off, as in the editor's default.
+extraPaths = ["Scripts/cv_pilot", "Scripts/reddit_analysis/scripts"]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "off"
+exclude = ["**/node_modules", "**/__pycache__", ".venv", "Data", "Deliverables", "Reference", "RESULTS_FINAL"]
+ignore = ["Data", "Deliverables", "Reference", "RESULTS_FINAL"]

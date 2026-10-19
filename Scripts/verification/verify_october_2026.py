@@ -187,7 +187,7 @@ def reddit_checks(rerun: bool) -> None:
             with tempfile.TemporaryDirectory() as tmp:
                 env = {**os.environ, "COMPUTERVISION_SENTINEL_OUT_DIR": tmp}
                 r = subprocess.run(["bash", str(REPO / "Scripts/reddit_analysis/run_all.sh"), ds.name],
-                                   env=env, capture_output=True, text=True)
+                                   env=env, capture_output=True, text=True, check=False)
                 files = [p.relative_to(tmp) for p in Path(tmp).rglob("*.csv")]
                 same = [f for f in files if filecmp.cmp(Path(tmp) / f, ds / f, shallow=False)]
                 add(A if ds == REDDIT else "Reddit Jun 2025-Jun 2026",

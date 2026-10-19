@@ -36,9 +36,7 @@ Methodological Notes
 
 import requests
 import pandas as pd
-from datetime import date
 from io import StringIO
-import numpy as np
 
 # --- CONFIGURATION (Regina - Multiple Stations) ---
 CITY_NAME = "Regina"

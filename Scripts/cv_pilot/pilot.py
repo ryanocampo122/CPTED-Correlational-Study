@@ -1,32 +1,24 @@
 #!/usr/bin/env python3
 """
-pilot.py  -  ComputerVision_Sentinel | computer-vision pilot CLI (October 2026)
-===============================================================================
-Runs the work-plan CV pipeline on a small Downtown sample (<= 10 images).
+pilot.py  -  ComputerVisionSentinel-Prairie | October 2026 computer-vision pilot
+======================================================================
+A deliberately small end-to-end run of the work-plan pipeline on <= 10 Downtown images:
 
-Usage (repo root):  .venv/bin/python Scripts/cv_pilot/pilot.py <step> --out <folder> [options]
+  points   1. sample points every ~50 m along OSM streets, clipped to the Downtown boundary
+  images   2. pick a spatially spread set of points, pull ONE Mapillary image for each
+  score    3. CLIP zero-shot: land-use typology + CPTED cue scores for each image
+  reddit   4. link to Reddit (r/saskatoon, 1 Jun - 31 Aug 2026) and compare cue by cue
+  report   5. write pilot_report.md, contact_sheet.jpg and a blind validation sheet
 
-Steps. Each reads the previous step's files from --out.
-  check     pre-flight: libraries, Reddit files, Mapillary token, Overpass. Writes nothing.
-  points    points every ~50 m on OSM streets inside the boundary  -> sample_points.csv/.geojson
-  coverage  every Mapillary image near every point, by year (slow) -> coverage_*.csv
-  images    one image per point, spread order, until --n found     -> images/, image_manifest.csv,
-                                                                       pilot_attempts.csv
-  score     CLIP land-use typology + CPTED cue scores              -> clip_scores.csv
-  reddit    Downtown Reddit summary, cue-by-cue comparison         -> reddit_*.csv
-  report    pilot_report.md, contact_sheet.jpg, validation_template_blind.csv
-  all       points, coverage, images, score, reddit, report
+  python pilot.py check        # 1-minute pre-flight: token, Overpass, libraries, Reddit files
+  python pilot.py coverage     # after `points`: which years of imagery exist at each point
+  By default only images captured in the study period (1 Jun - 31 Aug 2026) are used, including
+  360-degree panoramas cropped to side-on views. --any-date / --no-pano change that.
+  python pilot.py all          # run everything
+  python pilot.py <step>       # or one step at a time
 
-Behaviour worth knowing
-  * --out defaults to Data/cv_pilot_2026-10/cbd/, a tracked (published) folder. Test runs
-    use a separate folder.
-  * `images` keeps only 1 Jun - 31 Aug 2026 captures by default. None exist for the CBD,
-    so the step exits with "No usable Mapillary images". --any-date removes the filter.
-  * 360-degree images are used by default, cut into two side-on views (--no-pano skips them).
-  * Every step records its parameters and the git commit in <out>/run_meta.json.
-
-Feasibility pilot, not a result: <= 10 images support no inference about CPTED, crime or
-perception.
+This is a feasibility pilot, NOT a result: n <= 10 images cannot support any inference
+about CPTED and crime/perception. It shows that every stage runs and joins.
 """
 from __future__ import annotations
 
@@ -50,14 +42,12 @@ STUDY_START, STUDY_END = "2026-06-01", "2026-08-31"          # work plan study p
 # helpers
 # --------------------------------------------------------------------------- #
 def out_dir(a) -> Path:
-    """--out as a Path, created if missing."""
     p = Path(a.out)
     p.mkdir(parents=True, exist_ok=True)
     return p
 
 
 def update_meta(out: Path, key: str, value: dict) -> None:
-    """Merge one step's parameters into run_meta.json, stamped with time and git commit."""
     f = out / "run_meta.json"
     meta = json.loads(f.read_text()) if f.exists() else {}
     meta[key] = value
@@ -72,7 +62,6 @@ def read_meta(out: Path) -> dict:
 
 
 def lib_versions() -> dict:
-    """Versions of the libraries that affect results, for run_meta.json."""
     v = {"python": sys.version.split()[0]}
     for m in ("numpy", "pandas", "PIL", "requests", "torch", "transformers"):
         try:
@@ -84,7 +73,6 @@ def lib_versions() -> dict:
 
 
 def as_bool(s: pd.Series) -> pd.Series:
-    """CSV booleans ('True', '1', 'yes', ...) -> bool Series."""
     return s.map(lambda v: str(v).strip().lower() in ("true", "1", "1.0", "yes"))
 
 
@@ -92,8 +80,6 @@ def as_bool(s: pd.Series) -> pd.Series:
 # 1. points
 # --------------------------------------------------------------------------- #
 def cmd_points(a, session=None) -> pd.DataFrame:
-    """Step 1: sample points inside the boundary -> sample_points.csv/.geojson.
-    Roads come from Overpass (live OSM) unless --roads-geojson is given."""
     out = out_dir(a)
     polys, bbox, bsrc = L.load_boundary(a.boundary_geojson, a.boundary_name)
     if a.roads_geojson:
@@ -128,7 +114,6 @@ def cmd_points(a, session=None) -> pd.DataFrame:
 # 2. images
 # --------------------------------------------------------------------------- #
 def view_type(compass, road_bearing: float) -> tuple[float | None, str]:
-    """Camera heading vs road bearing -> (angle 0-90, 'along_road' | 'oblique' | 'side_on' | 'unknown')."""
     if compass is None or (isinstance(compass, float) and np.isnan(compass)):
         return None, "unknown"
     d = L.angle_diff(float(compass), float(road_bearing))
@@ -137,10 +122,6 @@ def view_type(compass, road_bearing: float) -> tuple[float | None, str]:
 
 
 def cmd_images(a, client=None) -> pd.DataFrame:
-    """Step 2: walk points in spread order and keep the first --n with a usable image.
-    Writes images/, image_manifest.csv and pilot_attempts.csv (misses included).
-    Known gap (issue #4): camera heading is not checked against the road, so a 360-degree
-    image taken on the cross street passes; its heading_vs_road_deg is recorded as 90."""
     out = out_dir(a)
     pts = pd.read_csv(out / "sample_points.csv")
     client = client or L.MapillaryClient(L.get_mapillary_token())
@@ -227,7 +208,6 @@ def cmd_images(a, client=None) -> pd.DataFrame:
 # 2b. coverage: what imagery exists, by year, at every sample point
 # --------------------------------------------------------------------------- #
 def _tiles(bbox, step):
-    """Split bbox into step-degree tiles (Mapillary bbox search must be < 0.01 sq deg)."""
     w, s_, e, n = bbox
     x = w
     while x < e:
@@ -239,7 +219,6 @@ def _tiles(bbox, step):
 
 
 def _fetch_all(client, box, window, depth=0) -> list[dict]:
-    """All images in box. A response at the API cap is re-queried as four quarters (max depth 6)."""
     res = client.search_bbox(box, window, limit=L.MAPILLARY_MAX_LIMIT)
     if len(res) >= L.MAPILLARY_MAX_LIMIT and depth < 6:      # capped: split into quarters
         w, s_, e, n = box
@@ -324,8 +303,6 @@ def cmd_coverage(a, client=None) -> pd.DataFrame:
 # 3. score (CLIP)
 # --------------------------------------------------------------------------- #
 def cmd_score(a, encoder=None) -> pd.DataFrame:
-    """Step 3: CLIP-score every image in image_manifest.csv -> clip_scores.csv.
-    encoder is injectable so tests run without the model."""
     from PIL import Image
     out = out_dir(a)
     man = pd.read_csv(out / "image_manifest.csv")
@@ -353,7 +330,6 @@ def cmd_score(a, encoder=None) -> pd.DataFrame:
 # 4. reddit
 # --------------------------------------------------------------------------- #
 def find_reddit_dir(given: str | None) -> Path:
-    """--reddit-dir, else the study-period dataset folder."""
     if given:
         return Path(given)
     d = L.REPO_ROOT / "Data" / "reddit_2026-06-01_2026-08-31"
@@ -385,14 +361,12 @@ def load_reddit(reddit_dir: Path) -> tuple[pd.DataFrame, dict]:
 
 
 def rate_row(k: int, n: int) -> dict:
-    """k of n as a rate per 100 with a Wilson 95% CI."""
     lo, hi = L.wilson(k, n)
     return {"k": k, "n": n, "per_100": round(100 * k / n, 1) if n else np.nan,
             "ci95_low": round(100 * lo, 1), "ci95_high": round(100 * hi, 1)}
 
 
 def downtown_summary(recs: pd.DataFrame) -> pd.DataFrame:
-    """Mean sentiment and % negative (with CIs) for Downtown, the rest, and all records."""
     rows = []
     for name, df in (("Downtown / CBD (validated tag)", recs[recs.vloc_downtown_cbd]),
                      ("Rest of study corpus", recs[~recs.vloc_downtown_cbd]),
@@ -411,8 +385,6 @@ def downtown_summary(recs: pd.DataFrame) -> pd.DataFrame:
 
 
 def cue_flags(recs: pd.DataFrame, lex: dict) -> tuple[pd.DataFrame, dict]:
-    """Per-record cue flags: audited cues from existing columns, exploratory cues from
-    reddit_lexicon.json regexes. Returns (flags, compiled regexes)."""
     flags, rx = pd.DataFrame(index=recs.index), {}
     for k, v in lex["audited_cues"].items():
         flags[k] = recs[v["column"]]
@@ -423,7 +395,6 @@ def cue_flags(recs: pd.DataFrame, lex: dict) -> tuple[pd.DataFrame, dict]:
 
 
 def audited_precision(reddit_dir: Path) -> dict:
-    """{cue: (precision, n_correct, n_judged)} from the held-out audit; {} if absent."""
     f = reddit_dir / "05_audits" / "env_cue_precision_heldout.csv"
     if not f.exists():
         return {}
@@ -432,7 +403,6 @@ def audited_precision(reddit_dir: Path) -> dict:
 
 
 def anchors_table(recs: pd.DataFrame, lex: dict) -> pd.DataFrame:
-    """Records naming each street/landmark anchor, citywide and inside the Downtown tag."""
     rows = []
     for name, pat in lex["place_anchors"].items():
         r = re.compile(pat, re.I)
@@ -460,7 +430,6 @@ def cue_samples(recs, flags, rx, n=8) -> pd.DataFrame:
 
 
 def clip_side(clip: pd.DataFrame | None, targets: list[str]) -> tuple[str, float]:
-    """The CLIP measure a Reddit cue is compared with: (description, value on pilot images)."""
     if not targets:
         return "n/a (lighting comes from the detector step, Nov)", np.nan
     parts, vals = [], []
@@ -478,8 +447,6 @@ def clip_side(clip: pd.DataFrame | None, targets: list[str]) -> tuple[str, float
 
 
 def cmd_reddit(a) -> dict:
-    """Step 4: Downtown summary, cue comparison and place anchors -> reddit_*.csv.
-    Snippets for precision checks go to _local_audit_do_not_share/ (git-ignored)."""
     out = out_dir(a)
     rd = find_reddit_dir(a.reddit_dir)
     recs, info = load_reddit(rd)
@@ -542,7 +509,6 @@ def cmd_reddit(a) -> dict:
 # 5. report
 # --------------------------------------------------------------------------- #
 def contact_sheet(out: Path, man: pd.DataFrame, clip: pd.DataFrame | None, cols: int = 5, w: int = 384) -> Path:
-    """Grid of pilot images captioned with point, date and CLIP type -> contact_sheet.jpg."""
     from PIL import Image, ImageDraw
     tiles = []
     for r in man.itertuples():
@@ -570,7 +536,6 @@ def contact_sheet(out: Path, man: pd.DataFrame, clip: pd.DataFrame | None, cols:
 
 
 def md_table(df: pd.DataFrame) -> str:
-    """DataFrame -> Markdown table; NaN prints blank."""
     cols = list(df.columns)
     lines = ["| " + " | ".join(str(c) for c in cols) + " |", "|" + "|".join("---" for _ in cols) + "|"]
     for _, r in df.iterrows():
@@ -579,8 +544,6 @@ def md_table(df: pd.DataFrame) -> str:
 
 
 def cmd_report(a) -> Path:
-    """Step 5: pilot_report.md, contact_sheet.jpg and validation_template_blind.csv.
-    Every number in the report is read from files in --out."""
     out = out_dir(a)
     meta = read_meta(out)
     man = pd.read_csv(out / "image_manifest.csv")
@@ -689,8 +652,6 @@ def cmd_report(a) -> Path:
 # check / CLI
 # --------------------------------------------------------------------------- #
 def cmd_check(a) -> int:
-    """Pre-flight check. Returns 0 if everything passes. One Mapillary and one Overpass
-    request; writes nothing."""
     ok = True
 
     def line(name, passed, msg=""):
@@ -761,7 +722,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv=None) -> int:
-    """CLI entry point."""
     a = build_parser().parse_args(argv)
     a.step_name, a.step = a.step, a.step_m          # positional step name vs spacing in metres
     if a.any_date:

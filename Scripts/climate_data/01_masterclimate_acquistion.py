@@ -36,9 +36,7 @@ Methodological Notes
 """
 import requests
 import pandas as pd
-from datetime import date
 from io import StringIO
-import numpy as np
 
 # --- CONFIGURATION (All Cities) ---
 CITIES_CONFIG = {
@@ -291,8 +289,8 @@ def process_city(city_name, station_ids):
             for station_id in station_ids:
                 # Download HOURLY data
                 if not hourly_downloaded:
-                  hourly_df, hourly_rows = download_raw_data(station_id, year, month, TIMEFRAME_HOURLY)
-                if hourly_rows > 0:
+                    hourly_df, hourly_rows = download_raw_data(station_id, year, month, TIMEFRAME_HOURLY)
+                    if hourly_rows > 0:
                         print(f" Hourly {year}-{month:02d} Station {station_id} ({hourly_rows} rows)")
                         hourly_data_list.append(clean_and_standardize(hourly_df, HOURLY_COLUMN_MAPPING, TIMEFRAME_HOURLY))
                         hourly_downloaded = True
@@ -368,7 +366,7 @@ def process_city(city_name, station_ids):
 
 def main():
     print(f"\n{'#'*60}")
-    print(f"### MASTER CLIMATE DATA COLLECTION FOR ALL CITIES ###")
+    print("### MASTER CLIMATE DATA COLLECTION FOR ALL CITIES ###")
     print(f"### Period: {START_YEAR} - {END_YEAR} ###")
     print(f"{'#'*60}")
     
@@ -392,7 +390,7 @@ def main():
     master_daily_filename = f"Master_All_Cities_Daily_Climate_{START_YEAR}_to_{END_YEAR}.csv"
     master_daily_df.to_csv(master_daily_filename)
     print(f"\n{'='*60}")
-    print(f"  MASTER DAILY DATA SUMMARY:")
+    print("  MASTER DAILY DATA SUMMARY:")
     print(f"   Total Rows: {len(master_daily_df)}")
     print(f"   Cities: {', '.join(CITIES_CONFIG.keys())}")
     print(f"   Date Range: {master_daily_df.index.min().date()} → {master_daily_df.index.max().date()}")
@@ -417,7 +415,7 @@ def main():
         master_monthly_df.sort_values(by=['City', master_monthly_df.index.name], inplace=True)
         master_monthly_filename = f"Master_All_Cities_Monthly_Climate_{START_YEAR}_to_{END_YEAR}.csv"
         master_monthly_df.to_csv(master_monthly_filename)
-        print(f"\n MASTER MONTHLY DATA:")
+        print("\n MASTER MONTHLY DATA:")
         print(f"   Total Rows: {len(master_monthly_df)}")
         print(f"  Saved → {master_monthly_filename}")
     
@@ -437,12 +435,12 @@ def main():
         master_yearly_df.sort_values(by=['City', master_yearly_df.index.name], inplace=True)
         master_yearly_filename = f"Master_All_Cities_Yearly_Climate_{START_YEAR}_to_{END_YEAR}.csv"
         master_yearly_df.to_csv(master_yearly_filename)
-        print(f"\n MASTER YEARLY DATA:")
+        print("\n MASTER YEARLY DATA:")
         print(f"   Total Rows: {len(master_yearly_df)}")
         print(f"  Saved → {master_yearly_filename}")
     
     print(f"\n{'#'*60}")
-    print(f"### SUCCESS! ALL CITIES PROCESSED ###")
+    print("### SUCCESS! ALL CITIES PROCESSED ###")
     print(f"{'#'*60}\n")
 
 

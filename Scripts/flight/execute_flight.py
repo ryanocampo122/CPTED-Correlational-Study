@@ -144,7 +144,7 @@ class Flight:
     def say(self, msg: str) -> None:
         line = f"{now()}  {msg}"
         print(msg, flush=True)
-        with open(self.logs / "flight.log", "a") as f:
+        with open(self.logs / "flight.log", "a", encoding="utf-8") as f:
             f.write(line + "\n")
 
     def _add(self, sid, stage, title, status, note="", seconds=0.0, log=None, exit_code=None, details=None) -> dict:
@@ -175,11 +175,11 @@ class Flight:
         log = self.logs / f"{n:02d}_{sid}.log"
         self.say(f"[{n:2d}] ....  {sid:28s} running  (log: {self.rel(log)})")
         t0, status, codes, notes = time.time(), "PASS", {}, []
-        with open(log, "w") as f:
+        with open(log, "w", encoding="utf-8") as f:
             for label, argv in cmds:
                 f.write(f"\n===== {label}\n$ {' '.join(map(str, argv))}\n(cwd {cwd})  started {now()}\n\n")
                 f.flush()
-                rc = subprocess.run([str(a) for a in argv], cwd=cwd, env=env or self.env,
+                rc = subprocess.run([str(a) for a in argv], cwd=cwd, env=env or self.env, check=False,
                                     stdout=f, stderr=subprocess.STDOUT).returncode
                 codes[label] = rc
                 f.write(f"\n===== {label}: exit {rc}\n")
@@ -435,7 +435,7 @@ def stage_install(F: Flight) -> bool:
     S = "1 install"
     t0 = time.time()
     if not VPY.exists():
-        rc = subprocess.run([sys.executable, "-m", "venv", str(VENV)]).returncode
+        rc = subprocess.run([sys.executable, "-m", "venv", str(VENV)], check=False).returncode
         F.record("venv", S, "Create the project virtual environment",
                  "PASS" if rc == 0 else "FAIL", f"created .venv with {sys.executable}", time.time() - t0)
         if rc:
@@ -443,7 +443,7 @@ def stage_install(F: Flight) -> bool:
     else:
         F.record("venv", S, "Project virtual environment", "PASS", f"using {VPY.relative_to(REPO)}")
     v = subprocess.run([VPY, "-c", "import sys; print('%d.%d.%d' % sys.version_info[:3])"],
-                       capture_output=True, text=True).stdout.strip()
+                       capture_output=True, text=True, check=False).stdout.strip()
     F.facts["python"] = v
     if not v.startswith("3.14"):
         F.say(f"      note: .venv runs Python {v}; requirements.txt is pinned for 3.14")
@@ -464,15 +464,19 @@ def stage_install(F: Flight) -> bool:
     env_dir = F.d("environment")
     t0 = time.time()
     freeze = subprocess.run([VPY, "-m", "pip", "freeze", "--disable-pip-version-check"],
-                            capture_output=True, text=True).stdout
+                            capture_output=True, text=True, check=False).stdout
     (env_dir / "pip_freeze.txt").write_text(freeze)
     shutil.copy2(REPO / "requirements.txt", env_dir / "requirements.txt")
-    git = lambda *a: subprocess.run(["git", "-C", str(REPO), *a], capture_output=True, text=True).stdout.strip()  # noqa: E731
+
+    def git(*a: str) -> str:
+        return subprocess.run(["git", "-C", str(REPO), *a], capture_output=True, text=True, check=False).stdout.strip()
+
     dirty = [x for x in git("status", "--porcelain").splitlines() if x.strip()]
     (env_dir / "git_status.txt").write_text("\n".join(dirty) + "\n")
     node = shutil.which("node")
     info = {"started_utc": F.started, "python": v, "platform": platform.platform(),
-            "node": subprocess.run([node, "--version"], capture_output=True, text=True).stdout.strip() if node else None,
+            "node": subprocess.run([node, "--version"], capture_output=True, text=True,
+                                   check=False).stdout.strip() if node else None,
             "git_branch": git("rev-parse", "--abbrev-ref", "HEAD"), "git_commit": git("rev-parse", "--short", "HEAD"),
             "uncommitted_changes": len(dirty),
             "requirements_sha256": hashlib.sha256((REPO / "requirements.txt").read_bytes()).hexdigest(),
@@ -557,6 +561,7 @@ def stage_collect(F: Flight) -> None:
         F.skip("mapillary_coverage", S, "Mapillary coverage at the sample points", "--skip-coverage")
     else:
         copy_inputs(CBD, cov, pts)
+
         def cov_note():
             c = coverage_numbers(cov)
             return (f"{c['with_study_period_image']} of {c['points']} points have a Jun-Aug 2026 image; "
@@ -589,8 +594,8 @@ def reddit_analysis(F: Flight, sid: str, title: str, raw: Path, out: Path, revie
     env = dict(F.env, COMPUTERVISION_SENTINEL_RAW_DIR=str(raw), COMPUTERVISION_SENTINEL_OUT_DIR=str(out),
                COMPUTERVISION_SENTINEL_REVIEW_DIR=str(review))
     cmds = [(s, [VPY, s]) for s in analysis_steps()]
-    pending = {"01b_other_city_review.py": (1, "new other-city candidates are 'pending' hand review "
-                                                "(treated as keep; decide them in the manual_review/ copy)")}
+    pending = {"01b_other_city_review.py": (
+        1, "new other-city candidates are 'pending' hand review (treated as keep; decide them in the manual_review/ copy)")}
 
     def note():
         n = reddit_numbers(out)
@@ -720,13 +725,13 @@ def stage_checks(F: Flight, snapshot: dict) -> None:
     if num.exists():
         st, note = compare_file(num, VERIF / "october_2026_numbers.json")
         rows.append({"area": "Report numbers", "file": "october_2026_numbers.json", "status": st, "note": note})
-    with open(cmp_dir / "reproduction_vs_published.csv", "w", newline="") as f:
+    with open(cmp_dir / "reproduction_vs_published.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["area", "file", "status", "note"])
         w.writeheader()
         w.writerows(rows)
     chk_new = F.exec_dir / "verification" / "october_2026_checks.csv"
     chk_rows = compare_checks(chk_new, VERIF / "october_2026_checks.csv", F.args.offline) if chk_new.exists() else []
-    with open(cmp_dir / "verification_checks_vs_published.csv", "w", newline="") as f:
+    with open(cmp_dir / "verification_checks_vs_published.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["area", "check", "published", "this_run", "why"])
         w.writeheader()
         w.writerows(chk_rows)
@@ -817,8 +822,8 @@ def write_summary(F: Flight, interrupted: bool = False) -> None:
     status = "INTERRUPTED" if interrupted else overall(F)
     counts = {s: sum(x["status"] == s for x in F.steps) for s in STATUSES}
     js = {"execution": F.name, "status": status, "started_utc": F.started, "finished_utc": fin,
-          "seconds": round(secs), "counts": counts, "options": {k: str(v) if isinstance(v, Path) else v
-                                                                     for k, v in vars(F.args).items()},
+          "seconds": round(secs), "counts": counts,
+          "options": {k: str(v) if isinstance(v, Path) else v for k, v in vars(F.args).items()},
           "facts": F.facts, "steps": F.steps}
     (F.exec_dir / "flight_status.json").write_text(json.dumps(js, indent=2, default=str) + "\n")
 
@@ -916,7 +921,7 @@ def write_summary(F: Flight, interrupted: bool = False) -> None:
 
     idx = F.root / "executions.csv"
     new = not idx.exists()
-    with open(idx, "a", newline="") as f:
+    with open(idx, "a", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         if new:
             w.writerow(["execution", "status", "started_utc", "finished_utc", "minutes", "pass", "warn", "fail", "skip",

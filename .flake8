@@ -1,0 +1,11 @@
+# Flake8 settings (VS Code Flake8 extension and the command line). Pylint and Pylance: pyproject.toml.
+[flake8]
+max-line-length = 120
+# Flake8's default ignore list (E121,E123,E126,E226,E24,E704,W503,W504), plus:
+#   E203 E501 W291 W293   whitespace and line length (as in the editor settings)
+#   E402                  imports after the sys.path set-up that lets scripts import their sibling modules
+#   E127 E128             visual alignment of continuation lines (style only)
+#   E701 E702             compact one-line statements in the 2010-2025 climate scripts
+ignore = E121,E123,E126,E226,E24,E704,W503,W504,E203,E501,W291,W293,E402,E127,E128,E701,E702
+# Kept exactly as collected or as sent; never edited, so not linted.
+exclude = .git,.venv,__pycache__,node_modules,Data,Deliverables,Reference,RESULTS_FINAL

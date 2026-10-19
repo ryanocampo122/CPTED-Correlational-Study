@@ -1,5 +1,8 @@
 {
     "files.watcherExclude": {
         "**/target/**": true
-    }
+    },
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "pylint.ignorePatterns": ["**/*.ipynb", "**/*.ipy", "**/Data/**", "**/Deliverables/**", "**/Reference/**", "**/RESULTS_FINAL/**"],
+    "flake8.ignorePatterns": ["**/*.ipynb", "**/*.ipy", "**/Data/**", "**/Deliverables/**", "**/Reference/**", "**/RESULTS_FINAL/**"]
 }

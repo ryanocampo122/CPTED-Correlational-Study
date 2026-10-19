@@ -102,7 +102,7 @@ try:
     import praw
     from praw.models import MoreComments
 except ImportError:
-    raise SystemExit("praw is required: pip install -r requirements.txt")
+    raise SystemExit("praw is required: pip install -r requirements.txt") from None
 
 try:
     from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
