@@ -22,8 +22,10 @@ analysis can be restricted to either set.
 
   safety  The 12 narrow safety-perception terms used in the June 2026
           collection (Dr. Kang, 3 June 2026), unchanged for comparability.
+
   crime   Added October 2026 so the collection captures crime narratives too
-          ("my car got broken into"), as Dr. Jayasooriya asked (1 Oct 2026).
+          ("my car got broken into").
+
           Aligned with the selected crime categories: break and enter, theft
           from vehicle, motor vehicle theft, mischief/graffiti, robbery, assault.
 

@@ -11,12 +11,16 @@
 What it does, in order:
 
 1. Checks the raw file's SHA-256 and columns; stops if either has changed.
+
 2. Stops if the extract has an SPS type it does not know, so a new type is mapped (here and in `Docs/crime_data.md`)
    before it is counted.
+
 3. Maps each SPS type to a study category and decision (`STUDY_TYPES`, from `Docs/crime_data.md`); the rest are
    `not_selected`.
+
 4. Adds time parts (Saskatoon time), parses block and intersection locations, flags missing neighbourhoods, and
    marks points inside the CBD polygon.
+
 5. Flags fixed-address midnight clusters and identical rows, and gives each reported time and location an
    incident ID. Nothing is dropped.
 
