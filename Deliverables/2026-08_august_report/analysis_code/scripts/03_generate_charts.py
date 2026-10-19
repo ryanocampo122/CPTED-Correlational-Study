@@ -53,6 +53,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from neighbourhoods import COMMENTS_PATH
+
 plt.rcParams.update({
     "font.family": "DejaVu Sans",
     "font.size": 11,
@@ -154,7 +156,7 @@ def chart4_env_cues():
     """Env-cue co-occurrence in negative comments: citywide vs. two focus sites.
     Citywide % is computed here directly from the raw comments file since
     02_corrected_analysis.py only stores per-site breakdowns."""
-    comments = pd.read_csv("/mnt/user-data/uploads/saskatoon_safety_comments_20260611.csv")
+    comments = pd.read_csv(COMMENTS_PATH)
     neg_all = comments[comments["sentiment_category"] == "negative"]
     cues = ["env_lighting", "env_noise", "env_weather", "env_time_of_day", "env_people"]
     citywide = {c: round(neg_all[c].mean() * 100, 1) for c in cues}

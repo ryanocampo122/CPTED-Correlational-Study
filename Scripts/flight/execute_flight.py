@@ -32,6 +32,7 @@ import argparse
 import csv
 import datetime as dt
 import hashlib
+import io
 import json
 import os
 import platform
@@ -41,6 +42,7 @@ import subprocess
 import sys
 import time
 import zipfile
+import zlib
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -56,6 +58,7 @@ VERIF = REPO / "Docs" / "verification"
 FIGS = REPO / "Docs" / "figures" / "mid_point_october"
 DIAGRAM = REPO / "Docs" / "figures" / "pipeline_overview.png"   # the README image
 ANALYSIS = REPO / "Scripts" / "reddit_analysis"
+AUGUST = REPO / "Deliverables" / "2026-08_august_report"      # rebuilt with its own analysis_code/
 REVIEW = ANALYSIS / "manual_review"
 REPORTING = REPO / "Scripts" / "reporting"
 PILOT_PY = REPO / "Scripts" / "cv_pilot" / "pilot.py"
@@ -287,12 +290,62 @@ def _flatten(obj, prefix=""):
         yield prefix, obj
 
 
-def compare_file(new: Path, pub: Path) -> tuple[str, str]:
-    """(status, note): identical | equivalent (differs only where a run stamps its own time) | differs."""
+def _png_image(data: bytes):
+    """(header, decompressed image data) of a PNG, ignoring its metadata chunks; None if not a PNG."""
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    i, header, chunks = 8, None, []
+    while i + 8 <= len(data):
+        n, kind = int.from_bytes(data[i:i + 4], "big"), data[i + 4:i + 8]
+        if kind == b"IHDR":
+            header = data[i + 8:i + 8 + n]
+        elif kind == b"IDAT":
+            chunks.append(data[i + 8:i + 8 + n])
+        i += 12 + n
+    try:
+        return header, zlib.decompress(b"".join(chunks))
+    except zlib.error:
+        return None
+
+
+def _tied_rows(a: bytes, b: bytes) -> str | None:
+    """Why two CSVs with the same header differ only through ties, or None. pandas' default sort is not
+    stable, so rows tied on the sort key can come out in another order, and a top-n cut can keep a
+    different one of the rows tied at the cut-off (the August code sorts quotes by score)."""
+    ra = list(csv.reader(io.StringIO(a.decode("utf-8", "replace"))))
+    rb = list(csv.reader(io.StringIO(b.decode("utf-8", "replace"))))
+    if not ra or not rb or ra[0] != rb[0] or len(ra) != len(rb):
+        return None
+    if sorted(ra[1:]) == sorted(rb[1:]):
+        return "same rows; rows tied on the sort key are in a different order"
+    if "score" in ra[0]:
+        k = ra[0].index("score")
+        try:
+            sa, sb = sorted(float(r[k]) for r in ra[1:]), sorted(float(r[k]) for r in rb[1:])
+        except ValueError:
+            return None
+        cut = sa[0] if sa else 0
+        if sa == sb and sorted(r for r in ra[1:] if float(r[k]) > cut) == sorted(r for r in rb[1:] if float(r[k]) > cut):
+            return f"same rows, except which of the rows tied at the cut-off score ({cut:g}) was kept"
+    return None
+
+
+def compare_file(new: Path, pub: Path, tolerate_ties: bool = False) -> tuple[str, str]:
+    """(status, note): identical | equivalent (differs only where a run stamps its own time or metadata, or,
+    with tolerate_ties, only in how tied rows were ordered) | differs."""
     a, b = new.read_bytes(), pub.read_bytes()
     if a == b:
         return "identical", ""
     suf = new.suffix.lower()
+    if suf == ".png":
+        ia, ib = _png_image(a), _png_image(b)
+        if ia is not None and ia == ib:
+            return "equivalent", "identical pixels; only the PNG metadata (e.g. the matplotlib version) differs"
+        return "differs", "the images differ"
+    if suf == ".csv" and tolerate_ties:
+        why = _tied_rows(a, b)
+        if why:
+            return "equivalent", why
     if suf == ".xlsx":
         try:
             with zipfile.ZipFile(new) as za, zipfile.ZipFile(pub) as zb:
@@ -619,6 +672,13 @@ def stage_results(F: Flight) -> None:
     else:
         F.skip("reddit_live", S, "Analyse the fresh Reddit collection", "no fresh collection in this run")
 
+    # The August 2026 package, rebuilt with its own code (one shared neighbourhoods.py) -------------
+    aug_out = rep / "august_2026_package"
+    F.run("august_reproduce", S, "Rebuild the August 2026 package with its own analysis code",
+          [("run_all", ["bash", AUGUST / "analysis_code" / "run_all.sh", aug_out])],
+          env=dict(F.env, PYTHON=str(VPY)),
+          note_fn=lambda: f"{len(list((aug_out / 'output').glob('*')))} files rebuilt")
+
     # Crime ---------------------------------------------------------------
     crime_out = rep / SPS.name / "02_cleaned"
     F.run("crime_clean", S, "Clean the SPS extract (raw file hash-checked)",
@@ -708,6 +768,17 @@ def stage_checks(F: Flight, snapshot: dict) -> None:
     for ds in (REDDIT_DS, REDDIT_JUNE_DS):
         if (rep / ds).exists():
             rows += compare_tree(f"Reddit {ds}", rep / ds, DATA / ds, exclude=("01_raw_collection", "README.md"))
+    aug_out = rep / "august_2026_package" / "output"
+    if aug_out.exists():
+        delivered = [AUGUST / "data_pkg_august" / d for d in
+                     ("02_derived_analysis", "03_extracted_comment_samples", "04_cleaned_datasets")] + [AUGUST / "charts"]
+        for d in delivered:
+            for pub in sorted(list(d.glob("*.csv")) + list(d.glob("*.png"))):
+                new = aug_out / pub.name
+                st, note = compare_file(new, pub, tolerate_ties=True) if new.exists() else \
+                    ("missing", "delivered, but this run did not produce it")
+                rows.append({"area": "August 2026 package", "file": str(pub.relative_to(AUGUST)),
+                             "status": st, "note": note})
     if (rep / SPS.name / "02_cleaned").exists():
         rows += compare_tree("SPS crime", rep / SPS.name / "02_cleaned", SPS / "02_cleaned")
     if (rep / "cv_pilot_cbd_latest_imagery").exists():
@@ -912,7 +983,7 @@ def write_summary(F: Flight, interrupted: bool = False) -> None:
           "  environment/             versions.json, pip_freeze.txt, requirements.txt, git_status.txt",
           "  models/models.json       what CLIP and VADER were loaded, and their smoke tests",
           "  live/                    fresh API data and its analysis (Reddit dataset, Mapillary coverage, pilot)",
-          "  reproduction/            published outputs rebuilt from the committed raw data",
+          "  reproduction/            published outputs rebuilt from the committed raw data (incl. the August package)",
           "  verification/            october_2026_checks.csv/.md",
           "  figures/                 fig01-fig08 and the README pipeline diagram",
           "  report/                  october_2026_numbers.json, the October report .docx",

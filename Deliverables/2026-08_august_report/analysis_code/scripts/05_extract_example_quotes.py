@@ -14,7 +14,7 @@ SHA-256 hashed by the original scraper, see initial_sraper.py).
 
 INPUT
 -----
-  /mnt/user-data/uploads/saskatoon_safety_comments_20260611.csv
+  data_pkg_august/01_raw_collection/saskatoon_safety_comments_20260611.csv
 
 OUTPUT
 ------
@@ -35,19 +35,11 @@ USAGE
   python 05_extract_example_quotes.py
 """
 
-import re
 import pandas as pd
 
-COMMENTS_PATH = "/mnt/user-data/uploads/saskatoon_safety_comments_20260611.csv"
+from neighbourhoods import COMMENTS_PATH, NEIGHBOURHOODS, bounded_match
 
-MEEWASIN_PATTERNS = ["river", "meewasin", "riverbank", "river trail"]
-
-
-def bounded_match(text: str, patterns: list[str]) -> bool:
-    if not isinstance(text, str):
-        return False
-    t = text.lower()
-    return any(re.search(r"\b" + re.escape(p) + r"\b", t) for p in patterns)
+MEEWASIN_PATTERNS = NEIGHBOURHOODS["Riverbank / Meewasin"]
 
 
 def main() -> None:

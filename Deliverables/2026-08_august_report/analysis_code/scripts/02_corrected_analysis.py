@@ -22,8 +22,8 @@ computes the analysis tables that feed the August report:
 
 INPUT
 -----
-  /mnt/user-data/uploads/saskatoon_safety_posts_20260611.csv
-  /mnt/user-data/uploads/saskatoon_safety_comments_20260611.csv
+  data_pkg_august/01_raw_collection/saskatoon_safety_posts_20260611.csv
+  data_pkg_august/01_raw_collection/saskatoon_safety_comments_20260611.csv
 
 OUTPUT
 ------
@@ -37,40 +37,10 @@ USAGE
   python 02_corrected_analysis.py
 """
 
-import re
 import pandas as pd
 
-POSTS_PATH = "/mnt/user-data/uploads/saskatoon_safety_posts_20260611.csv"
-COMMENTS_PATH = "/mnt/user-data/uploads/saskatoon_safety_comments_20260611.csv"
+from neighbourhoods import COMMENTS_PATH, NEIGHBOURHOODS, POSTS_PATH, bounded_match, slug
 
-# Same pattern list as 01_audit_location_tagging.py — kept in sync manually.
-# If you change one, change the other (or refactor both to import from a
-# shared constants module).
-NEIGHBOURHOODS: dict[str, list[str]] = {
-    "Pleasant Hill":       ["pleasant hill"],
-    "Riversdale":          ["riversdale"],
-    "Meadowgreen":         ["meadowgreen"],
-    "Westmount":           ["westmount"],
-    "Mount Royal":         ["mount royal"],
-    "King George":         ["king george"],
-    "Caswell Hill":        ["caswell hill", "caswell"],
-    "Mayfair":             ["mayfair"],
-    "Downtown / CBD":      ["downtown", "cbd", "central business district",
-                            "20th street", "20th st", "23rd street", "23rd st"],
-    "Broadway":            ["broadway"],
-    "Nutana":              ["nutana"],
-    "Downtown Terminal":   ["downtown terminal", "bus terminal", "bus depot",
-                            "transit terminal"],
-    "Confederation Mall":  ["confederation mall", "confed mall"],
-    "Market Mall":         ["market mall"],
-    "Place Riel / USask":  ["place riel", "usask", "u of s", "university of saskatchewan"],
-    "Riverbank / Meewasin": ["river", "meewasin", "riverbank", "river trail"],
-    "Stonebridge":         ["stonebridge"],
-    "Lakeridge":           ["lakeridge"],
-    "Briarwood":           ["briarwood"],
-    "Arbor Creek":         ["arbor creek"],
-    "Silverspring":        ["silverspring", "silver spring"],
-}
 
 # Sites with enough corrected volume (>=15 mentions) to be worth a
 # deeper cue / time-of-day breakdown, plus the two sites the August
@@ -82,19 +52,6 @@ FOCUS_SITES = [
 
 ENV_CUE_COLUMNS = ["env_lighting", "env_noise", "env_weather",
                     "env_time_of_day", "env_people"]
-
-
-def bounded_match(text: str, patterns: list[str]) -> bool:
-    if not isinstance(text, str):
-        return False
-    t = text.lower()
-    return any(re.search(r"\b" + re.escape(p) + r"\b", t) for p in patterns)
-
-
-def slug(name: str) -> str:
-    """Column-name-safe version of a neighbourhood name, matching the
-    convention used by the original scraper's loc_* columns."""
-    return "c_" + re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
 
 
 def tag_neighbourhoods(df: pd.DataFrame, text_col: str) -> pd.DataFrame:

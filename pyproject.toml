@@ -33,7 +33,7 @@ disable = [
     # size and duplication (analysis scripts are long, linear and deliberately self-contained)
     "duplicate-code", "too-many-locals", "too-many-statements", "too-many-branches", "too-many-arguments",
     "too-many-positional-arguments", "too-many-instance-attributes", "too-many-return-statements",
-    "too-many-boolean-expressions",
+    "too-many-boolean-expressions", "too-many-lines",
     # intentional patterns, each checked
     "broad-exception-caught",           # a failing step is reported and the run goes on, never a crash
     "global-statement",                 # CLI options override module-level default paths

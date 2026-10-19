@@ -26,44 +26,24 @@ The original columns are preserved untouched so the before/after is auditable.
 
 OUTPUT
 ------
-  cleaned/saskatoon_safety_posts_20260611_CLEANED.csv
-  cleaned/saskatoon_safety_comments_20260611_CLEANED.csv
-  cleaned/cleaning_changelog.csv   (row-level record of what changed)
+  output/saskatoon_safety_posts_20260611_CLEANED.csv
+  output/saskatoon_safety_comments_20260611_CLEANED.csv
+  output/cleaning_changelog.csv   (row-level record of what changed)
 """
 
 import os
-import re
+import sys
+from pathlib import Path
+
 import pandas as pd
 
-RAW_DIR = "/home/user/data_pkg/01_raw_collection"
-OUT_DIR = "/home/user/data_pkg/04_cleaned_datasets"
+# The vocabulary, matcher and raw-data folder are shared with the analysis scripts.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "analysis_code" / "scripts"))
+from neighbourhoods import NEIGHBOURHOODS, RAW_DIR, bounded_match  # noqa: E402
+from neighbourhoods import slug as column_name  # noqa: E402
 
-# Verbatim from initial_sraper.py
-NEIGHBOURHOODS: dict[str, list[str]] = {
-    "Pleasant Hill":       ["pleasant hill"],
-    "Riversdale":          ["riversdale"],
-    "Meadowgreen":         ["meadowgreen"],
-    "Westmount":           ["westmount"],
-    "Mount Royal":         ["mount royal"],
-    "King George":         ["king george"],
-    "Caswell Hill":        ["caswell hill", "caswell"],
-    "Mayfair":             ["mayfair"],
-    "Downtown / CBD":      ["downtown", "cbd", "central business district",
-                            "20th street", "20th st", "23rd street", "23rd st"],
-    "Broadway":            ["broadway"],
-    "Nutana":              ["nutana"],
-    "Downtown Terminal":   ["downtown terminal", "bus terminal", "bus depot",
-                            "transit terminal"],
-    "Confederation Mall":  ["confederation mall", "confed mall"],
-    "Market Mall":         ["market mall"],
-    "Place Riel / USask":  ["place riel", "usask", "u of s", "university of saskatchewan"],
-    "Riverbank / Meewasin": ["river", "meewasin", "riverbank", "river trail"],
-    "Stonebridge":         ["stonebridge"],
-    "Lakeridge":           ["lakeridge"],
-    "Briarwood":           ["briarwood"],
-    "Arbor Creek":         ["arbor creek"],
-    "Silverspring":        ["silverspring", "silver spring"],
-}
+OUT_DIR = "output"   # relative to the working folder, so the delivered files here are never overwritten
+
 
 # Categories that have an original loc_* column in the raw files, so we can
 # compare before/after. Others had no dedicated column.
@@ -78,15 +58,7 @@ ORIGINAL_LOC_COLUMNS = {
 
 
 def slug(name: str) -> str:
-    return "vloc_" + re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
-
-
-def bounded_match(text: str, patterns: list[str]) -> bool:
-    """Word-boundary match: 'river' no longer matches inside 'driver'."""
-    if not isinstance(text, str):
-        return False
-    t = text.lower()
-    return any(re.search(r"\b" + re.escape(p) + r"\b", t) for p in patterns)
+    return column_name(name, "vloc_")
 
 
 def clean(df: pd.DataFrame, text_col: str, id_col: str, kind: str):

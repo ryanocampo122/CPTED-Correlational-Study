@@ -111,4 +111,6 @@ document properties) was changed to ComputerVision_Sentinel, and the memo and th
 match; the same name change was made in the scripts in `analysis_code/` and in the
 scraper copy, run summary and log in `data_pkg_august/01_raw_collection/`. Nothing else was changed, apart from
 removing the Apple Numbers copy of the data tables (the same tables are the CSVs in
-`data_pkg_august/02_derived_analysis/`) and moving the literature review to `Docs/literature review/`. The slides are titled "Prairie Sentinel".
+`data_pkg_august/02_derived_analysis/`) and moving the literature review to `Docs/literature review/`. The analysis code now
+shares one neighbourhood list (`analysis_code/scripts/neighbourhoods.py`) and runs with `analysis_code/run_all.sh`;
+its outputs match the delivered files (see `analysis_code/README.md`). The slides are titled "Prairie Sentinel".

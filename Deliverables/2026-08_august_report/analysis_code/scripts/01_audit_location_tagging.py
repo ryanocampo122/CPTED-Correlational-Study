@@ -27,8 +27,8 @@ This script:
 
 INPUT
 -----
-  /mnt/user-data/uploads/saskatoon_safety_posts_20260611.csv
-  /mnt/user-data/uploads/saskatoon_safety_comments_20260611.csv
+  data_pkg_august/01_raw_collection/saskatoon_safety_posts_20260611.csv
+  data_pkg_august/01_raw_collection/saskatoon_safety_comments_20260611.csv
 
 OUTPUT
 ------
@@ -49,57 +49,11 @@ USAGE
   python 01_audit_location_tagging.py
 """
 
-import re
 import pandas as pd
 
-POSTS_PATH = "/mnt/user-data/uploads/saskatoon_safety_posts_20260611.csv"
-COMMENTS_PATH = "/mnt/user-data/uploads/saskatoon_safety_comments_20260611.csv"
+from neighbourhoods import COMMENTS_PATH, NEIGHBOURHOODS, POSTS_PATH, bounded_match, raw_match
+
 OUTPUT_PATH = "output/neighbourhood_tagging_audit.csv"
-
-# Copied verbatim from initial_sraper.py (SASKATOON_NEIGHBOURHOODS) so this
-# audit tests the exact same pattern list the original scraper used.
-NEIGHBOURHOODS: dict[str, list[str]] = {
-    "Pleasant Hill":       ["pleasant hill"],
-    "Riversdale":          ["riversdale"],
-    "Meadowgreen":         ["meadowgreen"],
-    "Westmount":           ["westmount"],
-    "Mount Royal":         ["mount royal"],
-    "King George":         ["king george"],
-    "Caswell Hill":        ["caswell hill", "caswell"],
-    "Mayfair":             ["mayfair"],
-    "Downtown / CBD":      ["downtown", "cbd", "central business district",
-                            "20th street", "20th st", "23rd street", "23rd st"],
-    "Broadway":            ["broadway"],
-    "Nutana":              ["nutana"],
-    "Downtown Terminal":   ["downtown terminal", "bus terminal", "bus depot",
-                            "transit terminal"],
-    "Confederation Mall":  ["confederation mall", "confed mall"],
-    "Market Mall":         ["market mall"],
-    "Place Riel / USask":  ["place riel", "usask", "u of s", "university of saskatchewan"],
-    "Riverbank / Meewasin": ["river", "meewasin", "riverbank", "river trail"],
-    "Stonebridge":         ["stonebridge"],
-    "Lakeridge":           ["lakeridge"],
-    "Briarwood":           ["briarwood"],
-    "Arbor Creek":         ["arbor creek"],
-    "Silverspring":        ["silverspring", "silver spring"],
-}
-
-
-def raw_match(text: str, patterns: list[str]) -> bool:
-    """Reproduces the ORIGINAL scraper logic: bare substring containment."""
-    if not isinstance(text, str):
-        return False
-    t = text.lower()
-    return any(p in t for p in patterns)
-
-
-def bounded_match(text: str, patterns: list[str]) -> bool:
-    """CORRECTED logic: same patterns, but matched on word boundaries so
-    'river' no longer matches inside 'driver'."""
-    if not isinstance(text, str):
-        return False
-    t = text.lower()
-    return any(re.search(r"\b" + re.escape(p) + r"\b", t) for p in patterns)
 
 
 def main() -> None:
