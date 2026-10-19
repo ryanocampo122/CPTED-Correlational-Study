@@ -1,7 +1,7 @@
 """
 02_corrected_analysis.py
 =========================
-UrbanSentinel-Prairie | Corrected neighbourhood-level analysis
+ComputerVision_Sentinel | Corrected neighbourhood-level analysis
 
 PURPOSE
 -------

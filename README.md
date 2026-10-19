@@ -19,7 +19,7 @@ segments in Downtown/CBD.
 | You want | Open |
 |---|---|
 | The latest update for supervisors | `Deliverables/2026-10_october_update/` |
-| The literature review (CPTED evidence, crime and perception, pilot sites) | [`Deliverables/2026-08_august_report/Master_lit_review.docx`](Deliverables/2026-08_august_report/Master_lit_review.docx) |
+| The literature review (CPTED evidence, crime and perception, pilot sites) | [`Docs/literature review/Master_lit_review.docx`](Docs/literature%20review/Master_lit_review.docx) |
 | How the whole study fits together, and how to run it | `Docs/workflow.md` |
 | What has been checked, and how | `Docs/verification/october_2026_checks.md` |
 | Open decisions and known problems | `Docs/decisions_and_issues.md` |
@@ -40,7 +40,7 @@ segments in Downtown/CBD.
 
 ```
 Plan/            governing documents: revised work plan, grant application
-Docs/            detailed documentation, verification checks, figures, history
+Docs/            detailed documentation, verification checks, figures, history, the literature review
 Data/
   reddit_2026-06-01_2026-08-31/   CURRENT  study-period Reddit: raw, cleaned, tables, audits, charts
   reddit_2025-06-11_2026-06-11/   earlier  12-month collection behind the July/August reports (corrected)
@@ -59,8 +59,8 @@ Scripts/
   verification/        independent checks of every October claim
   reporting/           figures, report numbers, the October .docx builder
   make_handoff.sh      builds a shareable zip without credentials or private text
-Deliverables/    dated copies of what was sent (2026-08 with the literature review, 2026-10); later edits noted in each README
-Reference/       literature (incl. computer-vision papers), literature review draft, presentations, maps
+Deliverables/    dated copies of what was sent (2026-08, 2026-10); later edits noted in each README
+Reference/       literature (incl. computer-vision papers), presentations, maps
 Archive/         surveys dropped in the revised plan (the August CV prototype is in git history)
 RESULTS_FINAL/   one EXECUTION-<n>/ folder per flight run, plus executions.csv (git-ignored)
 ```

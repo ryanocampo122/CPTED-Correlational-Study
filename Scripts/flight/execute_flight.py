@@ -68,7 +68,7 @@ NEEDS = {"reddit": ("PRAW_CLIENT_ID", "PRAW_CLIENT_SECRET", "COMPUTERVISION_SENT
 SECRET_HINTS = ("SECRET", "TOKEN", "SALT", "CLIENT_ID", "PASSWORD", "KEY")
 # Never part of the repository snapshot: build artefacts, environments, OS clutter
 SNAPSHOT_SKIP_DIRS = {".git", ".venv", "node_modules", "__pycache__"}
-SNAPSHOT_SKIP_FILES = {".DS_Store", "package-lock.json"}
+SNAPSHOT_SKIP_FILES = {".DS_Store", "package-lock.json", ".Rhistory", ".RData"}   # plus Word lock files (~$...)
 STATUSES = ("PASS", "WARN", "FAIL", "SKIP")
 
 
@@ -249,7 +249,7 @@ def tree_snapshot(skip_root: Path) -> dict:
             dirnames[:] = [x for x in dirnames if x not in SNAPSHOT_SKIP_DIRS
                            and not Path(dirpath, x).resolve().is_relative_to(skip_root)]
             for fn in filenames:
-                if fn in SNAPSHOT_SKIP_FILES or fn.endswith(".pyc"):
+                if fn in SNAPSHOT_SKIP_FILES or fn.endswith(".pyc") or fn.startswith("~$"):
                     continue
                 p = Path(dirpath, fn)
                 st = p.stat()
@@ -510,8 +510,6 @@ def stage_keys(F: Flight) -> dict:
     if differ:
         status = "WARN"
         notes.append(f".env and .venv/keys.txt disagree on {', '.join(differ)} (.env used)")
-    if "URBANSENTINEL_HASH_SALT" in merged and not have("COMPUTERVISION_SENTINEL_HASH_SALT"):
-        notes.append("rename URBANSENTINEL_HASH_SALT to COMPUTERVISION_SENTINEL_HASH_SALT (same value)")
     for use, keys in NEEDS.items():
         if not ready[use]:
             status = "FAIL"

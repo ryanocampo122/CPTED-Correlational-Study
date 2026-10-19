@@ -13,6 +13,7 @@ The short version for supervisors is the October report in `Deliverables/2026-10
 | [decisions_and_issues.md](decisions_and_issues.md) | Decisions needed and made; every problem found, its effect and its status |
 | [data_ethics.md](data_ethics.md) | Privacy, quoting, licences, credentials, describing places without labelling people |
 | [project_history.md](project_history.md) | How the project got here: grant, Phase 1, August report, corrections, revised plan |
+| [literature review/](literature%20review/) | `Master_lit_review.docx`: the literature review (CPTED evidence, crime and perception, candidate pilot sites); the only copy in the repository |
 | [verification/](verification/) | `october_2026_checks.md`: every October claim re-derived from the data (PASS/WARN/FAIL) |
 | [figures/](figures/) | All figures: the October midpoint set in `figures/mid_point_october/` (`Scripts/reporting/make_figures.py`); the README's pipeline diagram, `figures/pipeline_overview.png` (`make_pipeline_diagram.py`) |
 

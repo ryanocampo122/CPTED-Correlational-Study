@@ -4,7 +4,6 @@
 |---|---|
 | `CPTED_ComputerVis_2026.docx` | **The report, as sent.** 8 pages: where the project stands, three of the four October work-plan tasks (sample points are still being refined and are not reported yet), and the image model (CLIP ViT-B/32), why it was chosen and how it can change. Edited by hand after it was generated |
 | `CPTED_ComputerVis_2026.pdf` | The same report as a PDF |
-| `UrbanSentinel_October2026_Progress_Report.pdf` | An earlier generated version (7 pages) under the project's former name, before the hand edits; superseded by `CPTED_ComputerVis_2026.*` |
 
 The report's base is generated, not hand-typed: every number comes from `Data/` through
 `Scripts/reporting/report_numbers.py`, and the figures come from `Scripts/reporting/make_figures.py`.
@@ -23,4 +22,4 @@ the published files: `./flight --execute_flight` (repository root). To rebuild o
 
 The detailed documentation behind the report is in `Docs/` (start at `Docs/README.md`).
 
-**Edited after sending (19 Oct 2026).** In `CPTED_ComputerVis_2026.docx` the project name in the running header, one sentence in section 3.3 and the document properties was changed to ComputerVision_Sentinel; nothing else was changed. The two PDFs still carry the earlier name.
+**Edited after sending (19 Oct 2026).** In `CPTED_ComputerVis_2026.docx` the project name in the running header, one sentence in section 3.3 and the document properties was changed to ComputerVision_Sentinel; nothing else was changed. `CPTED_ComputerVis_2026.pdf` was re-exported from it (same 8 pages). The earlier generated PDF, superseded by these, was removed.

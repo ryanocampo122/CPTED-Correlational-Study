@@ -1,10 +1,10 @@
 /**
  * 06_build_meewasin_memo_docx.js
  * ================================
- * UrbanSentinel-Prairie | Builds the short-form data quality memo
+ * ComputerVision_Sentinel | Builds the short-form data quality memo
  *
  * PURPOSE
- * Generates UrbanSentinel_Meewasin_DataQuality_Memo.docx - the earlier,
+ * Generates ComputerVision_Sentinel_Meewasin_DataQuality_Memo.docx - the earlier,
  * narrower writeup focused specifically on the Riverbank/Meewasin
  * location-matching issue (see 01_audit_location_tagging.py for the
  * underlying analysis). Superseded in scope by the full August report
@@ -134,7 +134,7 @@ const doc = new Document({
     properties: { page: { size: { width: PAGE_W, height: PAGE_H }, margin: { top: 1080, bottom: 1080, left: 1260, right: 1260 } } },
     children: [
       new Paragraph({
-        children: [new TextRun({ text: "UrbanSentinel-Prairie", bold: true, size: 40, color: "2F5496" })],
+        children: [new TextRun({ text: "ComputerVision_Sentinel", bold: true, size: 40, color: "2F5496" })],
         spacing: { after: 40 },
       }),
       new Paragraph({

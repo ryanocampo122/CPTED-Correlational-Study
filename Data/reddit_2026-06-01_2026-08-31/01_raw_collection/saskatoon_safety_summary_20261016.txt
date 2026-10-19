@@ -1,5 +1,5 @@
 ======================================================================
-UrbanSentinel-Prairie | Reddit Crime & Safety Narrative Collection
+ComputerVision_Sentinel | Reddit Crime & Safety Narrative Collection
 r/saskatoon | 2026-06-01 – 2026-08-31 (local time) | scraper 2026-10
 ======================================================================
 

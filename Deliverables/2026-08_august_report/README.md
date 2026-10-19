@@ -10,7 +10,7 @@ Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
 | If you want to… | Open |
 |---|---|
 | Read the findings | `Master_Report.docx` |
-| Read the literature review | `Master_lit_review.docx` |
+| Read the literature review | `Docs/literature review/Master_lit_review.docx` (moved there; see below) |
 | See the slides from the meeting | `Presentation_Slides.pdf` |
 | Look up a specific number | `data_pkg_august/02_derived_analysis/` |
 | See the evidence behind the data cleaning | `data_pkg_august/04_cleaned_datasets/cleaning_changelog.csv` |
@@ -31,15 +31,12 @@ Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
 - **`ComputerVision_Sentinel_Meewasin_DataQuality_Memo.docx`** — an earlier, narrower memo
   covering only the Riverbank/Meewasin location verification. Superseded in
   scope by the main report; kept because the report's appendix references it.
-- **`ComputerVision_Sentinel_August_DataTables.numbers`** — the summary tables in workbook
-  form. Note this is Apple Numbers format; if a supervisor is on Windows they
-  will need the CSVs in `data_pkg_august/02_derived_analysis/` instead.
 
-- **`Master_lit_review.docx`** — the literature review, *A Privacy-Preserving GeoAI Framework for Urban
+- **The literature review** — sent with this package as `Master_lit_review.docx`; the one copy now kept is
+  `Docs/literature review/Master_lit_review.docx`. *A Privacy-Preserving GeoAI Framework for Urban
   CPTED Decision Support Using Environmental Sensing and Community Narratives: Site Identification for
   Saskatoon Pilot Deployment* (about 5,700 words): CPTED theory and evidence, crime and perception, and the
   candidate pilot sites.
-- **`literature review/master_draft.docx`** — the July draft of the same review (five paragraphs differ).
 - **`Presentation_Slides.pdf`** — the nine slides for the August meeting, including why the numbers changed.
 - **`august_2026_folder_structure.docx`** — a one-page map of this package with
   a navigation table; useful for orienting anyone new to the folder.
@@ -110,7 +107,8 @@ Two open items flagged for discussion rather than resolved here:
 ---
 
 **Edited after sending (19 Oct 2026).** The project's name in the Word files (titles, headers, footers and
-document properties) was changed to ComputerVision_Sentinel, and the memo, the data-tables workbook and the
-scraper log were renamed to match. Nothing else was changed. The workbook's cells still carry the earlier name,
-and the slides are titled "Prairie Sentinel". The July literature-review draft was moved here when the July
-initial-findings folder was removed.
+document properties) was changed to ComputerVision_Sentinel, and the memo and the scraper log were renamed to
+match; the same name change was made in the scripts in `analysis_code/` and in the
+scraper copy, run summary and log in `data_pkg_august/01_raw_collection/`. Nothing else was changed, apart from
+removing the Apple Numbers copy of the data tables (the same tables are the CSVs in
+`data_pkg_august/02_derived_analysis/`) and moving the literature review to `Docs/literature review/`. The slides are titled "Prairie Sentinel".

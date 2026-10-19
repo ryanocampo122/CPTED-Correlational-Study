@@ -1,7 +1,7 @@
 """
 05_extract_example_quotes.py
 ==============================
-UrbanSentinel-Prairie | Pull representative example comments for the report
+ComputerVision_Sentinel | Pull representative example comments for the report
 
 PURPOSE
 -------

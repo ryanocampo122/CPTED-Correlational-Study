@@ -18,7 +18,7 @@ Full verification: `Docs/verification/october_2026_checks.md`. Method and limita
 
 | Folder | Contents | Made by |
 |---|---|---|
-| `01_raw_collection/` | posts, comments, GIS export, metadata, summary, search-query log, scraper log, and `collection_code/` (the exact scraper and `common.py` that ran) | the scraper; **never edit** (one exception: on 18 Oct 2026 three folder-path strings in the metadata JSON and `collection_code/reddit_scraper.py` were updated to the current folder layout; no data values changed) |
+| `01_raw_collection/` | posts, comments, GIS export, metadata, summary, search-query log, scraper log, and `collection_code/` (the exact scraper and `common.py` that ran) | the scraper; **never edit** (exceptions, 18–19 Oct 2026: folder-path strings in the metadata JSON and `collection_code/reddit_scraper.py` updated to the current layout, and the project's former name replaced by ComputerVision_Sentinel in `collection_code/`, the run summary and the run log, renamed `computervision_sentinel_scraper.log`; no data values changed) |
 | `02_derived_analysis/` | per-area summary, thread-inherited sensitivity, environmental cues by area, time of day, night contrasts, season and month tables | `run_all.sh` step 02 |
 | `03_extracted_comment_samples/` | candidate example comments (verbatim, re-identifiable: **do not quote outside the team**) | step 05 |
 | `04_cleaned_datasets/` | row-level posts and comments with every correction added as new columns; location and cue changelogs | step 01d |

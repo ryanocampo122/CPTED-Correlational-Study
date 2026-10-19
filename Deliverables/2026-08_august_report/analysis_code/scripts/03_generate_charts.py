@@ -1,11 +1,11 @@
 """
 03_generate_charts.py
 ======================
-UrbanSentinel-Prairie | Chart generation for the August report
+ComputerVision_Sentinel | Chart generation for the August report
 
 PURPOSE
 -------
-Builds the six PNG charts used in UrbanSentinel_August_Report.docx, from
+Builds the six PNG charts used in ComputerVision_Sentinel_August_Report.docx, from
 the CSVs produced by 01_audit_location_tagging.py and
 02_corrected_analysis.py.
 
