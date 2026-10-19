@@ -11,7 +11,7 @@ Data: `Data/reddit_2026-06-01_2026-08-31/` (study period, current) and `Data/red
 | Subreddit | r/saskatoon | as in June |
 | Window | 1 Jun – 31 Aug 2026, Saskatoon time (`--start/--end`) | the study period |
 | Seed terms | 12 safety terms (unchanged from June, for comparability) + 19 crime terms | crime terms added Oct 2026 so crime narratives are captured, aligned with the crime categories |
-| Search | every term × 4 sort orders (relevance, new, top, comments) + the year's top listing | Reddit search returns ≤ ~250 results per query and cannot filter by date |
+| Search | every term × 4 sort orders (relevance, new, top, comments) + the year's top listing; an empty answer is retried twice (issue 17) | Reddit search returns ≤ ~250 results per query, cannot filter by date, and sometimes answers with nothing |
 | Comments | depth ≤ 4, ≤ 200 per post, collapsed "load more" stubs not expanded | rate limits and run time |
 | Privacy | authors replaced by HMAC-SHA-256 hashes with a private salt; deleted/removed content dropped; emails, phone numbers and street addresses scrubbed from `cleaned_text` | ethics |
 | Tagging | 22 areas and 5 environmental cues, whole words, from `Scripts/reddit_analysis/scripts/common.py` | one definition shared by collector and analysis |

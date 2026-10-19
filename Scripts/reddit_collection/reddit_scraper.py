@@ -159,6 +159,11 @@ class ScraperConfig:
     replace_more_limit: int | None = 0  # 0 = do not expand "load more" stubs
 
     inter_query_sleep: float = 2.0
+    # Reddit search sometimes answers a query with nothing at all, without an error, when the same query
+    # returns dozens of posts minutes later (seen 19 Oct 2026: 'robbed' gave 0 instead of 12 and two posts
+    # were missed). An empty answer is retried this many times before it is accepted.
+    zero_result_retries: int = 2
+    zero_result_pause: float = 10.0
     inter_post_sleep: float = 1.0
     output_dir: Path = field(default_factory=lambda: Path("output"))
 
@@ -234,15 +239,21 @@ class SaskatoonSafetyCollector:
     def _search(self, sub, term: str, seed_set: str, sort: str) -> None:
         """One search (term x sort). Out-of-window results are dropped; counts go to query_log."""
         q = search_query(term, seed_set)
-        seen = kept = 0
-        try:
-            for s in sub.search(q, sort=sort, time_filter=self.config.search_time_filter, limit=None):
-                seen += 1
-                kept += self._capture(s, source=f"search:{seed_set}:{term}")
-        except Exception as exc:  # noqa: BLE001 - log and continue with other queries
-            logger.warning("Search failed (%s | %s): %s", q, sort, exc)
+        seen = kept = attempts = 0
+        while attempts <= self.config.zero_result_retries:
+            attempts += 1
+            try:
+                for s in sub.search(q, sort=sort, time_filter=self.config.search_time_filter, limit=None):
+                    seen += 1
+                    kept += self._capture(s, source=f"search:{seed_set}:{term}")
+            except Exception as exc:  # noqa: BLE001 - log and continue with other queries
+                logger.warning("Search failed (%s | %s): %s", q, sort, exc)
+            if seen or attempts > self.config.zero_result_retries:
+                break
+            logger.info("Search %s | %s returned nothing; retrying in %.0f s", q, sort, self.config.zero_result_pause)
+            time.sleep(self.config.zero_result_pause)
         self.query_log.append({"seed_set": seed_set, "term": term, "query": q, "sort": sort,
-                               "results_returned": seen, "in_window_new_or_repeat": kept})
+                               "results_returned": seen, "in_window_new_or_repeat": kept, "attempts": attempts})
         logger.info("Search %-8s %-22s %-9s -> %3d returned, %3d in window", seed_set, q, sort, seen, kept)
         time.sleep(self.config.inter_query_sleep)
 
@@ -525,6 +536,7 @@ class SaskatoonSafetyCollector:
             "time_fields": f"local time ({common.LOCAL_TZ})",
             "author_hash": "HMAC-SHA-256 with private salt, first 16 hex chars",
             "replace_more_limit": self.config.replace_more_limit,
+            "zero_result_retries": self.config.zero_result_retries,
             "max_comment_depth": self.config.max_comment_depth,
             "max_comments_per_post": self.config.max_comments_per_post,
             "posts_collected": int(len(posts_df)),

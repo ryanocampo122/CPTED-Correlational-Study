@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sys
 import tempfile
+import zlib
 from pathlib import Path
 
 import numpy as np
@@ -191,7 +192,7 @@ class FakeEncoder:
     model_name, device, logit_scale = "fake-clip", "cpu", 100.0
 
     def _v(self, key):
-        rng = np.random.default_rng(abs(hash(key)) % (2 ** 32))
+        rng = np.random.default_rng(zlib.crc32(key.encode()))       # stable across runs (hash() is not)
         v = rng.normal(size=16)
         return v / np.linalg.norm(v)
 

@@ -250,10 +250,27 @@ def point_checks(network: bool) -> None:
         w, s, e, n = meta["bbox"]
         import requests
         q = f'[out:json][timeout:60];way["bridge"]["bridge"!="no"]["highway"]({s},{w},{n},{e});out ids;'
-        js = requests.post(L.OVERPASS_ENDPOINTS[0], data={"data": q},
-                           headers={"User-Agent": L.USER_AGENT}, timeout=90).json()
-        cache.write_text(json.dumps({"retrieved_utc": L.now_iso(), "query": q,
-                                     "way_ids": sorted(str(x["id"]) for x in js["elements"])}, indent=1))
+        js, errors = None, []
+        for url in L.OVERPASS_ENDPOINTS:                # public servers are often busy: try each in turn
+            try:
+                r = requests.post(url, data={"data": q}, headers={"User-Agent": L.USER_AGENT}, timeout=90)
+                r.raise_for_status()
+                js = r.json()
+                if "elements" in js:
+                    break
+                errors.append(f"{url}: no elements in the answer")
+                js = None
+            except (requests.RequestException, ValueError) as exc:
+                errors.append(f"{url}: {type(exc).__name__}")
+        if js is not None:
+            cache.write_text(json.dumps({"retrieved_utc": L.now_iso(), "query": q,
+                                         "way_ids": sorted(str(x["id"]) for x in js["elements"])}, indent=1))
+        elif cache.exists():
+            add(A, "OSM bridge list refreshed from Overpass",
+                "Overpass unavailable (" + "; ".join(errors) + "); used the cached list retrieved "
+                + json.loads(cache.read_text()).get("retrieved_utc", "?")[:10], "WARN", rel(cache))
+        else:
+            raise SystemExit("Overpass unavailable and no cached bridge list: " + "; ".join(errors))
     bridges = set(json.loads(cache.read_text())["way_ids"])
     on_bridge = pts.osm_way_id.astype(str).isin(bridges)
     motor = pts.highway.isin(["motorway", "trunk"])

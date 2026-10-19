@@ -402,7 +402,8 @@ def compare_tree(area: str, new_root: Path, pub_root: Path, exclude: tuple[str, 
     return rows
 
 
-NETWORK_CHECKS = ("Independent re-query", "Points on bridges or freeways")   # depend on today's API answers
+NETWORK_CHECKS = ("Independent re-query", "Points on bridges or freeways",   # depend on today's API answers
+                  "OSM bridge list refreshed")
 
 
 def compare_checks(new: Path, pub: Path, offline: bool = False) -> list[dict]:
