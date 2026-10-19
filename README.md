@@ -9,11 +9,6 @@ study on open secondary data for **1 June – 31 August 2026**. CPTED features m
 correlated with recorded crime (Y1, Saskatoon Police Service) and with perceived safety on Reddit (Y2), on street
 segments in Downtown/CBD.
 
-![Research workflow and data pipeline: three lanes (X built environment, Y1 recorded crime, Y2 perceived safety) run from source through collection and model or cleaning to a measure, and meet in research questions RQ1–RQ3](Docs/figures/pipeline_overview.png)
-
-*Solid boxes run in `./flight --execute_flight` today; dashed boxes are planned. Counts are read from `Data/` by
-`Scripts/reporting/make_pipeline_diagram.py`, which redraws the image.*
-
 ## Start here
 
 | You want | Open |
