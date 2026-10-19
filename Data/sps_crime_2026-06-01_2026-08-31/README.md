@@ -1,7 +1,6 @@
 # SPS criminal offences, 1 June – 31 August 2026 (study period)
 
-Saskatoon Police Service (SPS) criminal-offence records for the revised work plan's study period, obtained
-17 October 2026. This is the **current** recorded-crime dataset (Y1). Category decisions, what the extract does and
+Saskatoon Police Service (SPS) criminal-offence records for the revised work plan's study period. This is the **current** recorded-crime dataset (Y1). Category decisions, what the extract does and
 does not contain, and its caveats: `Docs/crime_data.md`.
 
 | | |
@@ -61,11 +60,3 @@ changed; these columns are added or derived:
 - `type_counts.csv`: every SPS type with its category, decision, records, incidents, CBD records and
   fixed-address midnight records.
 - `cleaning_report.json`: raw file, hash, date range and every count above.
-
-## Use with care
-
-- Reported, not occurred: time-of-day patterns describe reporting.
-- No premise type: street robbery includes commercial robbery, and outdoor assaults cannot be separated.
-- Block-level points: count per block face or street segment, not per 50 m sample point.
-- Leave `fixed_address_midnight` rows out of any "all crime" total, especially for the CBD.
-- Recorded crime reflects reporting and enforcement; call it recorded crime.
