@@ -1,6 +1,7 @@
 # Flake8 settings (VS Code Flake8 extension and the command line). Pylint and Pylance: pyproject.toml.
 [flake8]
 max-line-length = 120
+
 # Flake8's default ignore list (E121,E123,E126,E226,E24,E704,W503,W504), plus:
 ignore = E121,E123,E126,E226,E24,E704,W503,W504,E203,E501,W291,W293,E402,E127,E128,E701,E702
 
