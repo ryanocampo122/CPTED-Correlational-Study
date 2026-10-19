@@ -60,10 +60,13 @@ data dictionary.
 
 - **`01_raw_collection/`** — exactly as scraped, unmodified. Posts, comments, GIS
   export, run metadata, scraper log, and `initial_sraper.py` itself.
+
 - **`02_derived_analysis/`** — the five verified aggregate tables (tagging audit,
   neighbourhood summary, environmental cues, time-of-day, seasonal trend).
+
 - **`03_extracted_comment_samples/`** — the specific comments quoted in the
   report, so each quote traces to a source row.
+
 - **`04_cleaned_datasets/`** — cleaned row-level data with verified `vloc_*`
   location tags alongside the originals, plus `cleaning_changelog.csv` recording
   all 607 individual tag changes with text excerpts.
@@ -99,18 +102,10 @@ Two open items flagged for discussion rather than resolved here:
    city's downtown or were URL-string artifacts; these are documented in the
    changelog. A rounding-level effect (3 of 306), but worth a manual pass before
    anything enters the paper draft.
+
 2. **The social-versus-environmental characterisation of Downtown/CBD** is a
    qualitative reading of the highest-scored comments, not a conclusion the cue
    percentages establish on their own (lighting appears in 17.8% of its negative
    comments). Worth reading those comments directly before defending the claim.
 
 ---
-
-**Edited after sending (19 Oct 2026).** The project's name in the Word files (titles, headers, footers and
-document properties) was changed to ComputerVision_Sentinel, and the memo and the scraper log were renamed to
-match; the same name change was made in the scripts in `analysis_code/` and in the
-scraper copy, run summary and log in `data_pkg_august/01_raw_collection/`. Nothing else was changed, apart from
-removing the Apple Numbers copy of the data tables (the same tables are the CSVs in
-`data_pkg_august/02_derived_analysis/`) and moving the literature review to `Docs/literature review/`. The analysis code now
-shares one neighbourhood list (`analysis_code/scripts/neighbourhoods.py`) and runs with `analysis_code/run_all.sh`;
-its outputs match the delivered files (see `analysis_code/README.md`). The slides are titled "Prairie Sentinel".
