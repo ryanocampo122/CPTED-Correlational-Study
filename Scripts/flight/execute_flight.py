@@ -54,6 +54,7 @@ CV = DATA / "cv_pilot_2026-10"
 CBD, PILOT = CV / "cbd", CV / "cbd_latest_imagery"
 VERIF = REPO / "Docs" / "verification"
 FIGS = REPO / "Docs" / "figures" / "mid_point_october"
+DIAGRAM = REPO / "Docs" / "figures" / "pipeline_overview.png"   # the README image
 ANALYSIS = REPO / "Scripts" / "reddit_analysis"
 REVIEW = ANALYSIS / "manual_review"
 REPORTING = REPO / "Scripts" / "reporting"
@@ -672,7 +673,9 @@ def stage_results(F: Flight) -> None:
     figs = F.d("figures")
     F.run("figures", S, "Figures fig01-fig08",
           [("figures", [py, REPORTING / "make_figures.py", "--out", figs])],
-          note_fn=lambda: f"{len(list(figs.glob('*.png')))} figures")
+          note_fn=lambda: f"{len(list(figs.glob('fig*.png')))} figures")
+    F.run("pipeline_diagram", S, "README workflow and data pipeline diagram",
+          [("diagram", [py, REPORTING / "make_pipeline_diagram.py", "--out", figs / DIAGRAM.name])])
     report = F.d("report")
     numbers = report / "october_2026_numbers.json"
     checks = ver / "october_2026_checks.csv"
@@ -686,7 +689,7 @@ def stage_results(F: Flight) -> None:
         F.skip("report_docx", S, "October report (.docx)", "--skip-report")
     elif not (shutil.which("node") and (REPORTING / "node_modules" / "docx").exists()):
         F.skip("report_docx", S, "October report (.docx)", "node or the docx package is missing (npm install)")
-    elif not numbers.exists() or len(list(figs.glob("*.png"))) < 8:
+    elif not numbers.exists() or len(list(figs.glob("fig*.png"))) < 8:
         F.skip("report_docx", S, "October report (.docx)", "numbers or figures missing")
     else:
         F.run("report_docx", S, "October report (.docx), generated base",
@@ -720,7 +723,12 @@ def stage_checks(F: Flight, snapshot: dict) -> None:
             rows.append({"area": name, "file": "location_other_city_review.csv (after step 01b)", "status": st,
                          "note": note or "no new candidates"})
     if (F.exec_dir / "figures").exists():
-        rows += compare_tree("Figures", F.exec_dir / "figures", FIGS)
+        rows += compare_tree("Figures", F.exec_dir / "figures", FIGS, exclude=(DIAGRAM.name,))
+    if (F.exec_dir / "figures" / DIAGRAM.name).exists():
+        st, note = compare_file(F.exec_dir / "figures" / DIAGRAM.name, DIAGRAM)
+        rows.append({"area": "README diagram", "file": f"Docs/figures/{DIAGRAM.name}", "status": st,
+                     "note": note or ("" if st == "identical" else
+                                      "the README image is out of date: rerun make_pipeline_diagram.py")})
     num = F.exec_dir / "report" / "october_2026_numbers.json"
     if num.exists():
         st, note = compare_file(num, VERIF / "october_2026_numbers.json")
@@ -908,7 +916,7 @@ def write_summary(F: Flight, interrupted: bool = False) -> None:
           "  live/                    fresh API data and its analysis (Reddit dataset, Mapillary coverage, pilot)",
           "  reproduction/            published outputs rebuilt from the committed raw data",
           "  verification/            october_2026_checks.csv/.md",
-          "  figures/                 fig01-fig08",
+          "  figures/                 fig01-fig08 and the README pipeline diagram",
           "  report/                  october_2026_numbers.json, the October report .docx",
           "  comparisons/             reproduction_vs_published.csv, verification_checks_vs_published.csv,",
           "                           live_vs_published.json, repository_files_changed.txt",

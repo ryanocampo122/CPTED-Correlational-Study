@@ -1,4 +1,4 @@
-# UrbanSentinel-Prairie — Data Package
+# ComputerVision_Sentinel — Data Package
 
 All data used in the August 2026 analysis, organised by provenance: what was
 collected, what was derived from it, and which comment samples were pulled for
@@ -22,7 +22,7 @@ tables, not to these files.
 | `saskatoon_safety_gis_20260611.csv` | 90 rows × 12 cols — one row per neighbourhood-mention, formatted for GIS import |
 | `saskatoon_safety_metadata_20260611.json` | Run parameters: seed terms, window, counts, categories tracked |
 | `saskatoon_safety_summary_20260611.txt` | Human-readable summary produced at collection time |
-| `urbansentinel_scraper.log` | Full run log (PRAW init, per-term searches, comment collection progress) |
+| `computervision_sentinel_scraper.log` | Full run log (PRAW init, per-term searches, comment collection progress) |
 | `initial_sraper.py` | The collection script itself, included so the tagging logic is inspectable |
 
 **Note on the location flags in these files.** The `loc_riverbank_meewasin`

@@ -3,6 +3,7 @@
 | Script | Reads | Writes |
 |---|---|---|
 | `make_figures.py` | `Data/`, `Docs/verification/` | `Docs/figures/mid_point_october/fig01`–`fig08` (PNG, 220 dpi); `--out` for another folder |
+| `make_pipeline_diagram.py` | `Data/` (counts only) | `Docs/figures/pipeline_overview.png`: the workflow and data pipeline in the main README; `--out` for another file |
 | `report_numbers.py` | `Data/`, `Docs/verification/october_2026_checks.csv` | `Docs/verification/october_2026_numbers.json`: every number the report quotes |
 | `build_october_report.js` | the JSON above and `Docs/figures/mid_point_october/` (`--numbers`, `--figures`, `--out` redirect each) | `Deliverables/2026-10_october_update/ComputerVision_Sentinel_October2026_Progress_Report.docx` |
 

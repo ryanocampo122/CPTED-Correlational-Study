@@ -1,4 +1,4 @@
-# UrbanSentinel-Prairie — August 2026 Package
+# ComputerVision_Sentinel — August 2026 Package
 
 Reddit safety-perception analysis for the August supervisor meeting.
 Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
@@ -10,12 +10,14 @@ Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
 | If you want to… | Open |
 |---|---|
 | Read the findings | `Master_Report.docx` |
+| Read the literature review | `Master_lit_review.docx` |
+| See the slides from the meeting | `Presentation_Slides.pdf` |
 | Look up a specific number | `data_pkg_august/02_derived_analysis/` |
 | See the evidence behind the data cleaning | `data_pkg_august/04_cleaned_datasets/cleaning_changelog.csv` |
 | Find a quote to cite or read aloud | `data_pkg_august/03_extracted_comment_samples/` |
 | Reuse a chart in slides | `charts/` |
 | Reproduce the analysis | `analysis_code/README.md` |
-| See a map of this package | `august_2026_folder_structure.pdf` |
+| See a map of this package | `august_2026_folder_structure.docx` |
 
 ---
 
@@ -26,14 +28,20 @@ Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
 - **`Master_Report.docx`** — the main deliverable. Verified analysis, six
   figures, site deep dives on Downtown/CBD and Riverbank/Meewasin, direct
   answers to Dr. Jayasooriya's questions, limitations, and recommendations.
-- **`UrbanSentinel_Meewasin_DataQuality_Memo.docx`** — an earlier, narrower memo
+- **`ComputerVision_Sentinel_Meewasin_DataQuality_Memo.docx`** — an earlier, narrower memo
   covering only the Riverbank/Meewasin location verification. Superseded in
   scope by the main report; kept because the report's appendix references it.
-- **`UrbanSentinel_August_DataTables.numbers`** — the summary tables in workbook
+- **`ComputerVision_Sentinel_August_DataTables.numbers`** — the summary tables in workbook
   form. Note this is Apple Numbers format; if a supervisor is on Windows they
   will need the CSVs in `data_pkg_august/02_derived_analysis/` instead.
 
-- **`august_2026_folder_structure.pdf`** — a one-page map of this package with
+- **`Master_lit_review.docx`** — the literature review, *A Privacy-Preserving GeoAI Framework for Urban
+  CPTED Decision Support Using Environmental Sensing and Community Narratives: Site Identification for
+  Saskatoon Pilot Deployment* (about 5,700 words): CPTED theory and evidence, crime and perception, and the
+  candidate pilot sites.
+- **`literature review/master_draft.docx`** — the July draft of the same review (five paragraphs differ).
+- **`Presentation_Slides.pdf`** — the nine slides for the August meeting, including why the numbers changed.
+- **`august_2026_folder_structure.docx`** — a one-page map of this package with
   a navigation table; useful for orienting anyone new to the folder.
 
 ### `charts/`
@@ -98,3 +106,11 @@ Two open items flagged for discussion rather than resolved here:
    qualitative reading of the highest-scored comments, not a conclusion the cue
    percentages establish on their own (lighting appears in 17.8% of its negative
    comments). Worth reading those comments directly before defending the claim.
+
+---
+
+**Edited after sending (19 Oct 2026).** The project's name in the Word files (titles, headers, footers and
+document properties) was changed to ComputerVision_Sentinel, and the memo, the data-tables workbook and the
+scraper log were renamed to match. Nothing else was changed. The workbook's cells still carry the earlier name,
+and the slides are titled "Prairie Sentinel". The July literature-review draft was moved here when the July
+initial-findings folder was removed.

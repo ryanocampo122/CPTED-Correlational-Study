@@ -22,3 +22,5 @@ the published files: `./flight --execute_flight` (repository root). To rebuild o
 ```
 
 The detailed documentation behind the report is in `Docs/` (start at `Docs/README.md`).
+
+**Edited after sending (19 Oct 2026).** In `CPTED_ComputerVis_2026.docx` the project name in the running header, one sentence in section 3.3 and the document properties was changed to ComputerVision_Sentinel; nothing else was changed. The two PDFs still carry the earlier name.
