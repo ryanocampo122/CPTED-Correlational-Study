@@ -1,5 +1,5 @@
 {
-  "name": "urbansentinel-reporting",
+  "name": "computervision-sentinel-reporting",
   "private": true,
   "description": "Builds the October 2026 progress report (.docx) from Docs/figures and Data/",
   "scripts": { "build": "node build_october_report.js" },

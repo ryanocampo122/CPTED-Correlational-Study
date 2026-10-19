@@ -2,7 +2,7 @@
 pilot_lib.py
 ============
 Shared helpers for the October 2026 computer-vision pilot
-(UrbanSentinel-Prairie: street-level imagery -> CPTED cues -> Reddit).
+(ComputerVision_Sentinel: street-level imagery -> CPTED cues -> Reddit).
 
 Design choices
 --------------
@@ -11,7 +11,7 @@ Design choices
   torch + transformers are imported lazily and ONLY by ClipEncoder.
 * Every network call goes through a small function so it can be mocked in
   tests/test_pilot.py (the test-suite never touches the internet).
-* Secrets are read from the git-ignored .env at the repo root and are never
+* Secrets are read from the .env at the repo root and are never
   written to logs, CSVs or exception messages.
 """
 from __future__ import annotations
@@ -24,6 +24,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 
@@ -37,7 +38,7 @@ DEFAULT_OUT = REPO_ROOT / "Data" / "cv_pilot_2026-10" / "cbd"
 DEFAULT_BOUNDARY = REPO_ROOT / "Data" / "boundaries" / "central_business_district_osm.geojson"
 DEFAULT_BOUNDARY_NAME = "central business"
 
-# Box inherited from the August prototype (Archive/initial_cv_prototype_2026-08).
+# Box inherited from the August 2026 prototype (removed; in git history at 060db4f).
 # (min_lon, min_lat, max_lon, max_lat). A hand-drawn PLACEHOLDER: only 36% of the
 # points it produced fall inside the CBD (Docs/verification/october_2026_checks.md).
 # Used only when no boundary file is given (--boundary-geojson "").
@@ -64,7 +65,7 @@ MAPILLARY_MAX_LIMIT = 2000                      # API maximum per request
 LOCAL_TZ = "America/Regina"
 
 SUMMER_MONTHS = (6, 7, 8)                       # study period is June-August
-USER_AGENT = "UrbanSentinel-Prairie research pilot (University of Saskatchewan)"
+USER_AGENT = "ComputerVision_Sentinel research pilot (University of Saskatchewan)"
 
 
 # --------------------------------------------------------------------------- #
@@ -83,14 +84,17 @@ def load_env(path: Path | None = None) -> None:
 
 
 def get_mapillary_token() -> str:
+    """MAPILLARY_TOKEN from the environment or .env. Exits with setup steps if unset.
+    A value starting with PASTE is the August prototype's placeholder and is rejected."""
     load_env()
     tok = os.environ.get("MAPILLARY_TOKEN", "").strip()
     if not tok or tok.upper().startswith("PASTE"):
         raise SystemExit(
-            "MAPILLARY_TOKEN is empty.\n"
+            "MAPILLARY_TOKEN is empty or still a placeholder.\n"
+            f"  The keys live in {REPO_ROOT / '.env'} (copy: {REPO_ROOT / '.venv' / 'keys.txt'}).\n"
+            "  Set the line  MAPILLARY_TOKEN=MLY|...  there. To get a token:\n"
             "  1. Sign in at https://www.mapillary.com/dashboard/developers\n"
             "  2. Register an application and copy its Client Token (starts with 'MLY|')\n"
-            "  3. Put it in the git-ignored .env at the repo root:  MAPILLARY_TOKEN=MLY|...\n"
         )
     return tok
 
@@ -107,6 +111,7 @@ EARTH_R = 6371008.8
 
 
 def haversine_m(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
+    """Great-circle distance in metres."""
     p1, p2 = math.radians(lat1), math.radians(lat2)
     dphi, dl = p2 - p1, math.radians(lon2 - lon1)
     a = math.sin(dphi / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
@@ -114,6 +119,7 @@ def haversine_m(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
 
 
 def bearing_deg(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
+    """Compass bearing from point 1 to point 2, 0-360 degrees, 0 = north."""
     p1, p2 = math.radians(lat1), math.radians(lat2)
     dl = math.radians(lon2 - lon1)
     y = math.sin(dl) * math.cos(p2)
@@ -143,6 +149,7 @@ class LocalProjection:
 
 
 def point_in_ring(x: float, y: float, ring: list) -> bool:
+    """Ray-casting test against one closed ring of (x, y) vertices."""
     inside, n, j = False, len(ring), len(ring) - 1
     for i in range(n):
         xi, yi = ring[i][0], ring[i][1]
@@ -162,6 +169,7 @@ def point_in_polygons(lon: float, lat: float, polys: list) -> bool:
 
 
 def bbox_polygon(bbox: tuple) -> list:
+    """(w, s, e, n) box in the polygon-list format used by point_in_polygons."""
     w, s, e, n = bbox
     return [[[(w, s), (e, s), (e, n), (w, n), (w, s)]]]
 
@@ -221,6 +229,7 @@ def load_boundary(geojson_path: str | None = None, name_match: str | None = None
 # Roads -> street segments -> sample points
 # --------------------------------------------------------------------------- #
 def overpass_query(bbox: tuple, highway_regex: str = DEFAULT_HIGHWAYS) -> str:
+    """Overpass QL for every way in bbox whose highway tag matches highway_regex."""
     w, s, e, n = bbox
     return (f'[out:json][timeout:90];\n'
             f'way["highway"~"^({highway_regex})$"]({s},{w},{n},{e});\n'
@@ -228,6 +237,7 @@ def overpass_query(bbox: tuple, highway_regex: str = DEFAULT_HIGHWAYS) -> str:
 
 
 def parse_overpass(js: dict) -> list[dict]:
+    """Overpass JSON -> [{way_id, name, highway, coords}]. Ways with < 2 vertices are dropped."""
     ways = []
     for el in js.get("elements", []):
         if el.get("type") != "way" or not el.get("geometry"):
@@ -243,6 +253,7 @@ def parse_overpass(js: dict) -> list[dict]:
 
 def fetch_roads_overpass(bbox: tuple, highway_regex: str = DEFAULT_HIGHWAYS, session=None,
                          endpoints=None) -> tuple[list[dict], str]:
+    """Road ways from the first Overpass endpoint that returns any. Returns (ways, endpoint)."""
     import requests
     session = session or requests.Session()
     last = None
@@ -262,6 +273,7 @@ def fetch_roads_overpass(bbox: tuple, highway_regex: str = DEFAULT_HIGHWAYS, ses
 
 
 def load_roads_geojson(path: str) -> list[dict]:
+    """Local (Multi)LineString GeoJSON -> way dicts in the same shape as parse_overpass."""
     obj = json.loads(Path(path).read_text())
     ways = []
     for i, (props, geom) in enumerate(_geojson_geometries(obj, None)):
@@ -280,6 +292,7 @@ def load_roads_geojson(path: str) -> list[dict]:
 
 
 def _ckey(c) -> tuple:
+    """Vertex key rounded to ~1 cm so shared vertices compare equal."""
     return (round(c[0], 7), round(c[1], 7))
 
 
@@ -396,10 +409,12 @@ def local_window(start: str | None, end: str | None) -> tuple[datetime, datetime
 
 
 def iso_z(d: datetime) -> str:
+    """UTC timestamp in the format Mapillary's capture-date filters accept."""
     return d.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def parse_captured_at(v) -> datetime | None:
+    """Mapillary capture time (epoch ms, epoch s or ISO string) -> aware UTC datetime, or None."""
     if v is None:
         return None
     try:
@@ -412,6 +427,7 @@ def parse_captured_at(v) -> datetime | None:
 
 
 def image_lonlat(c: dict) -> tuple[float, float] | None:
+    """Image position, preferring Mapillary's corrected computed_geometry."""
     g = c.get("computed_geometry") or c.get("geometry")
     if g and g.get("coordinates"):
         return g["coordinates"][0], g["coordinates"][1]
@@ -419,6 +435,7 @@ def image_lonlat(c: dict) -> tuple[float, float] | None:
 
 
 def heading_of(c: dict):
+    """Camera heading in degrees, preferring computed_compass_angle. None if absent."""
     h = c.get("computed_compass_angle")
     if h is None:
         h = c.get("compass_angle")
@@ -515,6 +532,7 @@ class MapillaryClient:
         self.session.headers.update({"User-Agent": USER_AGENT})
 
     def _get(self, params: dict):
+        """GET /images with the token as a header; retried as a query parameter on 401/403."""
         r = self.session.get(MAPILLARY_IMAGES_URL, params=params, timeout=30,
                              headers={"Authorization": f"OAuth {self.token}"})
         if r.status_code in (401, 403):               # some tokens only work as a query param
@@ -522,6 +540,7 @@ class MapillaryClient:
         return r
 
     def search(self, lon: float, lat: float, radius_m: float, window: tuple | None = None) -> list[dict]:
+        """Images in a square of half-width radius_m around a point (distance is filtered later)."""
         dlat = radius_m / 111320.0
         dlon = radius_m / (111320.0 * math.cos(math.radians(lat)))
         return self.search_bbox((lon - dlon, lat - dlat, lon + dlon, lat + dlat), window, limit=500)
@@ -547,6 +566,7 @@ class MapillaryClient:
             raise RuntimeError(scrub(str(exc), self.token)) from None
 
     def download(self, url: str, dest: Path) -> int:
+        """Save an image URL to dest. Returns bytes written."""
         r = self.session.get(url, timeout=60)             # CDN link, no token needed
         r.raise_for_status()
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -589,6 +609,7 @@ class ClipEncoder:
         self.logit_scale = float(self.model.logit_scale.exp().item())     # = 100 for released CLIP
 
     def _norm(self, feats):
+        """L2-normalise features to float64 numpy (dot product = cosine similarity)."""
         if not self.torch.is_tensor(feats):                # newer transformers return an output object
             feats = getattr(feats, "pooler_output", feats[0])
         feats = feats / feats.norm(dim=-1, keepdim=True)
@@ -629,26 +650,30 @@ class ClipScorer:
     """Zero-shot scoring from prompt sets in clip_prompts.json.
     * typology: softmax over land-use labels (single-label)
     * cues: for each cue, softmax over [positive prompt, negative prompt] -> P(cue present)
-    Probabilities are UNCALIBRATED (they depend on the contrast wording). Use them to rank
-    and compare images, and validate against hand labels before treating them as measurements."""
-    encoder: object
+    Probabilities are UNCALIBRATED (they depend on the contrast wording). They rank and
+    compare images; they are not measurements until validated against hand labels."""
+    encoder: Any            # ClipEncoder, or any object with encode_texts / encode_images
     prompts: dict
     views: int = 3
     _typ: dict = field(default_factory=dict, init=False)
     _cue: dict = field(default_factory=dict, init=False)
 
     def _embed_phrases(self, phrases: list[str]) -> np.ndarray:
+        """Mean embedding over every phrase x template, re-normalised (prompt ensembling)."""
         texts = [t.format(p) for p in phrases for t in self.prompts["templates"]]
         e = self.encoder.encode_texts(texts).mean(axis=0)
         return e / np.linalg.norm(e)
 
     def prepare(self) -> None:
+        """Embed all typology labels and cue prompt pairs once."""
         self._typ = {k: self._embed_phrases(v) for k, v in self.prompts["typology"].items()
                      if not k.startswith("_")}
         self._cue = {k: (self._embed_phrases(v["positive"]), self._embed_phrases(v["negative"]))
                      for k, v in self.prompts["cues"].items() if not k.startswith("_")}
 
     def score(self, im) -> dict:
+        """One image -> typology top-2, per-label probabilities, and per-cue mean/max
+        P(present) across square views."""
         if not self._typ:
             self.prepare()
         scale = getattr(self.encoder, "logit_scale", 100.0)
@@ -690,6 +715,7 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
 
 
 def git_commit() -> str:
+    """Short hash of HEAD, or 'n/a' outside a git checkout."""
     import subprocess
     try:
         return subprocess.run(["git", "-C", str(REPO_ROOT), "rev-parse", "--short", "HEAD"],

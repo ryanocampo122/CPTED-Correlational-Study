@@ -55,7 +55,7 @@
     "comments"
   ],
   "search_time_filter": "year",
-  "tagging": "whole-word matching; vocabularies from analysis_code/scripts/common.py",
+  "tagging": "whole-word matching; vocabularies from reddit_analysis/scripts/common.py",
   "n_neighbourhoods_tracked": 22,
   "n_environmental_cue_categories": 5,
   "vader_lexicon_adjustments": {

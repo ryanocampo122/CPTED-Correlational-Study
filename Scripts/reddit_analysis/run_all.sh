@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run_all.sh: runs the UrbanSentinel-Prairie Reddit analysis pipeline on one dataset.
+# run_all.sh: runs the ComputerVision_Sentinel Reddit analysis pipeline on one dataset.
 # See README.md for what each step does.
 #
 #   bash run_all.sh                                         June 2025-26 collection -> output/<dataset>/
@@ -24,17 +24,17 @@ for arg in "$@"; do
   esac
 done
 
-export URBANSENTINEL_RAW_DIR="$REPO/Data/$DATASET/01_raw_collection"
-[[ -d "$URBANSENTINEL_RAW_DIR" ]] || { echo "No such dataset: $URBANSENTINEL_RAW_DIR" >&2; exit 1; }
+export COMPUTERVISION_SENTINEL_RAW_DIR="$REPO/Data/$DATASET/01_raw_collection"
+[[ -d "$COMPUTERVISION_SENTINEL_RAW_DIR" ]] || { echo "No such dataset: $COMPUTERVISION_SENTINEL_RAW_DIR" >&2; exit 1; }
 if [[ $PUBLISH == 1 ]]; then
-  export URBANSENTINEL_OUT_DIR="$REPO/Data/$DATASET"
+  export COMPUTERVISION_SENTINEL_OUT_DIR="$REPO/Data/$DATASET"
 else
-  export URBANSENTINEL_OUT_DIR="${URBANSENTINEL_OUT_DIR:-$HERE/output/$DATASET}"
+  export COMPUTERVISION_SENTINEL_OUT_DIR="${COMPUTERVISION_SENTINEL_OUT_DIR:-$HERE/output/$DATASET}"
 fi
 PY="$REPO/.venv/bin/python"
 [[ -x "$PY" ]] || PY=python3
 echo "Dataset: $DATASET"
-echo "Writing outputs to: $URBANSENTINEL_OUT_DIR"
+echo "Writing outputs to: $COMPUTERVISION_SENTINEL_OUT_DIR"
 
 cd "$HERE/scripts"
 run() { echo; echo "== $1 =="; "$PY" "$1"; }
@@ -51,4 +51,4 @@ run 05_extract_example_quotes.py
 run 08_verify_outputs.py            # exits non-zero if any check fails
 
 echo
-echo "Done. Outputs are in $URBANSENTINEL_OUT_DIR"
+echo "Done. Outputs are in $COMPUTERVISION_SENTINEL_OUT_DIR"

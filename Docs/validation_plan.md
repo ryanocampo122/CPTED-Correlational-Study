@@ -20,7 +20,7 @@ them concrete and adds the checks the October work showed are needed.
 | Reddit cue tags | Cue words mean the environmental cue | held-out sample, 30 per cue (June records): lighting 50%, noise 93%, people 87%, time 90%, weather 90%; add a Jun–Aug sample; split `people` | precision ≥ 0.8; lighting hand-coded | partly done |
 | Reddit coding (Dec–Jan) | Location, crime type, cue codes are consistent | codebook; second coder on a random 10–20%; kappa | κ ≥ 0.6 | planned |
 | Sentiment | Scores follow human judgement of tone | hand-rate ~200 records (negative / neutral / positive); compare with adjusted VADER | report agreement; keep the 4-scorer sensitivity | sensitivity done; hand-rating planned |
-| Recorded crime (Y1) | Locations precise enough for the unit | compare location generalization with segment length; test sensitivity to a coarser unit | — | data obtained; to be added to `Data/` |
+| Recorded crime (Y1) | Locations precise enough for the unit | compare location generalization with segment length; test sensitivity to a coarser unit | — | data added and cleaned (`Data/sps_crime_2026-06-01_2026-08-31/`): locations are hundred-blocks or intersections, 9,650 records on 2,625 points; sensitivity test not started |
 | Pipeline | Same inputs give the same outputs | automated checks; byte-for-byte reproduction | all pass | done: 30 checks; 22/22 and 23/23 tables |
 
 Targets are proposals for the co-leads to confirm. Report every result, including cues that fail and are dropped.

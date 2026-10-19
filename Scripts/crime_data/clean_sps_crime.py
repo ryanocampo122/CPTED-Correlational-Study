@@ -2,7 +2,7 @@
 """
 clean_sps_crime.py
 ==================
-UrbanSentinel-Prairie | Clean the Saskatoon Police Service (SPS) criminal-offence extract (Y1)
+ComputerVision_Sentinel | Clean the Saskatoon Police Service (SPS) criminal-offence extract (Y1)
 
 Reads the raw extract in Data/sps_crime_2026-06-01_2026-08-31/01_raw_collection/ (never edited; its SHA-256 is
 checked first) and writes 02_cleaned/:
@@ -71,6 +71,7 @@ BLOCK_RE = re.compile(r"^(\d+) BLOCK (.+)$")
 
 
 def sha256(path: Path) -> str:
+    """Hex SHA-256 of a file, read in 1 MB chunks."""
     h = hashlib.sha256()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(1 << 20), b""):
@@ -90,6 +91,8 @@ def parse_location(loc: str) -> tuple[str, object, str, str]:
 
 
 def clean(raw: Path, out: Path, check_hash: bool = True) -> dict:
+    """Write the 02_cleaned/ outputs and return the cleaning report. Exits if the raw
+    file's hash changed (check_hash), its columns differ, or an SPS type is unmapped."""
     digest = sha256(raw)
     if check_hash and digest != RAW_SHA256:
         raise SystemExit(f"{raw.name} has changed (SHA-256 {digest}); raw files are never edited. "

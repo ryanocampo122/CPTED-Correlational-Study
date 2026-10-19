@@ -71,7 +71,7 @@ adjusted VADER, 95% CI from resampling threads):
 Downtown sits at the corpus average in summer 2026; the 12-month collection had it at 41.8%, but the windows and
 search terms differ, so this is not a trend. Small areas have very wide intervals.
 
-![Share negative by area](figures/fig03_reddit_by_area.png)
+![Share negative by area](figures/mid_point_october/fig03_reddit_by_area.png)
 
 ## Limitations to carry into the analysis
 

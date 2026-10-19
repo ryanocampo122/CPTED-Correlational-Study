@@ -1,7 +1,7 @@
 """
 reddit_scraper.py
 =================
-UrbanSentinel-Prairie | Reddit crime- and safety-narrative collector (r/saskatoon)
+ComputerVision_Sentinel | Reddit crime- and safety-narrative collector (r/saskatoon)
 
 Project: A Privacy-Preserving GeoAI Framework for Urban CPTED Decision Support
 Co-Leads: Dr. Varuni Jayasooriya (SENS) & Dr. Timothy Kang (Sociology)
@@ -43,10 +43,10 @@ USAGE
 
 CREDENTIALS
 -----------
-PRAW_CLIENT_ID, PRAW_CLIENT_SECRET, PRAW_USER_AGENT and URBANSENTINEL_HASH_SALT
+PRAW_CLIENT_ID, PRAW_CLIENT_SECRET, PRAW_USER_AGENT and COMPUTERVISION_SENTINEL_HASH_SALT
 are read from the environment, or from the `.env` file at the repository root
-(git-ignored, never committed). The salt keys the author hashes; keep it private
-and reuse it so hashes stay comparable across collections.
+(tracked in the private repo; a copy is in .venv/keys.txt). The salt keys the author hashes. It stays private
+and is reused across collections so hashes remain comparable.
 
 OUTPUTS (in --out)
 ------------------
@@ -55,7 +55,8 @@ OUTPUTS (in --out)
   saskatoon_safety_metadata_<YYYYMMDD>.json  run parameters and counts
   saskatoon_safety_gis_<YYYYMMDD>.csv        one row per post x neighbourhood
   saskatoon_safety_summary_<YYYYMMDD>.txt    human-readable summary
-  urbansentinel_scraper.log                  run log
+  search_query_log_<YYYYMMDD>.csv            results returned per term x sort
+  computervision_sentinel_scraper.log        run log
   collection_code/                           exact copies of this script and
                                              common.py used for the run
 
@@ -113,7 +114,7 @@ SCRAPER_VERSION = "2026-10"
 LOCAL_TZ = ZoneInfo(common.LOCAL_TZ)
 REPO_ROOT = HERE.parents[1]
 
-logger = logging.getLogger("UrbanSentinel")
+logger = logging.getLogger("ComputerVision_Sentinel")
 
 
 # ---------------------------------------------------------------------------
@@ -144,6 +145,7 @@ def search_query(term: str, seed_set: str) -> str:
 
 @dataclass
 class ScraperConfig:
+    """Collection parameters. Defaults reproduce the October 2026 study-period run."""
     subreddit: str = "saskatoon"
     start_local: date = date(2026, 6, 1)
     end_local: date = date(2026, 8, 31)          # inclusive
@@ -162,6 +164,7 @@ class ScraperConfig:
 
     @property
     def window_utc(self) -> tuple[int, int]:
+        """Inclusive local-date window as UTC epoch seconds (start, end)."""
         start = datetime.combine(self.start_local, dtime.min, LOCAL_TZ)
         end = datetime.combine(self.end_local, dtime.max, LOCAL_TZ)
         return int(start.timestamp()), int(end.timestamp())
@@ -174,6 +177,7 @@ class ScraperConfig:
         return "year" if days <= 360 else "all"
 
     def seed_regex(self, seed_set: str) -> re.Pattern:
+        """Whole-word regex matching any term in one seed set."""
         return re.compile(r"\b(?:" + "|".join(re.escape(t) for t in SEED_TERMS[seed_set]) + r")\b")
 
 
@@ -208,6 +212,7 @@ class SaskatoonSafetyCollector:
     # ------------------------------------------------------------------
 
     def collect(self) -> None:
+        """Run every search and the top listing, then fetch comments for captured posts."""
         sub = self.reddit.subreddit(self.config.subreddit)
         w0, w1 = self.config.window_utc
         logger.info("Window (local): %s .. %s  |  UTC %s .. %s",
@@ -227,6 +232,7 @@ class SaskatoonSafetyCollector:
             self._collect_comments()
 
     def _search(self, sub, term: str, seed_set: str, sort: str) -> None:
+        """One search (term x sort). Out-of-window results are dropped; counts go to query_log."""
         q = search_query(term, seed_set)
         seen = kept = 0
         try:
@@ -241,6 +247,7 @@ class SaskatoonSafetyCollector:
         time.sleep(self.config.inter_query_sleep)
 
     def _listing(self, listing, label: str) -> None:
+        """Capture listing posts whose title or body contains a seed term."""
         kept = 0
         try:
             for s in listing:
@@ -269,6 +276,7 @@ class SaskatoonSafetyCollector:
     # ------------------------------------------------------------------
 
     def _extract_post(self, s) -> dict:
+        """Submission -> flat record. The author is hashed later, in _anonymize."""
         body, title = s.selftext or "", s.title or ""
         return {
             "id": s.id,
@@ -294,6 +302,8 @@ class SaskatoonSafetyCollector:
         }
 
     def _collect_comments(self) -> None:
+        """Comment threads for every captured post, capped by max_comment_depth and
+        max_comments_per_post. "Load more" stubs are not expanded (replace_more_limit=0)."""
         posts = list(self._posts.values())
         logger.info("Collecting comments for %d posts", len(posts))
         w0, w1 = self.config.window_utc
@@ -338,6 +348,7 @@ class SaskatoonSafetyCollector:
     # ------------------------------------------------------------------
 
     def build_dataframes(self) -> tuple[pd.DataFrame, pd.DataFrame]:
+        """Captured posts and comments -> processed (posts_df, comments_df)."""
         records = []
         for rec in self._posts.values():
             found = sorted(rec.pop("_found_by", set()))
@@ -359,6 +370,7 @@ class SaskatoonSafetyCollector:
         return posts_df, comments_df
 
     def _process(self, df: pd.DataFrame, text_col: str) -> pd.DataFrame:
+        """Clean, add time fields, tag places/cues/seed terms, hash authors, score sentiment."""
         df = self._clean(df, text_col=text_col)
         df = self._add_temporal(df, date_col="created_date")
         df = self._tag_neighbourhoods(df, text_col=text_col)
@@ -373,6 +385,7 @@ class SaskatoonSafetyCollector:
 
     @staticmethod
     def _clean(df: pd.DataFrame, text_col: str) -> pd.DataFrame:
+        """Drop deleted/bot rows and duplicates; add PII-scrubbed cleaned_text."""
         df = df[~df[text_col].isin(["[deleted]", "[removed]", ""])].copy()
         df = df[~df["author"].isin(["[deleted]", "AutoModerator", "[removed]"])]
         df = df.drop_duplicates(subset=[df.columns[0]])
@@ -383,6 +396,7 @@ class SaskatoonSafetyCollector:
 
     @staticmethod
     def _scrub_pii(text: str) -> str:
+        """Lower-cased text with URLs, phone numbers, emails and street addresses tokenised."""
         if not isinstance(text, str) or not text:
             return ""
         t = text.lower()
@@ -398,6 +412,7 @@ class SaskatoonSafetyCollector:
 
     @staticmethod
     def _add_temporal(df: pd.DataFrame, date_col: str) -> pd.DataFrame:
+        """Calendar fields in Saskatoon local time, plus season and time-of-day buckets."""
         d_utc = pd.to_datetime(df[date_col], utc=True)
         d = d_utc.dt.tz_convert(common.LOCAL_TZ)
         df["year"] = d.dt.year
@@ -415,6 +430,7 @@ class SaskatoonSafetyCollector:
 
     @staticmethod
     def _tag_neighbourhoods(df: pd.DataFrame, text_col: str) -> pd.DataFrame:
+        """loc_* flags and a neighbourhoods_mentioned list per record."""
         # Whole-word matching; other-city references ("downtown Regina") are
         # removed at analysis time from the hand-review file.
         df["neighbourhoods_mentioned"] = df[text_col].apply(
@@ -427,6 +443,7 @@ class SaskatoonSafetyCollector:
 
     @staticmethod
     def _tag_environmental_cues(df: pd.DataFrame, text_col: str) -> pd.DataFrame:
+        """env_* flag per cue category, plus n_env_cues."""
         for cue in ENVIRONMENTAL_CUE_NAMES:
             df[f"env_{cue}"] = df[text_col].apply(lambda t, q=cue: common.cue_flag(t, q))
         df["n_env_cues"] = df[[f"env_{k}" for k in ENVIRONMENTAL_CUE_NAMES]].sum(axis=1)
@@ -434,12 +451,14 @@ class SaskatoonSafetyCollector:
 
     @staticmethod
     def _anonymize(df: pd.DataFrame, author_col: str) -> pd.DataFrame:
-        salt = os.environ["URBANSENTINEL_HASH_SALT"].encode()
+        """Replace the author with a 16-hex-char HMAC-SHA-256 hash (salted, see CREDENTIALS)."""
+        salt = os.environ["COMPUTERVISION_SENTINEL_HASH_SALT"].encode()
         df["author_hash"] = df[author_col].apply(
             lambda a: hmac.new(salt, str(a).encode(), hashlib.sha256).hexdigest()[:16])
         return df.drop(columns=[author_col])
 
     def _add_sentiment(self, df: pd.DataFrame, text_col: str) -> pd.DataFrame:
+        """Standard VADER scores, plus the adjusted-lexicon compound used as the primary measure."""
         def score(text: str) -> dict:
             if not isinstance(text, str) or not text.strip():
                 return {"compound": 0.0, "pos": 0.0, "neu": 1.0, "neg": 0.0}
@@ -461,6 +480,8 @@ class SaskatoonSafetyCollector:
     # ------------------------------------------------------------------
 
     def export(self, posts_df: pd.DataFrame, comments_df: pd.DataFrame) -> str:
+        """Write every output to output_dir and copy the collection code beside it.
+        Returns the date stamp used in the file names."""
         stamp = datetime.now(LOCAL_TZ).strftime("%Y%m%d")
         out = self.config.output_dir
         for name, df in [("posts", posts_df), ("comments", comments_df)]:
@@ -484,6 +505,7 @@ class SaskatoonSafetyCollector:
         return stamp
 
     def _write_metadata(self, posts_df, comments_df, stamp: str) -> None:
+        """Run parameters and counts -> saskatoon_safety_metadata_<stamp>.json."""
         w0, w1 = self.config.window_utc
         meta = {
             "collection_run_utc": datetime.now(timezone.utc).isoformat(),
@@ -520,6 +542,7 @@ class SaskatoonSafetyCollector:
         logger.info("Metadata saved: %s", path)
 
     def _write_gis(self, posts_df: pd.DataFrame, stamp: str) -> None:
+        """One row per post x neighbourhood mentioned -> saskatoon_safety_gis_<stamp>.csv."""
         if posts_df.empty:
             return
         ex = posts_df.explode("neighbourhoods_mentioned").rename(
@@ -534,8 +557,9 @@ class SaskatoonSafetyCollector:
         logger.info("GIS export saved: %s (%d neighbourhood-mentions)", path, len(ex))
 
     def _write_summary(self, posts_df, comments_df, stamp: str) -> None:
+        """Human-readable counts -> saskatoon_safety_summary_<stamp>.txt."""
         path = self.config.output_dir / f"saskatoon_safety_summary_{stamp}.txt"
-        lines = ["=" * 70, "UrbanSentinel-Prairie | Reddit Crime & Safety Narrative Collection",
+        lines = ["=" * 70, "ComputerVision_Sentinel | Reddit Crime & Safety Narrative Collection",
                  f"r/{self.config.subreddit} | {self.config.start_local} – {self.config.end_local} "
                  f"(local time) | scraper {SCRAPER_VERSION}", "=" * 70, ""]
         if posts_df.empty:
@@ -568,7 +592,7 @@ class SaskatoonSafetyCollector:
 REQUIRED_ENV = {
     "PRAW_CLIENT_ID": "Reddit app client ID",
     "PRAW_CLIENT_SECRET": "Reddit app client secret",
-    "URBANSENTINEL_HASH_SALT": "private random string used to key author hashes",
+    "COMPUTERVISION_SENTINEL_HASH_SALT": "private random string used to key author hashes",
 }
 
 
@@ -584,9 +608,10 @@ def load_env_file(path: Path) -> None:
 
 
 def setup_logging(out_dir: Path | None) -> None:
+    """Log to the console, and to the run log in out_dir when given."""
     handlers: list[logging.Handler] = [logging.StreamHandler()]
     if out_dir is not None:
-        handlers.append(logging.FileHandler(out_dir / "urbansentinel_scraper.log"))
+        handlers.append(logging.FileHandler(out_dir / "computervision_sentinel_scraper.log"))
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s",
                         handlers=handlers, force=True)
 
@@ -603,6 +628,7 @@ def parse_args(argv=None) -> argparse.Namespace:
 
 
 def main(argv=None) -> None:
+    """CLI entry point: check credentials, collect, export."""
     args = parse_args(argv)
     load_env_file(REPO_ROOT / ".env")
     missing = [k for k in REQUIRED_ENV if not os.getenv(k)]
@@ -611,7 +637,7 @@ def main(argv=None) -> None:
                          f"{REPO_ROOT / '.env'}):\n" + "\n".join(f"  {k}: {REQUIRED_ENV[k]}" for k in missing))
     creds = {"client_id": os.environ["PRAW_CLIENT_ID"],
              "client_secret": os.environ["PRAW_CLIENT_SECRET"],
-             "user_agent": os.getenv("PRAW_USER_AGENT", "UrbanSentinel-Prairie/1.0 by /u/ocamporyan")}
+             "user_agent": os.getenv("PRAW_USER_AGENT", "ComputerVision_Sentinel/1.0 by /u/ocamporyan")}
 
     start, end = date.fromisoformat(args.start), date.fromisoformat(args.end)
     seed_sets = tuple(s.strip() for s in args.seed_sets.split(",") if s.strip())
@@ -633,7 +659,7 @@ def main(argv=None) -> None:
                            collect_comments=not args.no_comments, output_dir=out)
     collector = SaskatoonSafetyCollector(creds, config)
     logger.info("=" * 70)
-    logger.info("UrbanSentinel-Prairie | r/%s | %s .. %s (local) | seed sets: %s | sorts: %s",
+    logger.info("ComputerVision_Sentinel | r/%s | %s .. %s (local) | seed sets: %s | sorts: %s",
                 config.subreddit, start, end, ",".join(seed_sets), ",".join(config.search_sorts))
     logger.info("=" * 70)
     collector.collect()

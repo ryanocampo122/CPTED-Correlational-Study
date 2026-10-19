@@ -2,7 +2,7 @@
 """
 verify_october_2026.py
 ======================
-UrbanSentinel-Prairie | Independent checks on the October 2026 work-plan tasks
+ComputerVision_Sentinel | Independent checks on the October 2026 work-plan tasks
 
 The October tasks (revised work plan, p. 5) are: finalize crime categories,
 extend the Reddit collection to 1 June - 31 August 2026, generate sample points
@@ -23,6 +23,9 @@ USAGE (from the repository root)
       --network          also re-query Mapillary for 2024-2026 imagery over the
                          CBD (plain tiled bbox queries, independent of pilot.py coverage)
                          and refresh the cached OSM bridge list (Overpass)
+      --out <folder>     where the checks table goes (default: Docs/verification/)
+      --bridge-cache <json>  OSM bridge list to read, and to refresh with --network
+                         (default: Data/cv_pilot_2026-10/cbd/osm_bridge_way_ids.json)
 """
 from __future__ import annotations
 
@@ -49,6 +52,7 @@ BOX = CV / "placeholder_box"
 PILOT = CV / "cbd_latest_imagery"
 BOUNDARY = DATA / "boundaries" / "central_business_district_osm.geojson"
 OUT = REPO / "Docs" / "verification"
+BRIDGE_CACHE = CBD / "osm_bridge_way_ids.json"
 TZ = "America/Regina"
 
 sys.path.insert(0, str(REPO / "Scripts" / "cv_pilot"))
@@ -58,17 +62,21 @@ ROWS: list[dict] = []
 
 
 def add(area: str, check: str, result: str, status: str, evidence: str = "") -> None:
+    """Record one row of the checks table."""
     ROWS.append({"area": area, "check": check, "result": result, "status": status, "evidence": evidence})
 
 
 def rel(p: Path) -> str:
-    return str(p.relative_to(REPO))
+    p = Path(p).resolve()
+    return str(p.relative_to(REPO)) if p.is_relative_to(REPO) else str(p)
 
 
 # --------------------------------------------------------------------------- #
 # Reddit: the study-period collection
 # --------------------------------------------------------------------------- #
 def reddit_checks(rerun: bool) -> None:
+    """Reddit Jun-Aug 2026 checks. rerun=True also re-runs both Reddit pipelines into a
+    temp folder and compares every published CSV byte for byte."""
     A = "Reddit Jun-Aug 2026"
     raw = REDDIT / "01_raw_collection"
     posts = pd.read_csv(next(raw.glob("saskatoon_safety_posts_*.csv")))
@@ -177,7 +185,7 @@ def reddit_checks(rerun: bool) -> None:
     if rerun:
         for ds in (REDDIT, REDDIT_JUNE):
             with tempfile.TemporaryDirectory() as tmp:
-                env = {**os.environ, "URBANSENTINEL_OUT_DIR": tmp}
+                env = {**os.environ, "COMPUTERVISION_SENTINEL_OUT_DIR": tmp}
                 r = subprocess.run(["bash", str(REPO / "Scripts/reddit_analysis/run_all.sh"), ds.name],
                                    env=env, capture_output=True, text=True)
                 files = [p.relative_to(tmp) for p in Path(tmp).rglob("*.csv")]
@@ -192,6 +200,7 @@ def reddit_checks(rerun: bool) -> None:
 # Sample points
 # --------------------------------------------------------------------------- #
 def point_checks(network: bool) -> None:
+    """Sample-point checks. network=True refreshes the cached OSM bridge list."""
     A = "Sample points"
     polys, _, _ = L.load_boundary(str(BOUNDARY), "central business")
     pts = pd.read_csv(CBD / "sample_points.csv")
@@ -236,7 +245,7 @@ def point_checks(network: bool) -> None:
     hw = pts.highway.value_counts()
     add(A, "Road classes sampled", ", ".join(f"{k} {v}" for k, v in hw.items()), "INFO")
 
-    cache = CBD / "osm_bridge_way_ids.json"
+    cache = BRIDGE_CACHE
     if network or not cache.exists():
         w, s, e, n = meta["bbox"]
         import requests
@@ -258,6 +267,8 @@ def point_checks(network: bool) -> None:
 # Street-level imagery
 # --------------------------------------------------------------------------- #
 def imagery_checks(network: bool) -> None:
+    """Coverage and pilot-image checks. network=True adds a tiled Mapillary re-query for
+    2024-2026 imagery, independent of pilot.py."""
     A = "Street-level images"
     meta = json.loads((CBD / "run_meta.json").read_text())["coverage"]
     cp = pd.read_csv(CBD / "coverage_points.csv")
@@ -315,6 +326,7 @@ def imagery_checks(network: bool) -> None:
 
 
 def write() -> None:
+    """Write the checks to OUT as CSV and Markdown, and print them."""
     OUT.mkdir(parents=True, exist_ok=True)
     df = pd.DataFrame(ROWS)
     df.to_csv(OUT / "october_2026_checks.csv", index=False)
@@ -334,10 +346,14 @@ def write() -> None:
 
 
 def main() -> int:
+    global OUT, BRIDGE_CACHE
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--rerun-pipeline", action="store_true")
     ap.add_argument("--network", action="store_true")
+    ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--bridge-cache", type=Path, default=BRIDGE_CACHE)
     a = ap.parse_args()
+    OUT, BRIDGE_CACHE = a.out, a.bridge_cache
     reddit_checks(a.rerun_pipeline)
     point_checks(a.network)
     imagery_checks(a.network)

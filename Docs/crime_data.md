@@ -40,23 +40,6 @@ These categories match the Hypotheses: H1 (opportunistic crime), H2 (mischief an
 - SPS also publishes monthly and annual statistics as PDFs by patrol division (Central, East, North, West): far too
   coarse for street segments.
 
-## `Data/crime/` is not the SPS data
-
-`Data/crime/` holds Statistics Canada police-reported crime collected for the related Sentinel climate–crime research,
-not the SPS extract for this study, which is in `Data/sps_crime_2026-06-01_2026-08-31/` (checked 17 Oct 2026):
-
-- `<city>/Actual_Incidents_*.csv`: "Actual incidents" for 314 detailed violations, one count per year, 2010–2024, for
-  Saskatoon, Regina, Edmonton and Winnipeg (Statistics Canada geography codes 47725, 47705, 48835, 46602). 539 of the
-  4,668 values per city are not available (status "..").
-- `crime_metrics/`: each city's yearly "Total, all violations" and its year-on-year change; both match the source
-  files exactly.
-- The same four incident files are copied, unchanged, in `Data/reddit_2009_2025/`.
-
-There are no dates within the year, no locations and no premise type, so these files cannot give counts per street
-segment or for June–August 2026. They do include the matching violation types (breaking and entering, theft of and
-from motor vehicles, mischief, robbery, assault levels 1–3), so at most they give city-wide context, such as
-Saskatoon's yearly trend for the selected categories.
-
 ## The SPS extract, June–August 2026
 
 Obtained 17 Oct 2026 and kept unchanged in `Data/sps_crime_2026-06-01_2026-08-31/01_raw_collection/`;

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# flight: the whole ComputerVision_Sentinel pipeline in one command.
+#
+#   ./flight --execute_flight             install -> collect (Reddit, Mapillary APIs) -> load CLIP + VADER -> results
+#   ./flight --execute_flight --offline   the same without API calls
+#   ./flight --help                       every option
+#
+# Each run writes everything into a new RESULTS_FINAL/EXECUTION-<n>/ and nothing anywhere else.
+# The work is done by Scripts/flight/execute_flight.py (standard library only, so it can create .venv itself).
+set -euo pipefail
+cd "$(dirname "$0")"
+if [[ -x .venv/bin/python ]]; then PY=.venv/bin/python; else PY=python3; fi
+exec "$PY" Scripts/flight/execute_flight.py "$@"

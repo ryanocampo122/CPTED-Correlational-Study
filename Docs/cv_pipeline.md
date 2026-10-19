@@ -19,7 +19,7 @@ building frontage.
 **Fixed:** the first run (`placeholder_box/`) used a hand-drawn box from the August prototype. Only 212 of its 595
 points (36%) were in the CBD, and it missed 208 of the 423 CBD points (49%). The tool now defaults to the polygon.
 
-![Sample points](figures/fig05_sample_points_map.png)
+![Sample points](figures/mid_point_october/fig05_sample_points_map.png)
 
 ## Step 2: image collection
 
@@ -43,7 +43,7 @@ Zhou et al. 2021; Yue et al. 2022; Su, Li & Qiu 2023); see Section 4 of the Octo
 An independent tiled query found no Mapillary images over the CBD captured from 2024 to 16 Oct 2026. A study-period
 download over 60 spread points found 0 images (all logged in `cbd/pilot_attempts.csv`).
 
-![Imagery by year](figures/fig06_imagery_by_year.png)
+![Imagery by year](figures/mid_point_october/fig06_imagery_by_year.png)
 
 **Why it matters and what others do.** Imagery 3–6 years older than the outcomes describes the typical built form,
 not the street in summer 2026. Published street-view crime studies keep imagery within 1–3 years of the crime data
@@ -66,7 +66,7 @@ CLIP (`openai/clip-vit-base-patch32`, 3 square views per image) scored 8 land-us
 `clip_prompts.json`. The Reddit link reproduces the Downtown summary (238 records). `validation_template_blind.csv`
 is the blank hand-labelling sheet (no model scores shown).
 
-![Pilot images](figures/fig07_pilot_images.png)
+![Pilot images](figures/mid_point_october/fig07_pilot_images.png)
 
 What the pilot showed:
 

@@ -14,10 +14,15 @@ package-lock.json
 .Rhistory
 .RData
 
-# Secrets — never commit credentials
-.env
+# Secrets. The root .env IS tracked (the GitHub repo is private).
+# Any other *.env and secrets.* file stays out of git.
 *.env
+!/.env
 secrets.*
+
+# ./flight --execute_flight runs: one EXECUTION-<n>/ folder per run, regenerated from code;
+# large, and holds Reddit text (see Docs/data_ethics.md)
+RESULTS_FINAL/
 
 # Scratch pipeline runs (re-created by run_all.sh; published outputs live in Data/<dataset>/)
 Scripts/reddit_analysis/output/

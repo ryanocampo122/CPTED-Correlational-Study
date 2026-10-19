@@ -2,15 +2,17 @@
 """
 report_numbers.py
 =================
-UrbanSentinel-Prairie | Every number quoted in the October 2026 progress report
+ComputerVision_Sentinel | Every number quoted in the October 2026 progress report
 
 Reads Data/ and writes Docs/verification/october_2026_numbers.json, which
 build_october_report.js reads. Nothing in the report text is typed by hand.
 
-USAGE (repository root):  .venv/bin/python Scripts/reporting/report_numbers.py
+USAGE (repository root):  .venv/bin/python Scripts/reporting/report_numbers.py [--checks <csv>] [--out <json>]
+  defaults: Docs/verification/october_2026_checks.csv -> Docs/verification/october_2026_numbers.json
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -23,6 +25,7 @@ DATA = REPO / "Data"
 REDDIT = DATA / "reddit_2026-06-01_2026-08-31"
 JUNE = DATA / "reddit_2025-06-11_2026-06-11"
 CV = DATA / "cv_pilot_2026-10"
+CHECKS = REPO / "Docs" / "verification" / "october_2026_checks.csv"      # --checks overrides
 TZ = "America/Regina"
 sys.path.insert(0, str(REPO / "Scripts" / "cv_pilot"))
 import pilot_lib as L  # noqa: E402
@@ -33,6 +36,7 @@ def r1(x):
 
 
 def reddit() -> dict:
+    """Reddit numbers: collection counts, query log, Downtown and comparison areas, cue precision."""
     raw = REDDIT / "01_raw_collection"
     p = pd.read_csv(next(raw.glob("saskatoon_safety_posts_*.csv")))
     c = pd.read_csv(next(raw.glob("saskatoon_safety_comments_*.csv")))
@@ -45,7 +49,7 @@ def reddit() -> dict:
     prec = pd.read_csv(REDDIT / "05_audits" / "env_cue_precision_heldout.csv").set_index("cue")
     vr = (REDDIT / "05_audits" / "verification_report.txt").read_text()
     vrj = (JUNE / "05_audits" / "verification_report.txt").read_text()
-    chk = pd.read_csv(REPO / "Docs" / "verification" / "october_2026_checks.csv")
+    chk = pd.read_csv(CHECKS)
 
     def area(df, name):
         r = df.loc[name]
@@ -109,6 +113,7 @@ def reddit() -> dict:
 
 
 def points() -> dict:
+    """Sample-point numbers, including the placeholder-box comparison."""
     polys, _, _ = L.load_boundary(str(DATA / "boundaries" / "central_business_district_osm.geojson"), "central business")
     pts = pd.read_csv(CV / "cbd" / "sample_points.csv")
     box = pd.read_csv(CV / "placeholder_box" / "sample_points.csv")
@@ -136,6 +141,7 @@ def points() -> dict:
 
 
 def imagery() -> dict:
+    """Coverage-audit and pilot-image numbers."""
     cov = json.loads((CV / "cbd" / "run_meta.json").read_text())["coverage"]
     cp = pd.read_csv(CV / "cbd" / "coverage_points.csv")
     newest = cp[["latest_flat", "latest_pano"]].fillna("").max(axis=1).str[:4].replace("", "none")
@@ -158,10 +164,17 @@ def imagery() -> dict:
 
 
 def main() -> None:
+    global CHECKS
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--checks", type=Path, default=CHECKS, help="verification checks CSV (default: %(default)s)")
+    ap.add_argument("--out", type=Path, default=REPO / "Docs" / "verification" / "october_2026_numbers.json",
+                    help="numbers JSON to write (default: %(default)s)")
+    a = ap.parse_args()
+    CHECKS = a.checks
     out = {"generated_from": "Data/ via Scripts/reporting/report_numbers.py",
            "reddit": reddit(), "points": points(), "imagery": imagery()}
-    path = REPO / "Docs" / "verification" / "october_2026_numbers.json"
-    path.write_text(json.dumps(out, indent=1, default=str))
+    a.out.parent.mkdir(parents=True, exist_ok=True)
+    a.out.write_text(json.dumps(out, indent=1, default=str))
     print(json.dumps(out, indent=1, default=str))
 
 

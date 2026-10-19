@@ -18,12 +18,12 @@ Full verification: `Docs/verification/october_2026_checks.md`. Method and limita
 
 | Folder | Contents | Made by |
 |---|---|---|
-| `01_raw_collection/` | posts, comments, GIS export, metadata, summary, search-query log, scraper log, and `collection_code/` (the exact scraper and `common.py` that ran) | the scraper; **never edit** |
+| `01_raw_collection/` | posts, comments, GIS export, metadata, summary, search-query log, scraper log, and `collection_code/` (the exact scraper and `common.py` that ran) | the scraper; **never edit** (one exception: on 18 Oct 2026 three folder-path strings in the metadata JSON and `collection_code/reddit_scraper.py` were updated to the current folder layout; no data values changed) |
 | `02_derived_analysis/` | per-area summary, thread-inherited sensitivity, environmental cues by area, time of day, night contrasts, season and month tables | `run_all.sh` step 02 |
 | `03_extracted_comment_samples/` | candidate example comments (verbatim, re-identifiable: **do not quote outside the team**) | step 05 |
 | `04_cleaned_datasets/` | row-level posts and comments with every correction added as new columns; location and cue changelogs | step 01d |
 | `05_audits/` | tagging audits, cue precision, sentiment sensitivity, verification report | steps 01, 01c, 02b, 08 |
-| `charts/`, `UrbanSentinel_DataTables_corrected.xlsx` | report charts and a workbook of every table | steps 03, 04 |
+| `charts/`, `ComputerVision_Sentinel_DataTables_corrected.xlsx` | report charts and a workbook of every table | steps 03, 04 |
 
 Regenerate with `bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31 --publish`.
 Column definitions for the cleaned files are in `Data/reddit_2025-06-11_2026-06-11/README.md` (same pipeline);

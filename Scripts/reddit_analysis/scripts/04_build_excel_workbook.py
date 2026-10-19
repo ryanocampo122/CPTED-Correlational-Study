@@ -1,7 +1,7 @@
 """
 04_build_excel_workbook.py
 ============================
-UrbanSentinel-Prairie | Companion workbook for the corrected tables
+ComputerVision_Sentinel | Companion workbook for the corrected tables
 
 PURPOSE
 -------
@@ -12,7 +12,7 @@ formulas: every number is an output of the Python pipeline.
 Sheets:
   README, Neighbourhood Summary, Location Tag Audit, Env Cue Audit,
   Env Cue Precision, Env Cues by Site, Time of Day by Site,
-  Night vs Other, Seasonal Trend, Sentiment Sensitivity
+  Night vs Other, Seasonal Trend, Monthly Trend, Sentiment Sensitivity
 
 INPUT
 -----
@@ -20,7 +20,7 @@ INPUT
 
 OUTPUT
 ------
-  UrbanSentinel_DataTables_corrected.xlsx  (in the output root)
+  ComputerVision_Sentinel_DataTables_corrected.xlsx  (in the output root)
 
 USAGE
 -----
@@ -54,9 +54,9 @@ SHEETS = [
 ]
 
 README_LINES = [
-    ("UrbanSentinel-Prairie - Corrected Reddit Analysis (October 2026)", 14, True),
+    ("ComputerVision_Sentinel - Corrected Reddit Analysis (October 2026)", 14, True),
     ("", 10, False),
-    ("Supersedes UrbanSentinel_August_DataTables. Method (October 2026 corrections, same for every collection):", 10, False),
+    ("Supersedes the August 2026 data tables. Method (October 2026 corrections, same for every collection):", 10, False),
     ("  1. Location tags: whole-word matching plus hand-reviewed references to other cities removed (Location Tag Audit).", 10, False),
     ("  2. Sutherland tracked as a 22nd area.", 10, False),
     ("  3. Environmental cues: whole-word matching minus non-environmental senses; substring tags matched inside", 10, False),
@@ -71,11 +71,12 @@ README_LINES = [
     ("  - Lighting cue precision on a hand-checked sample is ~50%; treat lighting counts as an upper bound.", 10, False),
     ("  - small_sample = fewer than 30 mentions. Overlapping CIs mean no clear difference.", 10, False),
     ("", 10, False),
-    ("Produced by Scripts/reddit_analysis (run_all.sh). Prepared by: Ryan Ocampo, UrbanSentinel-Prairie", 10, False),
+    ("Produced by Scripts/reddit_analysis (run_all.sh). Prepared by: Ryan Ocampo, ComputerVision_Sentinel", 10, False),
 ]
 
 
 def source_line() -> str:
+    """Provenance line for each sheet: raw file stamp, window and dataset."""
     m = c.raw_metadata()
     win = m.get("window_local") or [m.get("window_start", "?")[:10], m.get("window_end", "?")[:10]]
     return (f"Source: saskatoon_safety_posts/comments_{c.raw_stamp()}.csv "
@@ -83,6 +84,7 @@ def source_line() -> str:
 
 
 def write_df(ws, df: pd.DataFrame) -> None:
+    """df -> worksheet with a styled header row; NaN -> empty cell."""
     for j, col in enumerate(df.columns, start=1):
         cell = ws.cell(row=1, column=j, value=col)
         cell.font = Font(name=FONT, bold=True, color="FFFFFF", size=10)
@@ -110,7 +112,7 @@ def main() -> None:
         cell.font = Font(name=FONT, size=size, bold=bold, color=NAVY if size >= 14 else "000000")
     for name, path in SHEETS:
         write_df(wb.create_sheet(name), pd.read_csv(path))
-    out = c.out_dir() / "UrbanSentinel_DataTables_corrected.xlsx"
+    out = c.out_dir() / "ComputerVision_Sentinel_DataTables_corrected.xlsx"
     wb.save(out)
     print(f"Wrote {out}")
 

@@ -89,7 +89,7 @@ without an original column, and 15 other-city exclusions. `env_cue_changelog.csv
 
 ### `charts/`
 Seven figures (light background, print-ready) with 95% CIs where sites are compared.
-`UrbanSentinel_DataTables_corrected.xlsx` collects all tables in one workbook.
+`ComputerVision_Sentinel_DataTables_corrected.xlsx` collects all tables in one workbook.
 
 ## Method notes
 

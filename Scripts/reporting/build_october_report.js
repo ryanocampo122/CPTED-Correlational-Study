@@ -1,11 +1,12 @@
 /*
  * build_october_report.js
  * =======================
- * UrbanSentinel-Prairie | October 2026 progress report (.docx) for the co-leads.
+ * ComputerVision_Sentinel | October 2026 progress report (.docx) for the co-leads.
  *
  * Inputs : Docs/verification/october_2026_numbers.json  (Scripts/reporting/report_numbers.py)
- *          Docs/figures/*.png                            (Scripts/reporting/make_figures.py)
- * Output : Deliverables/2026-10_october_update/UrbanSentinel_October2026_Progress_Report.docx
+ *          Docs/figures/mid_point_october/*.png          (Scripts/reporting/make_figures.py)
+ * Output : Deliverables/2026-10_october_update/ComputerVision_Sentinel_October2026_Progress_Report.docx
+ * Each can be redirected (./flight does): --numbers <json> --figures <folder> --out <docx>
  *
  * Layout: Times New Roman 11 pt, US Letter, 1-inch margins, running header from page 2.
  * Every main section (and every 3.x subsection) starts at the top of a new page, and each
@@ -24,10 +25,18 @@ const {
 } = require("docx");
 
 const REPO = path.resolve(__dirname, "..", "..");
-const N = JSON.parse(fs.readFileSync(path.join(REPO, "Docs/verification/october_2026_numbers.json"), "utf8"));
+// --numbers / --figures / --out override the published locations below.
+const arg = (name, dflt) => {
+  const i = process.argv.indexOf(name);
+  return i > 0 && process.argv[i + 1] ? path.resolve(process.argv[i + 1]) : dflt;
+};
+const NUMBERS = arg("--numbers", path.join(REPO, "Docs/verification/october_2026_numbers.json"));
+const FIG_DIR = arg("--figures", path.join(REPO, "Docs/figures/mid_point_october"));
+const OUT = arg("--out", path.join(REPO, "Deliverables/2026-10_october_update",
+  "ComputerVision_Sentinel_October2026_Progress_Report.docx"));
+const OUT_DIR = path.dirname(OUT);
+const N = JSON.parse(fs.readFileSync(NUMBERS, "utf8"));
 const R = N.reddit, P = N.points, I = N.imagery;
-const OUT_DIR = path.join(REPO, "Deliverables/2026-10_october_update");
-const OUT = path.join(OUT_DIR, "UrbanSentinel_October2026_Progress_Report.docx");
 
 const FONT = "Times New Roman";
 const TEXT_W = 9360;                 // 6.5 in in DXA
@@ -65,6 +74,7 @@ const bullet = (text, opts = {}) => new Paragraph({ numbering: { reference: "bul
 const numbered = (text) => new Paragraph({ numbering: { reference: "decisions", level: 0 },
   children: runs(text), spacing: { after: 100 }, keepLines: true });
 
+// Numbered table caption, kept on the same page as its table.
 let tableNo = 0;
 function tableCaption(text) {
   tableNo += 1;
@@ -72,6 +82,7 @@ function tableCaption(text) {
     children: [new TextRun({ text: `Table ${tableNo}. `, bold: true, size: 20 }), ...runs(text, { size: 20 })] });
 }
 
+// widths in DXA (1/1440 inch). Header row repeats on each page; rows never split.
 function table(headers, rows, widths, opts = {}) {
   const total = widths.reduce((a, b) => a + b, 0);
   const cell = (text, w, header, shade) => new TableCell({
@@ -98,14 +109,16 @@ function table(headers, rows, widths, opts = {}) {
   });
 }
 
+// PNG width/height from the IHDR chunk (bytes 16-23).
 function pngSize(file) {
   const b = fs.readFileSync(file);
   return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
 }
 
+// Centred image scaled to widthIn inches, followed by its numbered caption.
 function figure(key, file, widthIn, caption, opts = {}) {
   const n = F[key];
-  const full = path.join(REPO, "Docs/figures", file);
+  const full = path.join(FIG_DIR, file);
   const { w, h } = pngSize(full);
   const wpx = Math.round(widthIn * 96);
   return [
@@ -130,7 +143,7 @@ const add = (...xs) => xs.flat().forEach((x) => children.push(x));
 
 // ---------------- Page 1: title and summary ----------------
 add(
-  new Paragraph({ spacing: { after: 60 }, children: [new TextRun({ text: "UrbanSentinel-Prairie", bold: true, size: 32 })] }),
+  new Paragraph({ spacing: { after: 60 }, children: [new TextRun({ text: "ComputerVision_Sentinel", bold: true, size: 32 })] }),
   new Paragraph({ spacing: { after: 60 },
     children: [new TextRun({ text: "October 2026 progress report: work-plan tasks and verification", size: 26 })] }),
   new Paragraph({ spacing: { after: 40 }, children: runs(
@@ -242,7 +255,7 @@ add(
 add(
   h2("3.3 Street-level images", true),
   para(`**What October set out to show.** The October image task was a method check at the halfway point, not the delivery ` +
-    `of the full image set for the study period. Its aim was to validate that UrbanSentinel has a working way to source ` +
+    `of the full image set for the study period. Its aim was to validate that ComputerVision_Sentinel has a working way to source ` +
     `street-level images as secondary data at its sample points, and that the downloaded image model can read those images ` +
     `and return CPTED measures. Both were shown. ${I.pilot_n} spatially spread points were taken in an order fixed before any ` +
     `image was seen; the newest Mapillary image at each was downloaded (2014: ${I.pilot_years["2014"] || 0}, 2019: ` +
@@ -254,7 +267,7 @@ add(
     `vacant buildings, and advise checking image availability in the study area before collecting. Hipp et al. (2022) ` +
     `sampled images every 20 m along every street segment and measured the built environment with a pretrained ` +
     `deep-learning model; Yue et al. (2022), Zhou et al. (2021) and Su, Li and Qiu (2023) also applied pretrained models to ` +
-    `street images to measure features linked to crime. UrbanSentinel's points about 50 m apart on street segments, its ` +
+    `street images to measure features linked to crime. ComputerVision_Sentinel's points about 50 m apart on street segments, its ` +
     `availability check and its pretrained model follow the same pattern.`),
   para(`**Study-period imagery.** The availability check found images within 30 m of ${I.any} of ${I.points} points, but none ` +
     `captured from June to August 2026; the newest are from 2023 (${newest["2023"]} points) and 2020 (${newest["2020"]}) ` +
@@ -330,7 +343,7 @@ add(
     ["Data/cv_pilot_2026-10/", "Sample points, imagery coverage audit, 10-image validation run"],
     ["Scripts/", "Reddit collection and analysis, image pipeline, verification, figures and this report"],
     ["Deliverables/", "Dated copies of what was sent: July, August, October 2026"],
-    ["Reference/, Archive/", "Literature (incl. the computer-vision papers) and presentations; superseded prototype and dropped surveys"],
+    ["Reference/, Archive/", "Literature (incl. the computer-vision papers) and presentations; dropped surveys"],
   ], [3600, 5760], { shadeFirst: true }),
   new Paragraph({ heading: HeadingLevel.HEADING_2, spacing: { before: 320, after: 100 }, children: [new TextRun("References")] }),
   para(`He, L., Páez, A., & Liu, D. (2017). Built environment and violent crime: An environmental audit approach using ` +
@@ -357,14 +370,14 @@ const small = { size: 18, color: "4D4D4D" };
 const runningHeader = new Header({ children: [new Paragraph({
   tabStops: [{ type: TabStopType.RIGHT, position: TEXT_W }],
   border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000", space: 4 } },
-  children: [new TextRun({ text: "UrbanSentinel-Prairie  ·  October 2026 progress report", ...small }),
+  children: [new TextRun({ text: "ComputerVision_Sentinel  ·  October 2026 progress report", ...small }),
     new TextRun({ text: "\t17 October 2026", ...small })] })] });
 const pageFooter = new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT,
   children: [new TextRun({ children: ["Page ", PageNumber.CURRENT, " of ", PageNumber.TOTAL_PAGES], ...small })] })] });
 
 const doc = new Document({
   creator: "Ryan Ocampo",
-  title: "UrbanSentinel-Prairie: October 2026 progress report",
+  title: "ComputerVision_Sentinel: October 2026 progress report",
   description: "October 2026 work-plan tasks and verification",
   styles: {
     default: { document: { run: { font: FONT, size: 22 }, paragraph: { spacing: { line: 259 } } } },

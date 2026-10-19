@@ -1,7 +1,7 @@
 """
 01_audit_location_tagging.py
 =============================
-UrbanSentinel-Prairie | Audit of the neighbourhood tagger
+ComputerVision_Sentinel | Audit of the neighbourhood tagger
 
 PURPOSE
 -------

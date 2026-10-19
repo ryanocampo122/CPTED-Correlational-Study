@@ -1,7 +1,7 @@
 """
 01b_other_city_review.py
 ========================
-UrbanSentinel-Prairie | Keep the other-city location review in sync
+ComputerVision_Sentinel | Keep the other-city location review in sync
 
 PURPOSE
 -------
@@ -43,6 +43,7 @@ COLUMNS = ["record_type", "record_id", "neighbourhood", "other_cities_mentioned"
 
 
 def excerpt(text: str, patterns: list[str], width: int = 110) -> str:
+    """Text around the first location match (+/- width chars), whitespace collapsed."""
     t = text.lower()
     m = c._bounded_re(tuple(patterns)).search(t)
     if not m:
@@ -52,6 +53,7 @@ def excerpt(text: str, patterns: list[str], width: int = 110) -> str:
 
 
 def candidates() -> pd.DataFrame:
+    """One row per record x neighbourhood whose match co-occurs with another city's name."""
     posts, comments = c.load_raw()
     rows = []
     for record_type, df, text_col, id_col in [("post", posts, "full_text", "id"),

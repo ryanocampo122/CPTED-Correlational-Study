@@ -1,4 +1,4 @@
-# UrbanSentinel-Prairie: Reddit analysis pipeline
+# ComputerVision_Sentinel: Reddit analysis pipeline
 
 Turns a raw r/saskatoon collection into cleaned row-level data, analysis tables,
 charts, audits and a verification report. It runs on either collection:
@@ -9,8 +9,7 @@ charts, audits and a verification report. It runs on either collection:
 | `reddit_2025-06-11_2026-06-11` | 11 Jun 2025 – 11 Jun 2026 | `initial_sraper.py` (Jun 2026) | earlier; behind the August report |
 
 Both published output sets reproduce byte-for-byte from the raw files (checked
-16 Oct 2026). Git history (`git log --follow -- Scripts/reddit_analysis`) shows
-every change; this folder was `Scripts/analysis_code/` until October 2026.
+16 Oct 2026; `./flight --execute_flight` re-checks it on every run).
 
 ## What changed since August
 
@@ -23,7 +22,7 @@ every change; this folder was `Scripts/analysis_code/` until October 2026.
 | VADER scores the seed words `safe`/`safety` as positive and has no entry for `unsafe`, `sketchy`, `afraid` | Adjusted lexicon is primary; original kept alongside; 4-way sensitivity analysis | `common.VADER_LEXICON_ADJUSTMENTS`, `02b` |
 | Month, season and weekday taken from UTC | Local `America/Regina` time fields | `common.add_local_time` |
 | No uncertainty; "Downtown negative only at night" read off a −0.004 mean (n=40) | 95% CIs from a bootstrap that resamples whole threads; explicit night-vs-other contrasts | `02` |
-| `02_corrected_analysis.py` corrupted by stray vim keystrokes | Restored, then rewritten | git history |
+| `02_corrected_analysis.py` corrupted by stray vim keystrokes | Restored, then rewritten | `02_corrected_analysis.py` |
 | Absolute sandbox paths (`/mnt/user-data/…`, `/home/…`) | Paths discovered automatically or set by environment variable | `common.raw_dir` |
 | Pattern list copied by hand into 4 scripts | One definition in `common.py`; `08` checks it against the scraper that produced the data | `common.py`, `08` |
 
@@ -39,7 +38,7 @@ every change; this folder was `Scripts/analysis_code/` until October 2026.
 | 02 | `02_corrected_analysis.py` | `02_derived_analysis/*.csv` (incl. `monthly_trend.csv`) |
 | 02b | `02b_sentiment_sensitivity.py` | `05_audits/sentiment_sensitivity*.csv` |
 | 03 | `03_generate_charts.py` | `charts/chart1…7.png` |
-| 04 | `04_build_excel_workbook.py` | `UrbanSentinel_DataTables_corrected.xlsx` |
+| 04 | `04_build_excel_workbook.py` | `ComputerVision_Sentinel_DataTables_corrected.xlsx` |
 | 05 | `05_extract_example_quotes.py` | `03_extracted_comment_samples/*.csv` |
 | 08 | `08_verify_outputs.py` | `05_audits/verification_report.txt`, `august_document_claims_check.csv`; exits 1 on any failed check |
 | 06, 07 | `*.js` | **archival**: rebuild the August memo/report exactly as sent (old numbers). Not run. |

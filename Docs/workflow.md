@@ -19,11 +19,11 @@ Research questions: **RQ1** X ↔ Y1 (does the built environment co-vary with wh
 crime, and where does it not?). Hypotheses H1–H5 are in the work plan, p. 2. The study is correlational and describes
 places; it does not predict crime or label communities.
 
-![Workflow and status](figures/fig01_workflow_status.png)
+![Workflow and status](figures/mid_point_october/fig01_workflow_status.png)
 
 ## Timeline and status (17 October 2026)
 
-![Timeline](figures/fig02_timeline.png)
+![Timeline](figures/mid_point_october/fig02_timeline.png)
 
 ## Pipeline: step, code, output, status
 
@@ -45,11 +45,38 @@ places; it does not predict crime or label communities.
 | I1 | Integration: join on segments/zones; Spearman, bivariate Moran's I, LISA, perception–crime gap (Feb–Mar) | to write | — | planned |
 | V | Verification of everything above | `Scripts/verification/verify_october_2026.py` | `Docs/verification/` | done for October |
 
-## Running everything
+## One command: `./flight --execute_flight`
 
-From the repository root, with the environment from `requirements.txt` (`python3 -m venv .venv &&
-.venv/bin/pip install -r requirements.txt`) and credentials in the git-ignored `.env`
-(`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`, `URBANSENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`):
+From the repository root, `./flight --execute_flight` runs the whole pipeline into a new folder
+`RESULTS_FINAL/EXECUTION-<n>/` (n = 1, 2, 3, …, one per run). It writes nothing in `Data/`, `Docs/` or
+`Deliverables/`, and checks that at the end.
+
+| Stage | What runs | Writes (in `EXECUTION-<n>/`) |
+|---|---|---|
+| 1 Install | `.venv` (created if missing); `pip install -r requirements.txt`; `npm install` for the report builder; versions recorded | `environment/` |
+| 2 Collect (APIs) | Reddit collector, 1 Jun – 31 Aug 2026; Mapillary coverage at the 423 published sample points and the 10 newest images (the points are copied and read, never regenerated) | `live/` |
+| 3 Load models | CLIP ViT-B/32 and VADER (stock and adjusted), loaded and smoke-tested | `models/models.json` |
+| 4 Results | **Reproduction**: both Reddit collections, the SPS cleaning and the 10-image CLIP pilot rebuilt from the committed raw data. **Live**: the same Reddit analysis and CLIP scoring on this run's collection. CV tests, verification checks (`--rerun-pipeline`, `--network`), figures, report numbers, the October report | `reproduction/`, `live/`, `verification/`, `figures/`, `report/` |
+| 5 Checks | Every rebuilt file compared with its published copy; the fresh collection compared with the published numbers; the repository's files unchanged; no credential value in any output file | `comparisons/` |
+
+Read `FLIGHT_SUMMARY.md` first: every step with its status (PASS, WARN = works with a known limitation, FAIL,
+SKIP), time, result and log. `flight_status.json` holds the same for scripts, `logs/` each step's full output, and
+`RESULTS_FINAL/executions.csv` one row per run. Options (`./flight --help`): `--offline` (no API calls),
+`--skip-install`, `--skip-reddit-collection` (about 10 minutes), `--skip-coverage` (the slowest Mapillary step),
+`--skip-report`. A full run takes about 30–45 minutes.
+
+Two things the reproduction cannot match exactly, by design: the Excel workbook stores its creation time and
+`pilot_report.md` and `run_meta.json` store the run's time and git commit. The comparison reports these as
+*equivalent*, not identical. The fresh collection will not match the published one either: Reddit changes after
+collection (edits, deletions, late comments), so stage 4's live results are a check that collection works today,
+not a replacement for the published data. New other-city candidates in a fresh collection stop at *pending* in a
+copy of `manual_review/` inside the execution folder; the tracked review file is never changed.
+
+## Running single steps
+
+The flight runs all of these. To run one on its own, from the repository root, with the environment from
+`requirements.txt` (`python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`) and credentials in `.env`
+(`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`, `COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`):
 
 ```bash
 # Reddit: collect (network), then analyse (offline; scratch first, then publish)
@@ -79,15 +106,13 @@ done
 .venv/bin/python Scripts/cv_pilot/tests/test_pilot.py
 ```
 
-The report build writes the generated base, `Deliverables/2026-10_october_update/UrbanSentinel_October2026_Progress_Report.docx`.
+The report build writes the generated base, `Deliverables/2026-10_october_update/ComputerVision_Sentinel_October2026_Progress_Report.docx`.
 The report as sent, `CPTED_ComputerVis_2026.docx` (and its PDF), was edited by hand after that, so a rebuild neither
 reproduces nor overwrites it.
 
-**Related data, outside this pipeline.** `Data/climate_2010_2025/`, `Data/crime/` and `Data/reddit_2009_2025/` hold
-data collected for the related Sentinel climate–crime research (2010–2025, four prairie cities), with their scripts
-in `Scripts/reddit_collection/reddit_acquistion_2025/` and `Scripts/sentiment_analysis_2025/`. None of the commands
-above use or regenerate them. `Data/crime/` is Statistics Canada annual counts, not the SPS extract for step K2
-(`Data/sps_crime_2026-06-01_2026-08-31/`).
+**Related data, outside this pipeline.** `Data/climate_2010_2025/` holds ECCC daily, monthly and yearly climate
+data (2010–2025; Saskatoon, Regina, Edmonton, Winnipeg) from an earlier climate–crime study, kept in case climate
+is added to this one; its download scripts are in `Scripts/climate_data/`. None of the commands above use it.
 
 ## Conventions
 
@@ -96,4 +121,5 @@ above use or regenerate them. `Data/crime/` is Statistics Canada annual counts, 
 - **Scratch before publish:** pipelines write to a git-ignored `output/` first; `--publish` overwrites tracked
   outputs, and `git diff` shows what changed.
 - **Every number in a deliverable comes from a script** (`Scripts/reporting/report_numbers.py`), never typed by hand.
-- **Version control:** work on a branch, one commit per logical step; `.env` and Reddit text snippets are never committed.
+- **Version control:** work on a branch, one commit per logical step; Reddit text snippets are never committed. `.env`
+  is committed to the private repository, with a copy in `.venv/keys.txt`.

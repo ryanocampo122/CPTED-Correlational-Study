@@ -93,7 +93,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
-COMMON_DIR = HERE.parent / "analysis_code" / "scripts"
+COMMON_DIR = HERE.parent / "reddit_analysis" / "scripts"
 sys.path.insert(0, str(COMMON_DIR))
 import common  # noqa: E402  (shared vocabularies and matchers)
 
@@ -496,7 +496,7 @@ class SaskatoonSafetyCollector:
             "seed_sets": {k: SEED_TERMS[k] for k in self.config.seed_sets},
             "search_sorts": list(self.config.search_sorts),
             "search_time_filter": self.config.search_time_filter,
-            "tagging": "whole-word matching; vocabularies from analysis_code/scripts/common.py",
+            "tagging": "whole-word matching; vocabularies from reddit_analysis/scripts/common.py",
             "n_neighbourhoods_tracked": len(SASKATOON_NEIGHBOURHOODS),
             "n_environmental_cue_categories": len(ENVIRONMENTAL_CUE_NAMES),
             "vader_lexicon_adjustments": common.VADER_LEXICON_ADJUSTMENTS,

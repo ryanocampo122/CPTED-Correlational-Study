@@ -1,15 +1,16 @@
 /**
  * 06_build_meewasin_memo_docx.js
  * ================================
- * UrbanSentinel-Prairie | Builds the short-form data quality memo
+ * ComputerVision_Sentinel | Builds the short-form data quality memo
  *
- * ARCHIVAL (October 2026): rebuilds the memo exactly as sent in July/August.
+ * ARCHIVAL (October 2026): rebuilds the memo as sent in July/August, except that the
+ * project name now reads ComputerVision_Sentinel.
  * Its hard-coded numbers predate the October corrections (environmental-cue
  * tagging, other-city exclusions, adjusted sentiment) and are not current.
  * It is not run by run_all.sh. See Scripts/reddit_analysis/README.md.
  *
  * PURPOSE
- * Generates UrbanSentinel_Meewasin_DataQuality_Memo.docx - the earlier,
+ * Builds the Meewasin data-quality memo (memo.docx): the earlier,
  * narrower writeup focused specifically on the Riverbank/Meewasin
  * location-matching issue (see 01_audit_location_tagging.py for the
  * underlying analysis). Superseded in scope by the full August report
@@ -19,8 +20,7 @@
  * INPUT
  * Numbers/quotes in this script are hardcoded from the output of
  * 01_audit_location_tagging.py and 05_extract_example_quotes.py at the
- * time this memo was written. If you re-run the analysis and the
- * numbers change, update the strings in this file to match.
+ * time this memo was written. They do not change when the analysis is re-run.
  *
  * OUTPUT
  *   memo.docx
@@ -139,7 +139,7 @@ const doc = new Document({
     properties: { page: { size: { width: PAGE_W, height: PAGE_H }, margin: { top: 1080, bottom: 1080, left: 1260, right: 1260 } } },
     children: [
       new Paragraph({
-        children: [new TextRun({ text: "UrbanSentinel-Prairie", bold: true, size: 40, color: "2F5496" })],
+        children: [new TextRun({ text: "ComputerVision_Sentinel", bold: true, size: 40, color: "2F5496" })],
         spacing: { after: 40 },
       }),
       new Paragraph({

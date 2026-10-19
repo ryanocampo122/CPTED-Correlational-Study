@@ -1,7 +1,7 @@
 """
 02b_sentiment_sensitivity.py
 ============================
-UrbanSentinel-Prairie | How much do the conclusions depend on the sentiment scorer?
+ComputerVision_Sentinel | How much do the conclusions depend on the sentiment scorer?
 
 PURPOSE
 -------

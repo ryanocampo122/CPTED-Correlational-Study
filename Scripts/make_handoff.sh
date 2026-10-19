@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
 # make_handoff.sh: build a shareable copy of the research folder for supervisors.
 #
-#   bash Scripts/make_handoff.sh            -> ~/Desktop/UrbanSentinel_research_<date>.zip
+#   bash Scripts/make_handoff.sh            -> ~/Desktop/ComputerVision_Sentinel_research_<date>.zip
 #
 # Leaves out: .env (credentials), .venv, .git, node_modules, OS/editor clutter, caches,
-# scratch pipeline output, and every _local_audit_do_not_share/ folder (Reddit user text).
+# scratch pipeline output, flight runs (RESULTS_FINAL/), and every _local_audit_do_not_share/ folder
+# (Reddit user text).
 # Aborts if any credential value from .env is found inside the zip.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ROOT="$PWD"
-NAME="UrbanSentinel_research_$(date +%Y-%m-%d)"
+NAME="ComputerVision_Sentinel_research_$(date +%Y-%m-%d)"
 OUT="$HOME/Desktop/$NAME.zip"
 PY="$ROOT/.venv/bin/python"; [[ -x "$PY" ]] || PY=python3
 
 # 1. sanity: the pieces the October deliverable needs
 [[ -f Scripts/reddit_analysis/scripts/common.py ]] || { echo "Missing Scripts/reddit_analysis (the Reddit scraper needs it)."; exit 1; }
-[[ -f Deliverables/2026-10_october_update/UrbanSentinel_October2026_Progress_Report.docx ]] \
-  || { echo "October report missing: see Deliverables/2026-10_october_update/README.md to build it."; exit 1; }
+[[ -f Deliverables/2026-10_october_update/CPTED_ComputerVis_2026.docx ]] \
+  || { echo "October report (CPTED_ComputerVis_2026.docx, as sent) missing from Deliverables/2026-10_october_update/."; exit 1; }
 
 # 2. zip into a temp folder named after the project
 TMP="$(mktemp -d)"
@@ -26,7 +27,8 @@ rm -f "$OUT"
     -x "$NAME/.env*" "$NAME/.venv/*" "$NAME/.git/*" "$NAME/.vscode/*" "*/node_modules/*" \
        "*/.DS_Store" "*.sw?" "*/__pycache__/*" "*.pyc" "*/~\$*" "*/.Rhistory" \
        "*/_local_audit_do_not_share/*" \
-       "$NAME/Scripts/reddit_analysis/output/*" "$NAME/Scripts/reddit_analysis/scripts/output/*" )
+       "$NAME/Scripts/reddit_analysis/output/*" "$NAME/Scripts/reddit_analysis/scripts/output/*" \
+       "$NAME/RESULTS_FINAL/*" )
 rm -rf "$TMP"
 
 # 3. refuse to hand over a zip that contains any credential

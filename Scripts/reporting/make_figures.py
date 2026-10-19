@@ -2,7 +2,7 @@
 """
 make_figures.py
 ===============
-UrbanSentinel-Prairie | Figures for the October 2026 update and the Docs/ pages
+ComputerVision_Sentinel | Figures for the October 2026 update and the Docs/ pages
 
 Every number is read from Data/ (or Docs/verification/); nothing is typed in by
 hand except the workflow statuses in WORKFLOW, which mirror
@@ -17,10 +17,12 @@ Docs/verification/october_2026_checks.md and the work plan.
   fig07_pilot_images.png        four pilot images: what works and what needs fixing
   fig08_reddit_place_anchors.png  how finely Reddit can be placed inside Downtown
 
-USAGE (repository root):  .venv/bin/python Scripts/reporting/make_figures.py
+USAGE (repository root):  .venv/bin/python Scripts/reporting/make_figures.py [--out <folder>]
+  --out defaults to Docs/figures/mid_point_october/ (the published figures)
 """
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
@@ -39,8 +41,7 @@ DATA = REPO / "Data"
 REDDIT = DATA / "reddit_2026-06-01_2026-08-31"
 CV = DATA / "cv_pilot_2026-10"
 BND = DATA / "boundaries"
-OUT = REPO / "Docs" / "figures"
-OUT.mkdir(parents=True, exist_ok=True)
+OUT = REPO / "Docs" / "figures" / "mid_point_october"      # --out overrides
 
 # Reference palette (validated: Scripts/reporting/README.md)
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
@@ -67,12 +68,14 @@ DPI = 220
 
 
 def save(fig, name: str) -> None:
+    """Save to OUT/name at DPI and close the figure."""
     fig.savefig(OUT / name, dpi=DPI, bbox_inches="tight", pad_inches=0.06)
     plt.close(fig)
     print("wrote", OUT / name)
 
 
 def tint(hex_: str, a: float = 0.13) -> tuple:
+    """Pale RGB tint of a hex colour: share a of the colour, the rest white."""
     r, g, b = (int(hex_[i:i + 2], 16) / 255 for i in (1, 3, 5))
     return (1 - a + a * r, 1 - a + a * g, 1 - a + a * b)
 
@@ -104,6 +107,7 @@ WORKFLOW = [
 
 
 def box(ax, x, y, w, h, status, text, fs=7.0):
+    """Workflow-figure box: status icon and label on a tint of the status colour."""
     col, icon, _ = STATUS[status]
     ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0,rounding_size=0.8",
                                 fc=tint(col), ec=col, lw=1.1))
@@ -278,6 +282,7 @@ def fig_place_anchors():
 # 5-6. Sample points and imagery
 # --------------------------------------------------------------------------- #
 def _geo():
+    """(roads, water, CBD boundary) geometries from Data/boundaries/ for the map figures."""
     roads = json.loads((BND / "osm_roads_downtown_context.geojson").read_text())["features"]
     water = json.loads((BND / "osm_water_downtown_context.geojson").read_text())["features"][0]["geometry"]
     cbd = json.loads((BND / "central_business_district_osm.geojson").read_text())["features"][0]["geometry"]
@@ -285,6 +290,7 @@ def _geo():
 
 
 def _draw_base(ax, roads, water, cbd, extent):
+    """Base map: river, roads and the CBD outline within extent."""
     from shapely.geometry import shape
     w = shape(water)
     for poly in getattr(w, "geoms", [w]):
@@ -309,6 +315,7 @@ def _draw_base(ax, roads, water, cbd, extent):
 
 
 def newest_year(cp: pd.DataFrame) -> pd.Series:
+    """Year of each point's newest image (flat or 360), or 'none'."""
     return cp[["latest_flat", "latest_pano"]].fillna("").max(axis=1).str[:4].replace("", "none")
 
 
@@ -415,6 +422,11 @@ def fig_pilot_images():
 
 
 def main() -> None:
+    global OUT
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--out", type=Path, default=OUT, help="output folder (default: %(default)s)")
+    OUT = ap.parse_args().out
+    OUT.mkdir(parents=True, exist_ok=True)
     fig_workflow()
     fig_timeline()
     fig_reddit_by_area()

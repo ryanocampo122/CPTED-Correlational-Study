@@ -1,6 +1,6 @@
 # October 2026 pilot: street-level imagery -> CPTED cues -> Reddit
 
-*Generated 2026-10-17T02:20:59+00:00 (git `804ad46`). Every number is read from the pilot's output files.*
+*Generated 2026-10-17T02:20:59+00:00. Every number is read from the pilot's output files.*
 
 > **Status: feasibility pilot, not a result.** With 10 images no association between built environment, crime or perception can be estimated. The pilot shows that each stage of the work-plan pipeline runs and joins.
 

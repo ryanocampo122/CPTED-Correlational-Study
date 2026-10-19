@@ -16,7 +16,6 @@
     ]
   },
   "last_updated_utc": "2026-10-17T02:19:21+00:00",
-  "git_commit": "804ad46",
   "coverage": {
     "radius_m": 30.0,
     "points": 423,

@@ -1,7 +1,7 @@
 """
 01c_audit_env_cues.py
 =====================
-UrbanSentinel-Prairie | Audit of the environmental-cue tagger
+ComputerVision_Sentinel | Audit of the environmental-cue tagger
 
 PURPOSE
 -------

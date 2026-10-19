@@ -1,7 +1,7 @@
 """
 common.py
 =========
-UrbanSentinel-Prairie | Shared paths, vocabularies and matchers
+ComputerVision_Sentinel | Shared paths, vocabularies and matchers
 
 Every analysis script (and, from October 2026, the collection scraper) imports
 its tagging vocabulary and matching logic from here, so there is exactly one
@@ -18,10 +18,11 @@ CONTENTS
                    neighbourhood_tags()- word-boundary + other-city exclusions
   Env cues         ENV_CUES_ORIGINAL   - the scraper's original vocabulary
                    ENV_CUES            - corrected (October 2026) definitions
-                   cue_hits()          - corrected cue matcher
-  Sentiment        vader_adjusted()    - VADER with the seed-term lexicon fix
+                   cue_hits(), cue_flag() - corrected cue matcher
+  Sentiment        vader_compound()    - VADER with the seed-term lexicon fix (default)
   Time             add_local_time()    - Saskatoon local-time fields
-  Statistics       cluster_bootstrap_ci(), wilson_ci()
+  Statistics       cluster_bootstrap_ci(), cluster_bootstrap_diff_ci(), wilson_ci(),
+                   thread_id()         - thread clusters for the bootstrap
 
 WHY THE CUE DEFINITIONS CHANGED (October 2026)
 ----------------------------------------------
@@ -40,8 +41,10 @@ PATH RESOLUTION
 ---------------
 Each Reddit dataset is a folder Data/<dataset>/ whose 01_raw_collection/ holds
 one saskatoon_safety_posts_<stamp>.csv and one ..._comments_<stamp>.csv.
-Raw data: $URBANSENTINEL_RAW_DIR, else Data/reddit_2025-06-11_2026-06-11/01_raw_collection.
-Outputs: $URBANSENTINEL_OUT_DIR, else ../output. run_all.sh sets both.
+Raw data: $COMPUTERVISION_SENTINEL_RAW_DIR, else Data/reddit_2025-06-11_2026-06-11/01_raw_collection.
+Outputs: $COMPUTERVISION_SENTINEL_OUT_DIR, else ../output. run_all.sh sets both.
+Hand review: $COMPUTERVISION_SENTINEL_REVIEW_DIR, else ../manual_review (01b updates it in
+place, so ./flight points this at a copy when it analyses a fresh collection).
 
 TWO COLLECTION VERSIONS
 -----------------------
@@ -73,7 +76,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 ANALYSIS_DIR = SCRIPTS_DIR.parent
 REPO_DIR = ANALYSIS_DIR.parent.parent
 DATA_DIR = REPO_DIR / "Data"
-MANUAL_REVIEW_DIR = ANALYSIS_DIR / "manual_review"
+MANUAL_REVIEW_DIR = Path(os.getenv("COMPUTERVISION_SENTINEL_REVIEW_DIR", ANALYSIS_DIR / "manual_review"))
 
 # Each Reddit dataset lives in Data/<dataset>/, with the scraper output in
 # 01_raw_collection/ and this pipeline's outputs beside it.
@@ -90,8 +93,8 @@ def _raw_files(d: Path, kind: str) -> list[Path]:
 
 def raw_dir() -> Path:
     """Folder holding one saskatoon_safety_posts_*.csv and one ..._comments_*.csv:
-    $URBANSENTINEL_RAW_DIR, else the default dataset's 01_raw_collection."""
-    env = os.getenv("URBANSENTINEL_RAW_DIR")
+    $COMPUTERVISION_SENTINEL_RAW_DIR, else the default dataset's 01_raw_collection."""
+    env = os.getenv("COMPUTERVISION_SENTINEL_RAW_DIR")
     candidates = [Path(env)] if env else []
     candidates += [DATA_DIR / DEFAULT_DATASET / "01_raw_collection"]
     for c in candidates:
@@ -99,12 +102,13 @@ def raw_dir() -> Path:
             return c.resolve()
     raise FileNotFoundError(
         "No raw collection found (need exactly one saskatoon_safety_posts_*.csv and one "
-        "..._comments_*.csv). Set URBANSENTINEL_RAW_DIR. Looked in: "
+        "..._comments_*.csv). Set COMPUTERVISION_SENTINEL_RAW_DIR. Looked in: "
         + ", ".join(str(c) for c in candidates)
     )
 
 
 def raw_file(kind: str) -> Path:
+    """Raw CSV for kind = 'posts' | 'comments'."""
     return _raw_files(raw_dir(), kind)[0]
 
 
@@ -114,6 +118,7 @@ def raw_stamp() -> str:
 
 
 def raw_metadata() -> dict:
+    """The collection's metadata JSON, or {} if there is none."""
     files = sorted(raw_dir().glob("saskatoon_safety_metadata_*.json"))
     return json.loads(files[0].read_text()) if files else {}
 
@@ -148,17 +153,19 @@ def dataset_name() -> str:
 
 def out_dir(*parts: str) -> Path:
     """Output folder (created on demand). out_dir("02_derived_analysis")."""
-    base = Path(os.getenv("URBANSENTINEL_OUT_DIR", ANALYSIS_DIR / "output"))
+    base = Path(os.getenv("COMPUTERVISION_SENTINEL_OUT_DIR", ANALYSIS_DIR / "output"))
     p = base.joinpath(*parts)
     p.mkdir(parents=True, exist_ok=True)
     return p
 
 
 def cleaned_file(kind: str) -> Path:
+    """Cleaned v2 CSV (step 01d output) for kind = 'posts' | 'comments'."""
     return out_dir("04_cleaned_datasets") / f"saskatoon_safety_{kind}_{raw_stamp()}_CLEANED_v2.csv"
 
 
 def load_raw() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """(posts, comments) as collected."""
     posts = pd.read_csv(raw_file("posts"), low_memory=False)
     comments = pd.read_csv(raw_file("comments"), low_memory=False)
     return posts, comments
@@ -245,6 +252,7 @@ OTHER_CITY_RE = re.compile(r"\b(" + "|".join(re.escape(c) for c in OTHER_CITIES)
 
 
 def slug(name: str, prefix: str = "") -> str:
+    """Column-name form: slug("Downtown / CBD", "loc_") -> "loc_downtown_cbd"."""
     return prefix + re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
 
 
@@ -269,6 +277,7 @@ def bounded_match(text, patterns: list[str]) -> bool:
 
 
 def other_cities_mentioned(text) -> str:
+    """Other cities named in text, ';'-joined. Non-empty marks a location match for review."""
     if not isinstance(text, str):
         return ""
     return ";".join(sorted(set(OTHER_CITY_RE.findall(text.lower()))))
@@ -455,10 +464,12 @@ def cue_hits(text, cue: str) -> list[str]:
 
 
 def cue_flag(text, cue: str) -> bool:
+    """True if text contains `cue` under the corrected definitions."""
     return bool(cue_hits(text, cue))
 
 
 def original_cue_flag(text, cue: str) -> bool:
+    """Cue flag under the June 2026 substring logic. Audits only."""
     return substring_match(text, ENV_CUES_ORIGINAL[cue])
 
 
@@ -485,6 +496,7 @@ VADER_LEXICON_ADJUSTMENTS: dict[str, float] = {
 
 @lru_cache(maxsize=2)
 def _vader(adjusted: bool):
+    """Cached VADER analyser; adjusted=True applies VADER_LEXICON_ADJUSTMENTS."""
     from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
     a = SentimentIntensityAnalyzer()
     if adjusted:
@@ -497,12 +509,14 @@ def _vader(adjusted: bool):
 
 
 def vader_compound(text, adjusted: bool = True) -> float:
+    """VADER compound score in [-1, 1]. Empty text scores 0."""
     if not isinstance(text, str) or not text.strip():
         return 0.0
     return _vader(adjusted).polarity_scores(text)["compound"]
 
 
 def sentiment_category(c: float) -> str:
+    """Compound -> 'positive' (>= 0.05), 'negative' (<= -0.05) or 'neutral' (VADER's cut-offs)."""
     if c >= 0.05:
         return "positive"
     if c <= -0.05:
@@ -536,6 +550,7 @@ SEASON_ORDER = ["spring", "summer", "fall", "winter"]
 
 
 def season_of(month: int) -> str:
+    """Meteorological season (Dec-Feb = winter)."""
     if month in (12, 1, 2):
         return "winter"
     if month in (3, 4, 5):
@@ -546,6 +561,7 @@ def season_of(month: int) -> str:
 
 
 def time_of_day_of(hour: int) -> str:
+    """Local hour -> morning 5-11, afternoon 12-16, evening 17-20, night 21-4."""
     if 5 <= hour < 12:
         return "morning"
     if 12 <= hour < 17:

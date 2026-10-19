@@ -1,7 +1,7 @@
 """
 08_verify_outputs.py
 ====================
-UrbanSentinel-Prairie | Independent checks on the pipeline outputs
+ComputerVision_Sentinel | Independent checks on the pipeline outputs
 
 PURPOSE
 -------
@@ -57,12 +57,15 @@ FAILS: list[str] = []
 
 
 def check(ok: bool, label: str) -> None:
+    """Log one PASS/FAIL line. Any FAIL makes main() return 1."""
     LOG.append(f"[{'PASS' if ok else 'FAIL'}] {label}")
     if not ok:
         FAILS.append(label)
 
 
 def scraper_vocab(path):
+    """SASKATOON_NEIGHBOURHOODS and ENVIRONMENTAL_CUES literals from a scraper file,
+    read with ast so the scraper is never imported or run."""
     tree = ast.parse(path.read_text())
     out = {}
     for node in tree.body:
@@ -80,6 +83,7 @@ def scraper_vocab(path):
 # --- August logic, copied from the August 02_corrected_analysis.py --------------
 
 def august_tables(posts: pd.DataFrame, comments: pd.DataFrame) -> dict[str, str]:
+    """August 2026 tables rebuilt with the August logic. Returns {file name: CSV text}."""
     focus = ["Downtown / CBD", "Riverbank / Meewasin", "Caswell Hill",
              "Stonebridge", "Riversdale", "Pleasant Hill"]
     cues = ["env_lighting", "env_noise", "env_weather", "env_time_of_day", "env_people"]
@@ -283,6 +287,8 @@ def main() -> int:
 
 
 def write_claims(posts, comments, cp, cc, a) -> None:
+    """Numbers quoted in the July/August documents vs recomputed values
+    -> august_document_claims_check.csv."""
     rawm = comments[comments["loc_riverbank_meewasin"].astype(bool)]
     wb_river = comments["body"].apply(lambda t: c.bounded_match(t, c.NEIGHBOURHOODS_ORIGINAL["Riverbank / Meewasin"]))
     fp = comments[comments["loc_riverbank_meewasin"].astype(bool) & ~wb_river]["body"].str.lower()

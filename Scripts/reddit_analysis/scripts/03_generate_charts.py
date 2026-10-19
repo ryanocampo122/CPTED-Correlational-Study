@@ -1,7 +1,7 @@
 """
 03_generate_charts.py
 ======================
-UrbanSentinel-Prairie | Report charts from the corrected tables
+ComputerVision_Sentinel | Report charts from the corrected tables
 
 PURPOSE
 -------
@@ -63,6 +63,7 @@ OUT = c.out_dir("charts")
 
 
 def finish(fig, ax, name, title, subtitle=None):
+    """Title, subtitle and house style; save to OUT/name at 200 dpi and close."""
     ax.set_title(title, loc="left", fontsize=12, weight="bold", pad=22 if subtitle else 8)
     if subtitle:
         ax.text(0, 1.015, subtitle, transform=ax.transAxes, fontsize=9, color=INK_2, va="bottom")

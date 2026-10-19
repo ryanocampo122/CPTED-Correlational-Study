@@ -1,9 +1,10 @@
 /**
  * 07_build_august_report_docx.js
  * ================================
- * UrbanSentinel-Prairie | Builds the full August progress report
+ * ComputerVision_Sentinel | Builds the full August progress report
  *
- * ARCHIVAL (October 2026): rebuilds the August report exactly as sent. Its
+ * ARCHIVAL (October 2026): rebuilds the August report as sent, except that the project
+ * name now reads ComputerVision_Sentinel. Its
  * hard-coded numbers and quotes predate the October corrections: the lighting
  * percentages, the "negative only at night" claim and the "lock all
  * washrooms" quote (about downtown Regina) are superseded. It expects the
@@ -11,7 +12,7 @@
  * See Scripts/reddit_analysis/README.md.
  *
  * PURPOSE
- * Generates UrbanSentinel_August_Report.docx: the main deliverable,
+ * Builds the August progress report (august_report.docx): the main deliverable,
  * combining the corrected analysis (02_corrected_analysis.py), the
  * charts (03_generate_charts.py), and the example quotes
  * (05_extract_example_quotes.py) into one report with narrative,
@@ -21,8 +22,8 @@
  *   Reads chart PNGs from the current directory (chart1..chart6, copy
  *   them from output/ first, see run_all.sh). Narrative text and the
  *   specific numbers quoted in it are hardcoded from the analysis run
- *   at the time this report was written -- if you re-run the pipeline
- *   with new data, update the numbers in this file to match.
+ *   at the time this report was written; they do not change when the
+ *   pipeline is re-run.
  *
  * OUTPUT
  *   august_report.docx
@@ -101,7 +102,7 @@ const doc = new Document({
   sections: [{
     properties: { page: { size: { width: PAGE_W, height: PAGE_H }, margin: { top: 1080, bottom: 1080, left: 1260, right: 1260 } } },
     children: [
-      new Paragraph({ children: [new TextRun({ text: "UrbanSentinel-Prairie", bold: true, size: 44, color: NAVY })], spacing: { after: 40 } }),
+      new Paragraph({ children: [new TextRun({ text: "ComputerVision_Sentinel", bold: true, size: 44, color: NAVY })], spacing: { after: 40 } }),
       new Paragraph({ children: [new TextRun({ text: "Reddit Safety-Perception Analysis \u2014 August Progress Report", size: 28, color: "444444" })], spacing: { after: 40 } }),
       new Paragraph({ children: [new TextRun({ text: "Prepared by Ryan Ocampo  \u2022  July 21, 2026  \u2022  For discussion with Dr. Kang and Dr. Jayasooriya, August meeting", italics: true, size: 20, color: "666666" })], spacing: { after: 320 } }),
 
@@ -174,8 +175,8 @@ const doc = new Document({
       bullet("Agree on next data step: spot-check the \u201cdowntown\u201d generic-term issue, and consider whether any other categories need manual review before being used in the paper draft."),
 
       h1("Appendix: files accompanying this report"),
-      bullet("UrbanSentinel_August_DataTables.xlsx \u2014 full corrected data tables (neighbourhood summary, raw-vs-corrected comparison, environmental cues by site, time-of-day by site, seasonal trend)."),
-      bullet("UrbanSentinel_Meewasin_DataQuality_Memo.docx \u2014 earlier, narrower memo focused specifically on the Meewasin matching issue (superseded in scope by this report, kept for reference)."),
+      bullet("ComputerVision_Sentinel_August_DataTables.xlsx \u2014 full corrected data tables (neighbourhood summary, raw-vs-corrected comparison, environmental cues by site, time-of-day by site, seasonal trend)."),
+      bullet("ComputerVision_Sentinel_Meewasin_DataQuality_Memo.docx \u2014 earlier, narrower memo focused specifically on the Meewasin matching issue (superseded in scope by this report, kept for reference)."),
       bullet("Charts (Figures 1\u20136 above) are also included as standalone PNG files for reuse in slides or the paper draft."),
     ],
   }],

@@ -1,7 +1,7 @@
 """
 05_extract_example_quotes.py
 ==============================
-UrbanSentinel-Prairie | Candidate example comments for report quote blocks
+ComputerVision_Sentinel | Candidate example comments for report quote blocks
 
 PURPOSE
 -------
@@ -58,6 +58,7 @@ def main() -> None:
     out = c.out_dir("03_extracted_comment_samples")
 
     def pick(site: str, category: str, top: int | None, fname: str) -> int:
+        """Write one site x sentiment sample, highest score first. Returns the row count."""
         sub = comments[comments[c.slug(site, "vloc_")] & (comments["sentiment_adj_category"] == category)]
         sub = sub.sort_values("score", ascending=False)
         if top:

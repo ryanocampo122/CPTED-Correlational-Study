@@ -2,9 +2,9 @@
 
 | Script | Reads | Writes |
 |---|---|---|
-| `make_figures.py` | `Data/`, `Docs/verification/` | `Docs/figures/fig01`–`fig08` (PNG, 220 dpi) |
+| `make_figures.py` | `Data/`, `Docs/verification/` | `Docs/figures/mid_point_october/fig01`–`fig08` (PNG, 220 dpi); `--out` for another folder |
 | `report_numbers.py` | `Data/`, `Docs/verification/october_2026_checks.csv` | `Docs/verification/october_2026_numbers.json`: every number the report quotes |
-| `build_october_report.js` | the JSON above and `Docs/figures/` | `Deliverables/2026-10_october_update/UrbanSentinel_October2026_Progress_Report.docx` |
+| `build_october_report.js` | the JSON above and `Docs/figures/mid_point_october/` (`--numbers`, `--figures`, `--out` redirect each) | `Deliverables/2026-10_october_update/ComputerVision_Sentinel_October2026_Progress_Report.docx` |
 
 ```bash
 .venv/bin/python Scripts/verification/verify_october_2026.py

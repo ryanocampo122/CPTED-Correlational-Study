@@ -1,7 +1,7 @@
 """
 02_corrected_analysis.py
 =========================
-UrbanSentinel-Prairie | Neighbourhood, cue, time-of-day and seasonal analysis
+ComputerVision_Sentinel | Neighbourhood, cue, time-of-day and seasonal analysis
 
 PURPOSE
 -------
@@ -54,16 +54,19 @@ NEG = "negative"
 
 
 def load_clean() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Cleaned posts, and the comments used in analysis (in-window only, when recorded)."""
     posts = pd.read_csv(c.cleaned_file("posts"), low_memory=False)
     comments = pd.read_csv(c.cleaned_file("comments"), low_memory=False)
     return posts, c.analysis_comments(comments)
 
 
 def r3(x):
+    """Round to 3 dp; None/NaN -> None."""
     return None if x is None or (isinstance(x, float) and np.isnan(x)) else round(float(x), 3)
 
 
 def summarise(values: pd.Series, cats: pd.Series, clusters: pd.Series) -> dict:
+    """Mean sentiment and % negative, each with a thread-bootstrap 95% CI."""
     n = len(values)
     if n == 0:
         return {"mean_sentiment": None, "mean_ci95_low": None, "mean_ci95_high": None,
@@ -102,10 +105,12 @@ def neighbourhood_summary(posts, comments, comment_prefix: str = "vloc_") -> pd.
 
 
 def focus_sites(summary: pd.DataFrame) -> list[str]:
+    """Areas with at least MIN_MENTIONS_FOCUS verified mentions."""
     return summary.loc[summary["total_mentions"] >= c.MIN_MENTIONS_FOCUS, "neighbourhood"].tolist()
 
 
 def env_cues(comments, sites) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Cue rates among negative comments, citywide and per site. Returns (wide, long)."""
     wide, long = [], []
     groups = [("Citywide (all comments)", pd.Series(True, index=comments.index))]
     groups += [(s, comments[c.slug(s, "vloc_")]) for s in sites]
@@ -136,6 +141,8 @@ def env_cues(comments, sites) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def time_of_day(comments, sites) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Sentiment per time-of-day bucket and site, plus night-vs-other contrasts with CIs.
+    Returns (table, contrasts)."""
     rows, contrasts = [], []
     groups = [("Citywide (all comments)", comments)] + [(s, comments[comments[c.slug(s, "vloc_")]]) for s in sites]
     for name, sub in groups:
@@ -167,6 +174,7 @@ def time_of_day(comments, sites) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def seasonal(posts) -> pd.DataFrame:
+    """Posts and sentiment per local season; the UTC-season count is kept for comparison."""
     rows = []
     for s in c.SEASON_ORDER:
         b = posts[posts["local_season"] == s]
@@ -183,6 +191,7 @@ def seasonal(posts) -> pd.DataFrame:
 
 
 def monthly(posts) -> pd.DataFrame:
+    """Posts and sentiment per local calendar month."""
     rows = []
     year = posts["local_date"].str[:4].astype(int)
     for (y, m), b in posts.groupby([year, posts["local_month"]]):

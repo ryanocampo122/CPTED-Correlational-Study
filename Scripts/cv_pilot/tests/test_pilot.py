@@ -1,5 +1,5 @@
-"""Offline tests for the CV pilot: no network, no torch. Run: python -m pytest Scripts/cv_pilot/tests -q
-or simply: python Scripts/cv_pilot/tests/test_pilot.py"""
+"""Offline tests for the CV pilot: no network, no torch (fakes stand in for Mapillary and CLIP).
+Run from the repo root:  .venv/bin/python Scripts/cv_pilot/tests/test_pilot.py   (or pytest)"""
 from __future__ import annotations
 
 import json
@@ -94,6 +94,7 @@ def test_boundary_geojson_and_name_match(tmp=None):
 
 # ---------------- image choice ----------------
 def cand(i, lon, lat, iso, pano=False, url=True):
+    """Synthetic Mapillary search result."""
     return {"id": str(i), "captured_at": iso, "is_pano": pano, "compass_angle": 90.0,
             "computed_geometry": {"type": "Point", "coordinates": [lon, lat]},
             "thumb_1024_url": f"https://x/{i}.jpg" if url else None,
@@ -112,8 +113,8 @@ def test_choose_image_prefers_summer_then_recent_then_near():
     assert why == "ok" and c["id"] == "3"
     c, _ = L.choose_image(allc, lon, lat, 30)                                  # default: most recent year
     assert c["id"] == "1"
-    c, _ = L.choose_image(allc, lon, lat, 30, allow_pano=True)                # 2025 pano beats 2025-Jan flat? same year:
-    assert c["id"] == "4"                                                     # Jun-Aug ranks before flat
+    c, _ = L.choose_image(allc, lon, lat, 30, allow_pano=True)                # same year: Jul pano beats Jan flat
+    assert c["id"] == "4"                                                     # (Jun-Aug ranks before flat)
     w = L.local_window("2026-06-01", "2026-08-31")
     s26 = cand(6, lon, lat, "2026-07-02T18:00:00Z", pano=True)
     c, _ = L.choose_image(allc + [s26], lon, lat, 30, window=w, allow_pano=True)
@@ -203,6 +204,8 @@ class FakeEncoder:
 
 
 def test_end_to_end_offline():
+    """Whole CLI on a synthetic street grid. The reddit/report steps run only when the
+    study-period Reddit data are present, and must reproduce its Downtown row."""
     tmp = Path(tempfile.mkdtemp())
     args = pilot.build_parser().parse_args(["all", "--out", str(tmp), "--any-date", "--no-pano"])
     args.step_name, args.step = args.step, args.step_m
