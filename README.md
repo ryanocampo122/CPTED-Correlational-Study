@@ -74,7 +74,7 @@ with the published outputs) into a new `RESULTS_FINAL/EXECUTION-<n>/` and nothin
 `FLIGHT_SUMMARY.md` first. Details and options: `Docs/workflow.md` ("One command") and `./flight --help`.
 
 Environment: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt` (Python 3.14; the flight does
-this itself). Credentials are in `.env` at the root (committed to the private repository; a copy is in
+this itself, and fetches the pinned CLIP model listed in `requirements.txt`). Credentials are in `.env` at the root (committed to the private repository; a copy is in
 `.venv/keys.txt`): `PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`, `COMPUTERVISION_SENTINEL_HASH_SALT`,
 `MAPILLARY_TOKEN`. Single steps, to run one on its own, are listed in `Docs/workflow.md`; the most used:
 

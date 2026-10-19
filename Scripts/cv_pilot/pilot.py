@@ -307,7 +307,7 @@ def cmd_score(a, encoder=None) -> pd.DataFrame:
     out = out_dir(a)
     man = pd.read_csv(out / "image_manifest.csv")
     prompts = L.load_prompts()
-    encoder = encoder or L.ClipEncoder(a.clip_model)
+    encoder = encoder or L.ClipEncoder(a.clip_model, revision=a.clip_revision)
     scorer = L.ClipScorer(encoder, prompts, views=a.views)
     scorer.prepare()
     rows = []
@@ -715,7 +715,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--prefer", choices=["recent", "summer"], default="recent",
                    help="ranking when several images qualify (default: most recent year first)")
     p.add_argument("--coverage-from-year", type=int, default=2013)
-    p.add_argument("--clip-model", default="openai/clip-vit-base-patch32")
+    p.add_argument("--clip-model", default=L.CLIP_MODEL)
+    p.add_argument("--clip-revision", default=L.CLIP_REVISION, help="Hugging Face revision (pinned)")
     p.add_argument("--views", type=int, default=3, help="square crops per image for CLIP")
     p.add_argument("--reddit-dir", help="Data/reddit_2026-06-01_2026-08-31 (auto-detected)")
     return p

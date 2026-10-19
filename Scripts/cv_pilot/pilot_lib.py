@@ -67,6 +67,12 @@ LOCAL_TZ = "America/Regina"
 SUMMER_MONTHS = (6, 7, 8)                       # study period is June-August
 USER_AGENT = "ComputerVision_Sentinel research pilot (University of Saskatchewan)"
 
+# The CLIP model is a pinned requirement (see requirements.txt): this exact revision of the Hugging Face
+# repository, never "latest", because a re-uploaded model would change every score. ./flight's install stage
+# downloads and checks it; otherwise it downloads on first use (~600 MB, into ~/.cache/huggingface/).
+CLIP_MODEL = "openai/clip-vit-base-patch32"
+CLIP_REVISION = "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268"
+
 
 # --------------------------------------------------------------------------- #
 # Environment / secrets
@@ -595,7 +601,7 @@ def image_quality(path: Path) -> dict:
 class ClipEncoder:
     """Thin wrapper over Hugging Face CLIP. Returns L2-normalised embeddings."""
 
-    def __init__(self, model_name: str = "openai/clip-vit-base-patch32", device: str | None = None):
+    def __init__(self, model_name: str = CLIP_MODEL, device: str | None = None, revision: str = CLIP_REVISION):
         import torch
         from transformers import CLIPModel, CLIPProcessor
         self.torch = torch
@@ -603,9 +609,9 @@ class ClipEncoder:
             device = ("cuda" if torch.cuda.is_available()
                       else "mps" if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available()
                       else "cpu")
-        self.device, self.model_name = device, model_name
-        self.model = CLIPModel.from_pretrained(model_name).to(device).eval()
-        self.proc = CLIPProcessor.from_pretrained(model_name)
+        self.device, self.model_name, self.revision = device, model_name, revision
+        self.model = CLIPModel.from_pretrained(model_name, revision=revision).to(device).eval()
+        self.proc = CLIPProcessor.from_pretrained(model_name, revision=revision)
         self.logit_scale = float(self.model.logit_scale.exp().item())     # = 100 for released CLIP
 
     def _norm(self, feats):

@@ -4,7 +4,8 @@ execute_flight.py
 =================
 ComputerVision_Sentinel | The whole pipeline in one command:  ./flight --execute_flight
 
-  1 install       .venv (created if missing), pip install -r requirements.txt, npm install for the report builder
+  1 install       .venv (created if missing), pip install -r requirements.txt, npm install for the report builder,
+                  and the CLIP model at its pinned revision (downloaded once, ~600 MB)
   2 collect       through the APIs: Reddit (r/saskatoon, 1 Jun - 31 Aug 2026) and Mapillary (imagery coverage and
                   the 10 newest images at the 423 published sample points, which are read and never regenerated)
   3 load models   CLIP ViT-B/32 and VADER (stock and adjusted), each smoke-tested (load_models.py)
@@ -515,6 +516,14 @@ def stage_install(F: Flight) -> bool:
             F.skip("npm_install", S, "Install the report builder's Node packages", "npm not found; report build skipped")
 
     env_dir = F.d("environment")
+    clip_json = env_dir / "clip_model.json"
+
+    def clip_note():
+        c = json.loads(clip_json.read_text())["clip"]
+        return f"{c['model']} @ {c['revision'][:7]} ({c['megabytes']} MB) in {c['cache_folder']}"
+    F.run("clip_model", S, "CLIP model at its pinned revision (download if missing)",
+          [("fetch", [VPY, REPO / "Scripts" / "flight" / "load_models.py", "--fetch-only", "--out", clip_json])],
+          note_fn=clip_note)
     t0 = time.time()
     freeze = subprocess.run([VPY, "-m", "pip", "freeze", "--disable-pip-version-check"],
                             capture_output=True, text=True, check=False).stdout

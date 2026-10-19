@@ -9,9 +9,9 @@
 |---|---|
 | `../../flight` | launcher: uses `.venv/bin/python` if it exists, else `python3`, and runs `execute_flight.py` |
 | `execute_flight.py` | the stages, the step log, the comparisons and the summary (standard library only, so it can build `.venv` itself) |
-| `load_models.py` | stage 3: loads CLIP and VADER, smoke-tests both, writes `models/models.json` |
+| `load_models.py` | stage 1 (`--fetch-only`): the pinned CLIP model in the Hugging Face cache; stage 3: loads CLIP and VADER, smoke-tests both, writes `models/models.json` |
 
-Stages: **1 install** → **2 collect** (Reddit and Mapillary APIs) → **3 load models** (CLIP, VADER) → **4 results**
+Stages: **1 install** (packages and the pinned CLIP model) → **2 collect** (Reddit and Mapillary APIs) → **3 load models** (CLIP, VADER) → **4 results**
 (reproduction from the committed raw data, and the same analysis on the fresh collection) → **5 checks**
 (file-by-file comparison with the published outputs, repository unchanged, no credential in the output).
 `Docs/workflow.md` ("One command") describes each stage and what it writes.

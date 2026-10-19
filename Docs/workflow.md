@@ -53,7 +53,7 @@ From the repository root, `./flight --execute_flight` runs the whole pipeline in
 
 | Stage | What runs | Writes (in `EXECUTION-<n>/`) |
 |---|---|---|
-| 1 Install | `.venv` (created if missing); `pip install -r requirements.txt`; `npm install` for the report builder; versions recorded | `environment/` |
+| 1 Install | `.venv` (created if missing); `pip install -r requirements.txt`; `npm install` for the report builder; the CLIP model at its pinned revision (downloaded once, ~600 MB); versions recorded | `environment/` |
 | 2 Collect (APIs) | Reddit collector, 1 Jun – 31 Aug 2026; Mapillary coverage at the 423 published sample points and the 10 newest images (the points are copied and read, never regenerated) | `live/` |
 | 3 Load models | CLIP ViT-B/32 and VADER (stock and adjusted), loaded and smoke-tested | `models/models.json` |
 | 4 Results | **Reproduction**: both Reddit collections, the SPS cleaning, the 10-image CLIP pilot and the August 2026 package (with its own code) rebuilt from the committed raw data. **Live**: the same Reddit analysis and CLIP scoring on this run's collection. CV tests, verification checks (`--rerun-pipeline`, `--network`), figures, report numbers, the October report | `reproduction/`, `live/`, `verification/`, `figures/`, `report/` |

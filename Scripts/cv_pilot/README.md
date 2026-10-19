@@ -37,7 +37,8 @@ done
 By default the boundary is the CBD polygon in `Data/boundaries/` (the OSM copy of the City's neighbourhood
 boundary; swap in the City's own file when it arrives) and the output folder is `Data/cv_pilot_2026-10/cbd/`.
 `--boundary-geojson ""` falls back to the old placeholder box. Tests (offline, no token):
-`.venv/bin/python Scripts/cv_pilot/tests/test_pilot.py`. The first CLIP run downloads the model once (~600 MB).
+`.venv/bin/python Scripts/cv_pilot/tests/test_pilot.py`. CLIP is `openai/clip-vit-base-patch32` at a pinned revision (`CLIP_REVISION` in `pilot_lib.py`, listed in
+`requirements.txt`); `./flight` fetches it, or the first CLIP run downloads it once (~600 MB).
 Credentials: `MAPILLARY_TOKEN=MLY|...` in the `.env` at the repo root (copy in `.venv/keys.txt`).
 
 ## Images and the study period

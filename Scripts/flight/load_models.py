@@ -4,7 +4,8 @@ load_models.py
 ==============
 ComputerVision_Sentinel | Stage 3 of ./flight: load the two models, smoke-test them, record what was loaded
 
-  CLIP   openai/clip-vit-base-patch32 through Scripts/cv_pilot/pilot_lib.ClipEncoder (the class pilot.py score
+  CLIP   openai/clip-vit-base-patch32 at the pinned revision (pilot_lib.CLIP_REVISION) through
+         Scripts/cv_pilot/pilot_lib.ClipEncoder (the class pilot.py score
          uses), scored on one published pilot image with the prompts in clip_prompts.json
   VADER  stock and adjusted lexicons through Scripts/reddit_analysis/scripts/common.py (what the collector and
          the analysis use), scored on fixed test sentences
@@ -13,6 +14,8 @@ Writes one JSON (--out): library versions, the model revision and size, the devi
 outputs and a PASS/FAIL per model. Exit code 1 if either model fails to load or fails its smoke test.
 
 USAGE (repository root):  .venv/bin/python Scripts/flight/load_models.py --out <models.json>
+  --fetch-only   stage 1 of ./flight: make sure the pinned CLIP files are in the Hugging Face cache
+                 (downloading them if not) and report where; no smoke tests
 """
 from __future__ import annotations
 
@@ -28,6 +31,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "Scripts" / "cv_pilot"))
 sys.path.insert(0, str(REPO / "Scripts" / "reddit_analysis" / "scripts"))
+import pilot_lib as L  # noqa: E402
 
 PILOT_IMAGES = REPO / "Data" / "cv_pilot_2026-10" / "cbd_latest_imagery" / "images"
 # (sentence, what the adjusted lexicon must do with it)
@@ -51,14 +55,29 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def load_clip(model_name: str) -> dict:
+def fetch_clip(model_name: str, revision: str) -> dict:
+    """The pinned CLIP files in the Hugging Face cache, downloaded if missing: where they are and their size."""
+    from huggingface_hub import try_to_load_from_cache
+    from transformers import CLIPModel, CLIPProcessor
+
+    t0 = time.time()
+    CLIPModel.from_pretrained(model_name, revision=revision)
+    CLIPProcessor.from_pretrained(model_name, revision=revision)
+    config = try_to_load_from_cache(model_name, "config.json", revision=revision)
+    folder = Path(config).parent if isinstance(config, str) else None
+    files = sorted(folder.iterdir()) if folder else []
+    return {"model": model_name, "revision": revision, "cache_folder": str(folder),
+            "files": [f.name for f in files], "megabytes": round(sum(f.stat().st_size for f in files) / 1e6),
+            "seconds": round(time.time() - t0, 1), "status": "PASS" if folder else "FAIL"}
+
+
+def load_clip(model_name: str, revision: str) -> dict:
     """Load CLIP once, score one published pilot image, and check the outputs are sane."""
     import numpy as np
     from PIL import Image
-    import pilot_lib as L
 
     t0 = time.time()
-    enc = L.ClipEncoder(model_name)
+    enc = L.ClipEncoder(model_name, revision=revision)
     load_s = time.time() - t0
     prompts = L.load_prompts()
     scorer = L.ClipScorer(enc, prompts, views=3)
@@ -69,6 +88,7 @@ def load_clip(model_name: str) -> dict:
     text = enc.encode_texts(["a photo of a street"])
     typ = [v for k, v in scores.items() if k.startswith("typ_")]
     checks = {
+        "pinned_revision_loaded": getattr(enc.model.config, "_commit_hash", None) == revision,
         "embedding_unit_norm": bool(abs(float(np.linalg.norm(text[0])) - 1) < 1e-6),
         "typology_probabilities_sum_to_1": bool(abs(sum(typ) - 1) < 0.01),
         "cue_probabilities_in_0_1": all(0 <= v <= 1 for k, v in scores.items() if k.startswith("cue_")),
@@ -130,10 +150,23 @@ def load_vader() -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", type=Path, required=True, help="models JSON to write")
-    ap.add_argument("--clip-model", default="openai/clip-vit-base-patch32")
+    ap.add_argument("--clip-model", default=L.CLIP_MODEL)
+    ap.add_argument("--clip-revision", default=L.CLIP_REVISION)
+    ap.add_argument("--fetch-only", action="store_true", help="only make sure the pinned CLIP files are present")
     a = ap.parse_args()
     out = {"python": sys.version.split()[0]}
-    for name, fn in (("vader", load_vader), ("clip", lambda: load_clip(a.clip_model))):
+    if a.fetch_only:
+        try:
+            out["clip"] = fetch_clip(a.clip_model, a.clip_revision)
+        except Exception as e:                              # noqa: BLE001
+            traceback.print_exc()
+            out["clip"] = {"model": a.clip_model, "revision": a.clip_revision, "status": "FAIL",
+                           "error": f"{type(e).__name__}: {e}"}
+        a.out.parent.mkdir(parents=True, exist_ok=True)
+        a.out.write_text(json.dumps(out, indent=2) + "\n")
+        print(json.dumps(out, indent=2))
+        return 0 if out["clip"]["status"] == "PASS" else 1
+    for name, fn in (("vader", load_vader), ("clip", lambda: load_clip(a.clip_model, a.clip_revision))):
         try:
             out[name] = fn()
         except Exception as e:                              # noqa: BLE001
