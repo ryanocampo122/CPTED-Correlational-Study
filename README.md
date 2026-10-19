@@ -35,7 +35,7 @@ segments in Downtown/CBD.
 
 ```
 Plan/            governing documents: revised work plan, grant application
-Docs/            detailed documentation, verification checks, figures, history, the literature review
+Docs/            detailed documentation, verification checks, figures, the literature review
 Data/
   reddit_2026-06-01_2026-08-31/   CURRENT  study-period Reddit: raw, cleaned, tables, audits, charts
   reddit_2025-06-11_2026-06-11/   earlier  12-month collection behind the July/August reports (corrected)
