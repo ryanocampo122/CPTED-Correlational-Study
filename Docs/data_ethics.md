@@ -39,7 +39,7 @@ stigmatization: Wacquant 2007; Meade 2021; Schwarze 2023, in `Reference/Literatu
 
 - All credentials live in `.env` at the repository root (`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`,
   `PRAW_USER_AGENT`, `COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`), with a copy in `.venv/keys.txt`.
-  Since October 2026 `.env` is committed to the private GitHub repository, so everyone with access to
+  Since October 2026 `.env` is committed to the private GitHub repository , so everyone with access to
   the repository can read the keys and the hash salt. Never paste them into code, notebooks or messages.
 - `Scripts/make_handoff.sh` builds a shareable zip without `.env`, `.git`, `.venv` and the private audit folders,
   and refuses to finish if any credential value appears inside the zip.
