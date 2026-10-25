@@ -81,7 +81,12 @@ def reddit() -> dict:
 
     areas15 = nb[nb.total_mentions >= 15].index.tolist()
     rv = pd.read_csv(REPO / "Scripts" / "reddit_analysis" / "manual_review" / "location_other_city_review.csv", dtype=str)
-    rv = rv[rv.reviewer.fillna("").str.contains("reconstructed")]
+    # The Jun-Aug review rows: records in the Jun-Aug collection and not in the June one
+    # (found by record id, so they don't depend on what the reviewer column says)
+    jc = pd.read_csv(next((JUNE / "01_raw_collection").glob("saskatoon_safety_comments_*.csv")), dtype=str)
+    ja_ids = set(p.id.astype(str)) | set(c.comment_id.astype(str))
+    june_ids = set(jp.id.astype(str)) | set(jc.comment_id.astype(str))
+    rv = rv[rv.record_id.isin(ja_ids) & ~rv.record_id.isin(june_ids)]
     return {
         "posts": len(p), "comments": len(c), "comments_in_window": int(c.comment_in_window.sum()),
         "comments_late": int((~c.comment_in_window.astype(bool)).sum()),

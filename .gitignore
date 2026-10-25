@@ -35,5 +35,8 @@ Scripts/reporting/node_modules/
 # Reddit snippets kept only for local precision checks (contain user text)
 Data/cv_pilot_2026-10/**/_local_audit_do_not_share/
 
+# Blind review lists (blind_review.py make); the answers end up in the two manual_review files
+Scripts/reddit_analysis/manual_review/blind/
+
 # Project virtual environment
 .venv/

@@ -78,6 +78,11 @@ out of every analysis table (`common.analysis_comments()`).
   judged before the final exclusions were tuned (so the precision estimate is
   conservative). Fill `ra_judgement` (1/0) for a second-coder check; `01c`
   reports agreement automatically.
+- **Redoing either file blind** (`scripts/blind_review.py`): `make` writes both lists to
+  `manual_review/blind/` (git-ignored) without the earlier answers; fill
+  `correct_1_or_0` and `decision_keep_or_exclude` (how to judge is in the script's
+  docstring); `apply --reviewer "Full Name"` checks every row and writes the answers,
+  the name and the date into both files. Then rebuild both datasets with `run_all.sh`.
 
 ## Known limits (not fixable with keyword rules)
 
