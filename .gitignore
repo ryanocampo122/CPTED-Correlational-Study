@@ -14,7 +14,7 @@ package-lock.json
 .Rhistory
 .RData
 
-# Secrets. The root .env IS tracked (the GitHub repo is private).
+# Secrets. The root .env IS tracked .
 # Any other *.env and secrets.* file stays out of git.
 *.env
 !/.env

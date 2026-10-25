@@ -646,9 +646,9 @@ def main(argv=None) -> None:
     args = parse_args(argv)
     load_env_file(REPO_ROOT / ".env")
     missing = [k for k in REQUIRED_ENV if not os.getenv(k)]
+
     if missing:
-        raise SystemExit("Missing environment variables (set them or add to "
-                         f"{REPO_ROOT / '.env'}):\n" + "\n".join(f"  {k}: {REQUIRED_ENV[k]}" for k in missing))
+        raise SystemExit("Missing environment variables (set them or add to " f"{REPO_ROOT / '.env'}):\n" + "\n".join(f"  {k}: {REQUIRED_ENV[k]}" for k in missing))
     creds = {"client_id": os.environ["PRAW_CLIENT_ID"],
              "client_secret": os.environ["PRAW_CLIENT_SECRET"],
              "user_agent": os.getenv("PRAW_USER_AGENT", "ComputerVision_Sentinel/1.0 by /u/ocamporyan")}
@@ -669,19 +669,19 @@ def main(argv=None) -> None:
     out = Path(args.out) if args.out else REPO_ROOT / "Data" / f"reddit_{start}_{end}" / "01_raw_collection"
     out.mkdir(parents=True, exist_ok=True)
     setup_logging(out)
-    config = ScraperConfig(start_local=start, end_local=end, seed_sets=seed_sets,
-                           collect_comments=not args.no_comments, output_dir=out)
+
+    config = ScraperConfig(start_local=start, end_local=end, seed_sets=seed_sets, collect_comments=not args.no_comments, output_dir=out)
     collector = SaskatoonSafetyCollector(creds, config)
     logger.info("=" * 70)
+
     logger.info("ComputerVision_Sentinel | r/%s | %s .. %s (local) | seed sets: %s | sorts: %s",
                 config.subreddit, start, end, ",".join(seed_sets), ",".join(config.search_sorts))
+
     logger.info("=" * 70)
     collector.collect()
     posts_df, comments_df = collector.build_dataframes()
     stamp = collector.export(posts_df, comments_df)
-    logger.info("Collection complete (%s): %d posts, %d comments -> %s",
-                stamp, len(posts_df), len(comments_df), out)
-
+    logger.info("Collection complete (%s): %d posts, %d comments -> %s", stamp, len(posts_df), len(comments_df), out)
 
 if __name__ == "__main__":
     try:

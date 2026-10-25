@@ -183,19 +183,19 @@ TIMELINE_NOTES = {
 def fig_timeline():
     fig, ax = plt.subplots(figsize=(6.6, 3.5))
     t0 = pd.Timestamp("2026-10-01")
+
     for i, (lab, s, e, st) in enumerate(TIMELINE):
         col, icon, _ = STATUS[st]
         a, b = (pd.Timestamp(s) - t0).days, (pd.Timestamp(e) - t0).days + 1
         ax.barh(i, b - a, left=a, height=0.62, color=tint(col, 0.35), edgecolor=col, lw=1)
         ax.text(a + 2, i, icon, va="center", ha="left", fontsize=8, color=INK, weight="bold")
         if lab in TIMELINE_NOTES:
-            ax.text(b + 3, i, TIMELINE_NOTES[lab], va="center", ha="left", fontsize=6.6, color=INK,
-                    linespacing=1.15)
+            ax.text(b + 3, i, TIMELINE_NOTES[lab], va="center", ha="left", fontsize=6.6, color=INK, linespacing=1.15)
+
     ax.set_yticks(range(len(TIMELINE)), [t[0] for t in TIMELINE], fontsize=7.6)
     ax.invert_yaxis()
     months = pd.date_range("2026-10-01", "2027-06-01", freq="MS")
-    ax.set_xticks([(m - t0).days for m in months], [m.strftime("%b\n%Y") if m.month in (10, 1) else m.strftime("%b")
-                                                     for m in months], fontsize=7.4)
+    ax.set_xticks([(m - t0).days for m in months], [m.strftime("%b\n%Y") if m.month in (10, 1) else m.strftime("%b") for m in months], fontsize=7.4)
     ax.set_xlim(0, (pd.Timestamp("2027-06-01") - t0).days)
     today = (pd.Timestamp("2026-10-17") - t0).days
     ax.axvline(today, color=INK, lw=1, ls="--")
@@ -203,8 +203,7 @@ def fig_timeline():
     ax.grid(axis="y", visible=False)
     used = {t[3] for t in TIMELINE}
     handles = [Patch(fc=tint(c, 0.35), ec=c, label=f"{i}  {lab}") for k, (c, i, lab) in STATUS.items() if k in used]
-    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.42, -0.13), ncol=4, frameon=False, fontsize=6.6,
-              handlelength=1.2, columnspacing=0.9)
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.42, -0.13), ncol=4, frameon=False, fontsize=6.6, handlelength=1.2, columnspacing=0.9)
     save(fig, "fig02_timeline.png")
 
 
@@ -293,20 +292,25 @@ def _draw_base(ax, roads, water, cbd, extent):
     """Base map: river, roads and the CBD outline within extent."""
     from shapely.geometry import shape
     w = shape(water)
+
     for poly in getattr(w, "geoms", [w]):
         xs, ys = poly.exterior.xy
         ax.fill(xs, ys, color="#dbe9f6", lw=0, zorder=0)
+
     for f in roads:
         xs, ys = zip(*f["geometry"]["coordinates"])
         major = f["properties"]["highway"] in ("motorway", "trunk", "primary", "secondary")
         ax.plot(xs, ys, color="#cfcdc6" if major else GREY_L, lw=1.0 if major else 0.6, zorder=1)
+
     xs, ys = zip(*cbd["coordinates"][0])
     ax.plot(xs, ys, color=INK, lw=1.3, zorder=4)
     ax.set_xlim(extent[0], extent[2]), ax.set_ylim(extent[1], extent[3])
     ax.set_aspect(1 / np.cos(np.radians(52.13)))
     ax.set_xticks([]), ax.set_yticks([]), ax.grid(False)
+
     for s in ax.spines.values():
         s.set_visible(True), s.set_color(GREY)
+
     # 500 m scale bar
     x0, y0 = extent[0] + 0.0012, extent[1] + 0.0010
     dx = 500 / (111320 * np.cos(np.radians(52.13)))
@@ -330,18 +334,19 @@ def fig_points_map():
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(6.7, 3.25))
     for ax in (a1, a2):
         _draw_base(ax, roads, water, cbd, extent)
+
     from shapely.geometry import Point, shape
     poly = shape(cbd)
     inside = box_pts.apply(lambda r: poly.contains(Point(r.lon, r.lat)), axis=1)
-    a1.add_patch(Rectangle((bb[0], bb[1]), bb[2] - bb[0], bb[3] - bb[1], fill=False, ec=ORANGE, lw=1.3, ls="--",
-                           zorder=5))
+    a1.add_patch(Rectangle((bb[0], bb[1]), bb[2] - bb[0], bb[3] - bb[1], fill=False, ec=ORANGE, lw=1.3, ls="--", zorder=5))
     a1.scatter(box_pts.lon[~inside], box_pts.lat[~inside], s=4.5, color=ORANGE, lw=0, zorder=3)
     a1.scatter(pts.lon, pts.lat, s=4.5, color=BLUE, lw=0, zorder=3)
     a1.set_title("a. Study-area boundary", loc="left", fontsize=8.5, weight="bold")
+
     h1 = [Line2D([], [], color=INK, lw=1.3, label="CBD neighbourhood boundary"),
           Line2D([], [], marker="o", ls="", color=BLUE, ms=3.5, label=f"CBD points ({len(pts)})"),
-          Line2D([], [], color=ORANGE, lw=1.3, ls="--", marker="o", ms=3.5,
-                 label=f"old placeholder box: {int((~inside).sum())} of\n{len(box_pts)} points outside the CBD")]
+          Line2D([], [], color=ORANGE, lw=1.3, ls="--", marker="o", ms=3.5, label=f"old placeholder box: {int((~inside).sum())} of\n{len(box_pts)} points outside the CBD")]
+
     a1.legend(handles=h1, loc="upper left", bbox_to_anchor=(0, -0.01), frameon=False, fontsize=6.6, handlelength=1.6)
     order = [("2023", SEQ[3]), ("2020", SEQ[2]), ("2017–19", SEQ[1]), ("2014", SEQ[0])]
     grp = pts.newest.replace({"2017": "2017–19", "2018": "2017–19", "2019": "2017–19"})
@@ -350,6 +355,7 @@ def fig_points_map():
         m = grp == lab
         a2.scatter(pts.lon[m], pts.lat[m], s=6, color=col, lw=0, zorder=3)
         hand.append(Line2D([], [], marker="o", ls="", color=col, ms=3.8, label=f"{lab}  ({int(m.sum())} points)"))
+
     m = grp == "none"
     a2.scatter(pts.lon[m], pts.lat[m], s=7, facecolor="none", edgecolor=INK_2, lw=0.6, zorder=3)
     hand.append(Line2D([], [], marker="o", ls="", mfc="none", mec=INK_2, ms=3.8, label=f"no image  ({int(m.sum())})"))
@@ -358,8 +364,8 @@ def fig_points_map():
     # read order: study period first (empty), then newest -> oldest, then no image
     a2.legend(handles=[hand[5], hand[3], hand[2], hand[1], hand[0], hand[4]], loc="upper left",
               bbox_to_anchor=(0, -0.01), frameon=False, fontsize=6.6, ncol=2, handlelength=1.0, columnspacing=0.8)
-    fig.text(0.995, 0.005, "Map data © OpenStreetMap contributors (ODbL); image dates from Mapillary",
-             ha="right", fontsize=5.8, color=INK_2)
+
+    fig.text(0.995, 0.005, "Map data © OpenStreetMap contributors (ODbL); image dates from Mapillary", ha="right", fontsize=5.8, color=INK_2)
     fig.subplots_adjust(wspace=0.04)
     save(fig, "fig05_sample_points_map.png")
 
@@ -373,6 +379,7 @@ def fig_imagery_by_year():
     x = np.arange(len(cats))
     cols = [GREY] + [BLUE] * 6 + [GREY_L] * 3
     ax.bar(x, vc.values, color=cols, width=0.7)
+
     for i, v in enumerate(vc.values):
         ax.text(i, v + 4, str(int(v)), ha="center", fontsize=7.4, weight="bold" if cats[i] == "2026" else None)
     ax.set_xticks(x, ["no\nimage"] + cats[1:], fontsize=7.6)
