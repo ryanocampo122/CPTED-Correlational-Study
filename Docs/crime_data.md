@@ -71,7 +71,7 @@ Two patterns are flagged in the cleaned file, not removed:
   incidents (to confirm with SPS). None are in the study categories, but they would inflate any "all crime" count for
   the CBD, so leave them out of such counts.
 - **Identical rows** (`identical_rows`, `identical_rank`): 1,075 records repeat another record exactly (same time,
-  type and location), 138 of them in the study categories. An incident can carry several counts of the same offence,
+  type and location), 60 of them in the study categories. An incident can carry several counts of the same offence,
   so they are kept; `category_counts.csv` gives both offence records and distinct incidents.
 
 39 records have no neighbourhood (`neighbourhood_missing`); every record has coordinates, and `in_cbd` comes from the

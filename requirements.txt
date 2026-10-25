@@ -29,6 +29,13 @@ huggingface_hub==0.36.2
 scipy==1.18.1
 statsmodels==0.15.0
 
+# Notebooks (Notebooks/): the kernel, running them headless (Scripts/flight/run_notebook.py), and the git
+# filter that keeps their outputs out of commits (nbstripout --install, once per clone)
+ipykernel==7.4.0
+nbclient==0.11.0
+nbformat==5.11.1
+nbstripout==0.9.1
+
 # Models: not pip packages, but requirements all the same (the results depend on them)
 #   CLIP ViT-B/32   openai/clip-vit-base-patch32 at revision 3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268
 #                   (Hugging Face, ~600 MB). Pinned in Scripts/cv_pilot/pilot_lib.py (CLIP_MODEL,

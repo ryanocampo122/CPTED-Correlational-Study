@@ -16,6 +16,7 @@ segments in Downtown/CBD.
 | The latest update for supervisors | `Deliverables/2026-10_october_update/` |
 | The literature review (CPTED evidence, crime and perception, pilot sites) | [`Docs/literature review/Master_lit_review.docx`](Docs/literature%20review/Master_lit_review.docx) |
 | How the whole study fits together, and how to run it | `Docs/workflow.md` |
+| The results, step by step, in notebooks | `Notebooks/` (start with `00_replicate_system.ipynb`) |
 | What has been checked, and how | `Docs/verification/october_2026_checks.md` |
 | Open decisions and known problems | Decision D1 (image source) in `Docs/cv_pipeline.md`; Decision D2 (Reddit spatial unit) and the Reddit limitations in `Docs/reddit_pipeline.md`; gaps in the crime data in `Docs/crime_data.md` |
 | Any other documentation | `Docs/README.md` |
@@ -35,7 +36,7 @@ segments in Downtown/CBD.
 
 ```
 Plan/            governing documents: revised work plan, grant application
-Docs/            detailed documentation, verification checks, figures, history, the literature review
+Docs/            detailed documentation, verification checks, figures, the literature review
 Data/
   reddit_2026-06-01_2026-08-31/   CURRENT  study-period Reddit: raw, cleaned, tables, audits, charts
   reddit_2025-06-11_2026-06-11/   earlier  12-month collection behind the July/August reports (corrected)
@@ -45,7 +46,7 @@ Data/
   climate_2010_2025/                       ECCC climate 2010–2025, four prairie cities; kept for possible use
 flight           ./flight --execute_flight: the whole pipeline in one command (Scripts/flight/)
 Scripts/
-  flight/              the flight: execute_flight.py (stages, comparisons, summary), load_models.py
+  flight/              the flight: execute_flight.py (stages, comparisons, summary), load_models.py, run_notebook.py
   reddit_collection/   Reddit collector (reddit_scraper.py)
   reddit_analysis/     cleaning, tagging, analysis and self-checks (run_all.sh <dataset>)
   crime_data/          cleans the SPS extract into study categories (clean_sps_crime.py)
@@ -54,6 +55,7 @@ Scripts/
   verification/        independent checks of every October claim
   reporting/           figures, report numbers, the October .docx builder
   make_handoff.sh      builds a shareable zip without credentials or private text
+Notebooks/       notebooks on top of the scripts: replicate the system, Reddit, crime, street images (outputs never committed)
 Deliverables/    dated copies of what was sent (2026-08, 2026-10); later edits noted in each README
 Reference/       literature (incl. computer-vision papers), presentations, maps
 Archive/         surveys dropped in the revised plan (the August CV prototype is in git history)
@@ -85,6 +87,10 @@ bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31            
 .venv/bin/python Scripts/verification/verify_october_2026.py                      # re-check October claims
 .venv/bin/python Scripts/reporting/make_figures.py                                # rebuild figures
 ```
+
+**Notebooks** (`Notebooks/`, see its README): open them in VS Code with the `.venv` kernel. They read `Data/` and
+never write there, the flight runs 01–03 on every run, and a git filter keeps their outputs out of commits
+(after cloning, run `.venv/bin/nbstripout --install` once).
 
 ## Ground rules
 

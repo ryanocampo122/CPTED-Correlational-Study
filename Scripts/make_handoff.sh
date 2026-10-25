@@ -28,7 +28,7 @@ rm -f "$OUT"
        "*/.DS_Store" "*.sw?" "*/__pycache__/*" "*.pyc" "*/~\$*" "*/.Rhistory" \
        "*/_local_audit_do_not_share/*" \
        "$NAME/Scripts/reddit_analysis/output/*" "$NAME/Scripts/reddit_analysis/scripts/output/*" \
-       "$NAME/RESULTS_FINAL/*" )
+       "$NAME/RESULTS_FINAL/*" "$NAME/Notebooks/_out/*" "*/.ipynb_checkpoints/*" )
 rm -rf "$TMP"
 
 # 3. refuse to hand over a zip that contains any credential

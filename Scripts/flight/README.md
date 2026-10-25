@@ -10,6 +10,7 @@
 | `../../flight` | launcher: uses `.venv/bin/python` if it exists, else `python3`, and runs `execute_flight.py` |
 | `execute_flight.py` | the stages, the step log, the comparisons and the summary (standard library only, so it can build `.venv` itself) |
 | `load_models.py` | stage 1 (`--fetch-only`): the pinned CLIP model in the Hugging Face cache; stage 3: loads CLIP and VADER, smoke-tests both, writes `models/models.json` |
+| `run_notebook.py` | stage 4: runs one notebook from `Notebooks/` top to bottom and saves the copy with outputs in the execution's `notebooks/` |
 
 Stages: **1 install** (packages and the pinned CLIP model) → **2 collect** (Reddit and Mapillary APIs) → **3 load models** (CLIP, VADER) → **4 results**
 (reproduction from the committed raw data, and the same analysis on the fresh collection) → **5 checks**

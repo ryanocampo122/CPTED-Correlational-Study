@@ -56,14 +56,15 @@ From the repository root, `./flight --execute_flight` runs the whole pipeline in
 | 1 Install | `.venv` (created if missing); `pip install -r requirements.txt`; `npm install` for the report builder; the CLIP model at its pinned revision (downloaded once, ~600 MB); versions recorded | `environment/` |
 | 2 Collect (APIs) | Reddit collector, 1 Jun – 31 Aug 2026; Mapillary coverage at the 423 published sample points and the 10 newest images (the points are copied and read, never regenerated) | `live/` |
 | 3 Load models | CLIP ViT-B/32 and VADER (stock and adjusted), loaded and smoke-tested | `models/models.json` |
-| 4 Results | **Reproduction**: both Reddit collections, the SPS cleaning, the 10-image CLIP pilot and the August 2026 package (with its own code) rebuilt from the committed raw data. **Live**: the same Reddit analysis and CLIP scoring on this run's collection. CV tests, verification checks (`--rerun-pipeline`, `--network`), figures, report numbers, the October report | `reproduction/`, `live/`, `verification/`, `figures/`, `report/` |
+| 4 Results | **Reproduction**: both Reddit collections, the SPS cleaning, the 10-image CLIP pilot and the August 2026 package (with its own code) rebuilt from the committed raw data. **Live**: the same Reddit analysis and CLIP scoring on this run's collection. CV tests, verification checks (`--rerun-pipeline`, `--network`), figures, report numbers, the October report; notebooks 01–03 run top to bottom | `reproduction/`, `live/`, `verification/`, `figures/`, `report/`, `notebooks/` |
 | 5 Checks | Every rebuilt file compared with its published copy; the fresh collection compared with the published numbers; the repository's files unchanged; no credential value in any output file | `comparisons/` |
 
 Read `FLIGHT_SUMMARY.md` first: every step with its status (PASS, WARN = works with a known limitation, FAIL,
 SKIP), time, result and log. `flight_status.json` holds the same for scripts, `logs/` each step's full output, and
 `RESULTS_FINAL/executions.csv` one row per run. Options (`./flight --help`): `--offline` (no API calls),
 `--skip-install`, `--skip-reddit-collection` (about 10 minutes), `--skip-coverage` (the slowest Mapillary step),
-`--skip-report`. A full run takes about 30–45 minutes.
+`--skip-report`. A full run takes about 20 minutes once `.venv` and the CLIP model are installed (the Reddit
+collection is about 10 of them); a first run on a new machine also downloads the packages and the ~600 MB model.
 
 Two things the reproduction cannot match exactly, by design: the Excel workbook stores its creation time and
 `pilot_report.md` and `run_meta.json` store the run's time and git commit. The comparison reports these as
@@ -109,6 +110,16 @@ done
 The report build writes the generated base, `Deliverables/2026-10_october_update/ComputerVision_Sentinel_October2026_Progress_Report.docx`. The report as sent, `CPTED_ComputerVis_2026.docx` (and its PDF), was edited by hand after that, so a rebuild neither reproduces nor overwrites it.
 
 **Related data, outside this pipeline.** `Data/climate_2010_2025/` holds ECCC daily, monthly and yearly climate data (2010–2025; Saskatoon, Regina, Edmonton, Winnipeg) from an earlier climate–crime study, kept in case climate is added to this one; its download scripts are in `Scripts/climate_data/`. None of the commands above use it.
+
+## Notebooks
+
+`Notebooks/` holds Jupyter notebooks that sit on top of the scripts (details in `Notebooks/README.md`).
+`00_replicate_system` runs the flight offline and walks through each stage; `01_reddit`, `02_crime` and
+`03_cv_pilot` show the published results for each data source. They read `Data/` and never write there, show
+counts rather than Reddit text, and import the project's modules through `Notebooks/_setup.py`. The flight runs
+01–03 on every run (copies with outputs in `EXECUTION-<n>/notebooks/`), and the `nbstripout` git filter keeps
+outputs out of commits. A method tried in a notebook moves into `Scripts/`, with a test and a flight step, once it
+works.
 
 ## Conventions
 

@@ -11,9 +11,10 @@ ComputerVision_Sentinel | The whole pipeline in one command:  ./flight --execute
   3 load models   CLIP ViT-B/32 and VADER (stock and adjusted), each smoke-tested (load_models.py)
   4 results       reproduction: every published output rebuilt from the committed raw data; live: the same
                   analysis on the fresh collection; CV tests; verification checks; figures; report numbers;
-                  the October report (.docx)
+                  the October report (.docx); notebooks 01-09 in Notebooks/, run top to bottom
   5 checks        reproduction compared with Data/ and Docs/ file by file; fresh collection compared with the
-                  published numbers; Data/, Docs/, Deliverables/ and Scripts/ unchanged; no credential in the output
+                  published numbers; Data/, Docs/, Deliverables/, Scripts/ and Notebooks/ unchanged; no
+                  credential in the output
 
 Each run gets a new folder RESULTS_FINAL/EXECUTION-<n>/ (n = last + 1) and writes nowhere else.
 Read its FLIGHT_SUMMARY.md first; flight_status.json holds the same in machine-readable form, logs/ every
@@ -23,7 +24,7 @@ Standard library only, so it runs before the environment exists; every step runs
 
 USAGE (repository root)
 -----
-  ./flight --execute_flight                      everything (~30-45 min; the Reddit collection is ~10)
+  ./flight --execute_flight                      everything (~20 min once installed; the Reddit collection is ~10)
   ./flight --execute_flight --offline            no API calls: install, models, reproduction, checks
   ./flight --execute_flight --skip-install --skip-reddit-collection --skip-coverage
 """
@@ -70,7 +71,7 @@ NEEDS = {"reddit": ("PRAW_CLIENT_ID", "PRAW_CLIENT_SECRET", "COMPUTERVISION_SENT
          "mapillary": ("MAPILLARY_TOKEN",)}
 SECRET_HINTS = ("SECRET", "TOKEN", "SALT", "CLIENT_ID", "PASSWORD", "KEY")
 # Never part of the repository snapshot: build artefacts, environments, OS clutter
-SNAPSHOT_SKIP_DIRS = {".git", ".venv", "node_modules", "__pycache__"}
+SNAPSHOT_SKIP_DIRS = {".git", ".venv", "node_modules", "__pycache__", "_out"}   # _out: Notebooks/_out (scratch)
 SNAPSHOT_SKIP_FILES = {".DS_Store", "package-lock.json", ".Rhistory", ".RData"}   # plus Word lock files (~$...)
 STATUSES = ("PASS", "WARN", "FAIL", "SKIP")
 
@@ -244,7 +245,7 @@ def analysis_steps() -> list[str]:
 def tree_snapshot(skip_root: Path) -> dict:
     """{relative path: (size, mtime_ns)} for every repository file the flight must not change."""
     snap = {}
-    for top in ("Data", "Docs", "Deliverables", "Scripts", "Plan", "Reference", "Archive"):
+    for top in ("Data", "Docs", "Deliverables", "Scripts", "Notebooks", "Plan", "Reference", "Archive"):
         base = REPO / top
         if not base.exists():
             continue
@@ -763,6 +764,18 @@ def stage_results(F: Flight) -> None:
               note_fn=lambda: f"{docx.stat().st_size / 1e6:.1f} MB; the hand-edited CPTED_ComputerVis_2026.docx "
                               "is the version sent")
 
+    # Notebooks 01-09: each one run top to bottom; the copies with outputs stay in this execution --------
+    # (00_replicate_system runs the flight itself, so the flight never runs it)
+    notebooks = sorted((REPO / "Notebooks").glob("0[1-9]_*.ipynb"))
+    if notebooks:
+        nb_out = F.d("notebooks")
+        F.run("notebooks", S, f"Notebooks run top to bottom ({len(notebooks)})",
+              [(nb.stem, [py, REPO / "Scripts" / "flight" / "run_notebook.py", nb, nb_out / nb.name])
+               for nb in notebooks],
+              note_fn=lambda: f"{len(list(nb_out.glob('*.ipynb')))} run; copies with outputs in notebooks/")
+    else:
+        F.skip("notebooks", S, "Notebooks run top to bottom", "no notebooks in Notebooks/")
+
 
 def stage_checks(F: Flight, snapshot: dict) -> None:
     S = "5 checks"
@@ -863,7 +876,7 @@ def stage_checks(F: Flight, snapshot: dict) -> None:
     changed = sorted(k for k in set(snapshot) | set(after) if snapshot.get(k) != after.get(k))
     (cmp_dir / "repository_files_changed.txt").write_text("\n".join(changed) + ("\n" if changed else ""))
     F.facts["repo_changed"] = changed
-    F.record("repo_untouched", S, "Data/, Docs/, Deliverables/, Scripts/ unchanged by the flight",
+    F.record("repo_untouched", S, "Data/, Docs/, Deliverables/, Scripts/, Notebooks/ unchanged by the flight",
              "FAIL" if changed else "PASS",
              f"{len(changed)} file(s) changed: {', '.join(changed[:5])}" if changed else
              f"{len(snapshot):,} files checked, none changed", time.time() - t0)
