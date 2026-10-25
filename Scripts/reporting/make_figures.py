@@ -93,7 +93,7 @@ COLS = ["1. Collect  (Oct)", "2. Analyse  (Nov \u2013 Jan)", "3. Check accuracy 
 WORKFLOW = [
     [("done", "195 posts, 6,452 comments\nJune\u2013August 2026"),
      ("done", "Places and tone tagged;\nresults reproduce exactly"),
-     ("done", "Tags checked by hand\n(30 examples per topic)")],
+     ("partial", "Tags checked: first pass\n(30 examples per topic);\nby hand next")],
     [("done", "Collection method validated:\n10 Mapillary images sourced"),
      ("done", "CLIP ViT-B/32 model\nvalidated to analyse in the\npipeline on a small sample"),
      ("done", "Scoring validated on a\nsmall sample (10 images);\n~150-image check next")],

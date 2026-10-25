@@ -445,7 +445,7 @@ class SaskatoonSafetyCollector:
     def _tag_neighbourhoods(df: pd.DataFrame, text_col: str) -> pd.DataFrame:
         """loc_* flags and a neighbourhoods_mentioned list per record."""
         # Whole-word matching; other-city references ("downtown Regina") are
-        # removed at analysis time from the hand-review file.
+        # removed at analysis time from the review file.
         df["neighbourhoods_mentioned"] = df[text_col].apply(
             lambda t: [n for n, p in SASKATOON_NEIGHBOURHOODS.items() if common.bounded_match(t, p)])
         df["n_neighbourhoods"] = df["neighbourhoods_mentioned"].apply(len)
@@ -682,6 +682,7 @@ def main(argv=None) -> None:
     posts_df, comments_df = collector.build_dataframes()
     stamp = collector.export(posts_df, comments_df)
     logger.info("Collection complete (%s): %d posts, %d comments -> %s", stamp, len(posts_df), len(comments_df), out)
+
 
 if __name__ == "__main__":
     try:

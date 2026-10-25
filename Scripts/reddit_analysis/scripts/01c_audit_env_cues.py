@@ -15,7 +15,7 @@ This script measures the damage and documents the corrected tags:
                   environmental senses (the definition used from October 2026)
 
 It also lists the words that triggered the original substring match without
-being a cue word ("police" -> "ice"), and summarises the hand-judged precision
+being a cue word ("police" -> "ice"), and summarises the judged precision
 of the corrected tags from manual_review/env_cue_validation_heldout.csv.
 
 OUTPUT

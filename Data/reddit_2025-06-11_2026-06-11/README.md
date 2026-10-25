@@ -64,7 +64,7 @@ rules out direct quotation without consent).
 
 | Column(s) | Meaning |
 |---|---|
-| `vloc_<area>` (22) | final location tag: whole word, minus hand-reviewed other-city references |
+| `vloc_<area>` (22) | final location tag: whole word, minus reviewed other-city references (automated first pass, to be confirmed by hand) |
 | `vloc_any`, `vloc_n`, `vloc_names` | summaries of the above |
 | `thread_vloc_<area>` | comments only: the comment or its parent post is tagged |
 | `venv_<cue>`, `venv_<cue>_terms`, `venv_n` | corrected environmental cues and the words that triggered them |
@@ -84,7 +84,7 @@ without an original column, and 15 other-city exclusions. `env_cue_changelog.csv
 | `neighbourhood_tagging_audit.csv` | raw → word boundary → final counts per area |
 | `env_cue_tagging_audit.csv` | original vs whole-word vs corrected cue counts |
 | `env_cue_false_trigger_words.csv` | words that falsely triggered cues (`police`→ice 452×, `little`→lit 256×) |
-| `env_cue_precision_heldout.csv` | hand-checked precision: lighting 50%, noise 93%, weather 90%, time 90%, people 87% |
+| `env_cue_precision_heldout.csv` | precision from an automated first pass, not yet checked by hand: lighting 50%, noise 93%, weather 90%, time 90%, people 87% |
 | `sentiment_sensitivity.csv`, `…_ranking.csv` | headline figures under 4 scoring specs |
 | `august_document_claims_check.csv` | numbers quoted in the July/August documents vs the data |
 | `verification_report.txt` | 25 automated checks, all passing |
@@ -102,4 +102,4 @@ Seven figures (light background, print-ready) with 95% CIs where sites are compa
 - **Lighting cue:** about 50% precise even after correction, so treat it as an upper bound.
 - **Review status:** location exclusions and cue judgements are an automated first pass made on
   2026-10-16 and are recorded row by row in `Scripts/reddit_analysis/manual_review/` for
-  the research team to confirm or overturn.
+  the research team to confirm or overturn (`Scripts/reddit_analysis/scripts/blind_review.py`).

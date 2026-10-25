@@ -650,7 +650,7 @@ def stage_models(F: Flight) -> None:
 
 
 def reddit_analysis(F: Flight, sid: str, title: str, raw: Path, out: Path, review: Path) -> None:
-    """The run_all.sh steps on one collection, writing to out/ and using a copy of the hand-review files."""
+    """The run_all.sh steps on one collection, writing to out/ and using a copy of the review files."""
     shutil.copytree(REVIEW, review, dirs_exist_ok=True)
     env = dict(F.env, COMPUTERVISION_SENTINEL_RAW_DIR=str(raw), COMPUTERVISION_SENTINEL_OUT_DIR=str(out),
                COMPUTERVISION_SENTINEL_REVIEW_DIR=str(review))
@@ -792,7 +792,7 @@ def stage_checks(F: Flight, snapshot: dict) -> None:
         rows += compare_tree("CV pilot (10 images)", rep / "cv_pilot_cbd_latest_imagery", PILOT,
                              exclude=("sample_points.csv", "sample_points.geojson", "image_manifest.csv",
                                       "pilot_attempts.csv", "images"))
-    for name, new, pub in (("Hand review", rep / "manual_review" / REDDIT_DS / "location_other_city_review.csv",
+    for name, new, pub in (("Review files", rep / "manual_review" / REDDIT_DS / "location_other_city_review.csv",
                             REVIEW / "location_other_city_review.csv"),):
         if new.exists():
             st, note = compare_file(new, pub)

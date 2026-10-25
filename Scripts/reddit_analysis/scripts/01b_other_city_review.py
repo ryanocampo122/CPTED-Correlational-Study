@@ -10,7 +10,7 @@ Saskatoon's downtown from Regina's. The August report quoted a comment that
 begins "I operate buildings in downtown Regina" as evidence about Downtown/CBD.
 
 This script lists every post/comment whose location match co-occurs with the
-name of another city, and merges that list with the hand-made decisions in
+name of another city, and merges that list with the review decisions in
 
     manual_review/location_other_city_review.csv
 

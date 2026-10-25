@@ -157,7 +157,7 @@ def chart4_env_cues():
     ax.grid(axis="x", visible=False)
     ax.legend(frameon=False, fontsize=9, loc="upper left")
     finish(fig, ax, "chart4_env_cues.png", "Environmental cues in negative comments (corrected tagging)",
-           "Lighting tags have ~50% precision on a hand-checked sample; read lighting counts as an upper bound.")
+           "Lighting tags were ~50% precise in a first-pass check; read lighting counts as an upper bound.")
 
 
 def chart5_time_of_day():

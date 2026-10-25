@@ -16,9 +16,9 @@ Both published output sets reproduce byte-for-byte from the raw files (checked
 | Problem | Fix | Where |
 |---|---|---|
 | Location tags matched inside words (`river` in `driver`) | Whole-word matching (August fix, kept) | `common.bounded_match` |
-| "Downtown" sometimes meant Regina's, Calgary's… downtown; a Regina comment was quoted in the August report | 76 candidate records read by hand; 15 excluded | `manual_review/location_other_city_review.csv`, `01b` |
+| "Downtown" sometimes meant Regina's, Calgary's… downtown; a Regina comment was quoted in the August report | 76 candidate records reviewed (automated first pass, to be confirmed by hand); 15 excluded | `manual_review/location_other_city_review.csv`, `01b` |
 | Sutherland never tracked, although the survey draft cites it | Added as a 22nd area (53 mentions, all checked) | `common.NEIGHBOURHOODS_ADDED` |
-| Environmental cues matched inside words (`ice` in `police`, `lit` in `little`, `late` in `plate`); never corrected in August | Whole words + inflections − explicit non-environmental senses; accuracy hand-checked | `common.ENV_CUES`, `01c`, `manual_review/env_cue_validation_heldout.csv` |
+| Environmental cues matched inside words (`ice` in `police`, `lit` in `little`, `late` in `plate`); never corrected in August | Whole words + inflections − explicit non-environmental senses; accuracy checked on a held-out sample (automated first pass, to be checked by hand) | `common.ENV_CUES`, `01c`, `manual_review/env_cue_validation_heldout.csv` |
 | VADER scores the seed words `safe`/`safety` as positive and has no entry for `unsafe`, `sketchy`, `afraid` | Adjusted lexicon is primary; original kept alongside; 4-way sensitivity analysis | `common.VADER_LEXICON_ADJUSTMENTS`, `02b` |
 | Month, season and weekday taken from UTC | Local `America/Regina` time fields | `common.add_local_time` |
 | No uncertainty; "Downtown negative only at night" read off a −0.004 mean (n=40) | 95% CIs from a bootstrap that resamples whole threads; explicit night-vs-other contrasts | `02` |
@@ -65,7 +65,10 @@ the whole-word tags and flag comments posted after the window closed
 (`comment_in_window`). Those late comments stay in the cleaned files but are left
 out of every analysis table (`common.analysis_comments()`).
 
-## Hand-made inputs (`manual_review/`)
+## Review inputs (`manual_review/`)
+
+Both files hold an automated first pass (16 Oct 2026) that has not yet been checked by
+hand; the `reviewer` / `judge` column says so on every row.
 
 - **`location_other_city_review.csv`**: one row per location match that co-occurs
   with another city's name, for every collection (keyed by record id).
@@ -73,7 +76,7 @@ out of every analysis table (`common.analysis_comments()`).
   collection's candidates appear as `pending` and the pipeline stops until someone
   decides them. The 68 Jun–Aug 2026 rows were reconstructed on 16 Oct 2026 from that
   collection's `location_changelog.csv` (17 exclude, 51 keep) after the original
-  review file was lost; they are marked to be confirmed by hand.
+  review file was lost.
 - **`env_cue_validation_heldout.csv`**: 30 random corrected matches per cue,
   judged before the final exclusions were tuned (so the precision estimate is
   conservative). Fill `ra_judgement` (1/0) for a second-coder check; `01c`

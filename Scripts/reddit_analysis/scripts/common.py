@@ -43,7 +43,7 @@ Each Reddit dataset is a folder Data/<dataset>/ whose 01_raw_collection/ holds
 one saskatoon_safety_posts_<stamp>.csv and one ..._comments_<stamp>.csv.
 Raw data: $COMPUTERVISION_SENTINEL_RAW_DIR, else Data/reddit_2025-06-11_2026-06-11/01_raw_collection.
 Outputs: $COMPUTERVISION_SENTINEL_OUT_DIR, else ../output. run_all.sh sets both.
-Hand review: $COMPUTERVISION_SENTINEL_REVIEW_DIR, else ../manual_review (01b updates it in
+Review files: $COMPUTERVISION_SENTINEL_REVIEW_DIR, else ../manual_review (01b updates it in
 place, so ./flight points this at a copy when it analyses a fresh collection).
 
 TWO COLLECTION VERSIONS
@@ -212,7 +212,7 @@ NEIGHBOURHOODS_ORIGINAL: dict[str, list[str]] = {
 
 # Added October 2026: the safety-perception survey draft names Sutherland as a
 # site the Reddit data pointed to, but it was never a tracked category. Every
-# one of its 53 word-boundary matches was checked by hand and refers to the
+# one of its 53 word-boundary matches was checked and refers to the
 # Saskatoon neighbourhood (or businesses / Sutherland Beach within it).
 NEIGHBOURHOODS_ADDED: dict[str, list[str]] = {
     "Sutherland": ["sutherland"],
@@ -297,7 +297,7 @@ def neighbourhood_tags(df: pd.DataFrame, text_col: str, id_col: str, record_type
                        vocab: dict[str, list[str]] | None = None,
                        prefix: str = "vloc_") -> pd.DataFrame:
     """Adds one boolean column per neighbourhood: word-boundary match, minus
-    hand-reviewed other-city references. Returns df (modified in place)."""
+    reviewed other-city references. Returns df (modified in place)."""
     vocab = NEIGHBOURHOODS if vocab is None else vocab
     excl = other_city_exclusions()
     for name, patterns in vocab.items():

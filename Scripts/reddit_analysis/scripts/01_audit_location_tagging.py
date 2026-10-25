@@ -9,7 +9,7 @@ Compares three versions of every neighbourhood tag, for posts and comments:
 
   raw            the scraper's original substring match ("river" in "driver")
   word_boundary  the same patterns matched as whole words (August 2026 fix)
-  final          word boundary, minus hand-reviewed references to other
+  final          word boundary, minus reviewed references to other
                  cities' downtowns/rivers (October 2026, see
                  manual_review/location_other_city_review.csv)
 

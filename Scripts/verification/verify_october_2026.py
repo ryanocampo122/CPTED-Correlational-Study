@@ -173,7 +173,7 @@ def reddit_checks(rerun: bool) -> None:
         "WARN", "mixes presence of people with mentions of a social group; split it before H4")
 
     prec = pd.read_csv(REDDIT / "05_audits" / "env_cue_precision_heldout.csv").set_index("cue")
-    add(A, "Environmental-cue precision (hand-checked held-out sample, June records)",
+    add(A, "Environmental-cue precision (held-out sample, June records; automated first pass, not yet checked by hand)",
         "; ".join(f"{k} {v.precision:.0%}" for k, v in prec.iterrows())
         + ". Lighting fires on traffic/car lights", "WARN", rel(REDDIT / "05_audits" / "env_cue_precision_heldout.csv"))
 
@@ -186,7 +186,7 @@ def reddit_checks(rerun: bool) -> None:
         for ds in (REDDIT, REDDIT_JUNE):
             with tempfile.TemporaryDirectory() as tmp:
                 env = {**os.environ, "COMPUTERVISION_SENTINEL_OUT_DIR": tmp}
-                r = subprocess.run(["bash", str(REPO / "Scripts/reddit_analysis/run_all.sh"), ds.name],env=env, capture_output=True, text=True, check=False)
+                r = subprocess.run(["bash", str(REPO / "Scripts/reddit_analysis/run_all.sh"), ds.name], env=env, capture_output=True, text=True, check=False)
                 files = [p.relative_to(tmp) for p in Path(tmp).rglob("*.csv")]
                 same = [f for f in files if filecmp.cmp(Path(tmp) / f, ds / f, shallow=False)]
                 add(A if ds == REDDIT else "Reddit Jun 2025-Jun 2026",

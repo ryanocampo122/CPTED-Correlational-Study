@@ -13,7 +13,7 @@ tags only.
 COLUMNS ADDED
 -------------
   vloc_<area>            final location tag: word-boundary match minus
-                         hand-reviewed other-city references (22 areas,
+                         reviewed other-city references (22 areas,
                          Sutherland included)
   vloc_any / vloc_n / vloc_names
   thread_vloc_<area>     comments only: True if the comment OR its parent post

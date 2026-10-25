@@ -1,7 +1,7 @@
 """
 blind_review.py
 ===============
-ComputerVision_Sentinel | Redo both hand-review files blind, then record who decided
+ComputerVision_Sentinel | Check both review files by hand, blind, then record who decided
 
 PURPOSE
 -------

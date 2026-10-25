@@ -25,7 +25,7 @@ Re-derives key numbers by separate code paths and fails loudly on any mismatch.
      comment_in_window flag agrees with each comment's timestamp.
   Every collection:
   4. The cleaned v2 rows reconcile with neighbourhood_summary.csv.
-  5. Every hand-review "exclude" decision is reflected in the cleaned data, and
+  5. Every review "exclude" decision is reflected in the cleaned data, and
      no quote sample row comes from an excluded record.
   6. June collection only: numbers quoted in the July/August documents,
      re-checked against the data (05_audits/august_document_claims_check.csv).

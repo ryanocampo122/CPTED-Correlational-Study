@@ -222,7 +222,7 @@ add(
   para(`**What was adjusted.** The collector now takes the study window in Saskatoon time (1 June to 31 August 2026). It searches ` +
     `the ${R.seeds_safety} original safety terms plus ${R.seeds_crime} crime terms aligned with the categories above ` +
     `(e.g. "broken into", "catalytic converter", "robbed"), under ${R.sorts} search orders each. Locations and environmental ` +
-    `cues are tagged on whole words, with references to other cities' downtowns removed by hand review. Sentiment uses ` +
+    `cues are tagged on whole words, with references to other cities' downtowns removed after a first-pass review (to be confirmed by hand). Sentiment uses ` +
     `VADER adjusted so the search words themselves ("safe", "safety") do not bias it. Comments written after 31 August are ` +
     `flagged and left out of the analysis (${R.comments_late} of ${fmt(R.comments)}).`),
   para(`**What was collected.** ${R.posts} posts (June ${R.posts_by_month.Jun}, July ${R.posts_by_month.Jul}, August ` +

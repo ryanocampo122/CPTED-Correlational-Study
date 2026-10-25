@@ -21,7 +21,7 @@ Data: `Data/reddit_2026-06-01_2026-08-31/` (study period, current) and `Data/red
 ## Analysis (`run_all.sh`)
 
 Steps 01–08 are described in `Scripts/reddit_analysis/README.md`. In short: audit the location and cue tags
-(raw → whole word → final), merge hand-reviewed exclusions of other cities' downtowns, build cleaned row-level
+(raw → whole word → final), merge the reviewed exclusions of other cities' downtowns (automated first pass; to be confirmed by hand), build cleaned row-level
 files that keep every original column, compute per-area tables with 95% CIs from a bootstrap that resamples
 whole threads, test sensitivity to the sentiment scorer, draw charts, and verify.
 
@@ -80,7 +80,7 @@ Downtown sits at the corpus average in summer 2026; the 12-month collection had 
 
 - **`lighting` cue:** 50% precise on a held-out sample; do not use for H3.
 
-- **Precision samples** (30 per cue) were judged on June-collection records; definitions are identical, but a Jun–Aug sample should be added in the coding step.
+- **Precision samples** (30 per cue) were judged on June-collection records, as an automated first pass that has not yet been checked by hand; definitions are identical, but a Jun–Aug sample should be added in the coding step.
 
 - **Spatial resolution:** Reddit locates to neighbourhoods, not segments (the most-named Downtown street has 8 records). See Decision D2 below.
 
@@ -88,7 +88,9 @@ Downtown sits at the corpus average in summer 2026; the 12-month collection had 
 
 - **Who posts:** Reddit users are not the population of Saskatoon, and a seed-term corpus describes how safety is talked about, not how safe places are.
 
-- **Other-city review:** the 68 Jun–Aug decisions (17 exclude, 51 keep) were reconstructed from the run's changelog after the review file was lost; they are still to be confirmed by hand (`Scripts/reddit_analysis/manual_review/`).
+- **Other-city review:** all 144 decisions (76 for the June collection, 68 for Jun–Aug) are an automated first pass, still to be confirmed by hand; the 68 Jun–Aug decisions (17 exclude, 51 keep) were reconstructed from the run's changelog after the review file was lost (`Scripts/reddit_analysis/manual_review/`).
+
+- **Checking both reviews by hand:** `Scripts/reddit_analysis/scripts/blind_review.py` lists the 150 cue matches and the 144 other-city rows without the first-pass answers; a person judges each row, and `apply` records the answers with the reviewer's name and date. The cue precision and the area counts are then rebuilt from those answers.
 
 ## Decision D2 (open): spatial unit for Reddit
 
