@@ -56,7 +56,17 @@ Street View images, and 3.2.3(c) forbid using Google Maps content to train, test
 (read 16 Oct 2026). The work plan allowed Street View only "after confirming its terms of use allow this kind of
 analysis"; they do not.
 
-Options are in Decision 1 (`decisions_and_issues.md`).
+**Decision D1 (open): image source for the study period.** No Mapillary imagery from June–August 2026, or from
+any date after 2023, exists over the CBD, and Google Street View's terms forbid bulk download and model use.
+
+| Option | For | Against |
+|---|---|---|
+| (a) Newest Mapillary imagery, date stated | available now; 288 of 423 points have 2020 or 2023 imagery | 3–6 year gap (12 for 2014-only points); 26 points have none |
+| (b) Ask the City for recent street-level imagery (e.g. road-survey imagery; the 2014 Mapillary frames came from a survey vehicle) | could be recent and complete | depends on the City; data-sharing terms |
+| (c) Capture new imagery | current, complete | primary data collection (the plan is secondary-only); cannot cover summer 2026 |
+
+**Recommended:** (b) now through Elisabeth Miller; (a) as fallback, describing imagery as typical built form and
+testing stability where 2020 and 2023 images both exist.
 
 ## Pilot on the newest imagery (`cbd_latest_imagery/`)
 
@@ -89,6 +99,6 @@ What the pilot showed:
 - **5 CLIP:** cues that are hard to segment (graffiti, litter, boarded windows, active storefronts).
 - **6 Indicators:** combine per CPTED principle; average per segment.
 - **7 Validation:** ~150 hand-labelled images (`validation_plan.md`).
-- **8 Integration:** join with crime counts and Reddit (see Decision 2 on the Reddit unit).
+- **8 Integration:** join with crime counts and Reddit (see Decision D2 in `reddit_pipeline.md` on the Reddit unit).
 
 Images: © Mapillary contributors, CC BY-SA 4.0. Map data © OpenStreetMap contributors (ODbL).

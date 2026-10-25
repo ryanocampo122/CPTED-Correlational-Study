@@ -48,7 +48,7 @@ uses 360-degree panoramas as well as normal photos. Each panorama is cut into tw
 two sides of the street. **No Mapillary imagery from 2024, 2025 or 2026 exists over the CBD** (coverage audit,
 and an independent tiled re-query on 17 Oct 2026); the newest is 2023 (27 points) and 2020 (261 points).
 Google Street View is not an alternative: its terms (Maps Platform ToS 3.2.3) prohibit bulk download and using the
-imagery to train, test or validate models. See `Docs/decisions_and_issues.md`.
+imagery to train, test or validate models. See Decision D1 in `Docs/cv_pipeline.md`.
 
 ## How the 10 pilot images are chosen (fixed before looking at any image)
 

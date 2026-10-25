@@ -9,6 +9,9 @@
   **Do not quote Reddit text in anything that leaves the team.** Paraphrase, and confirm the approach with the REB.
   `03_extracted_comment_samples/` and `_local_audit_do_not_share/` exist for internal checking only;
   the latter is git-ignored and excluded from handoff zips.
+- Verbatim Reddit text is in the git repository: the raw and cleaned files, `03_extracted_comment_samples/`, and
+  the excerpts in `Scripts/reddit_analysis/manual_review/`. They are committed so the pipeline can be rebuilt from
+  them, and the GitHub repository is private, open only to the research team. Handoff zips include them too.
 - Reddit users are not the population of Saskatoon; describe results as "how safety is discussed on r/saskatoon".
 
 ## Describing places, not labelling people
@@ -18,7 +21,7 @@ stigmatization: Wacquant 2007; Meade 2021; Schwarze 2023, in `Reference/Literatu
 
 - Report recorded crime as recorded crime (reporting and enforcement shape it; Buil-Gil et al. 2022).
 - Keep cues about **physical features** (lighting, maintenance, vacancy, frontage) apart from mentions of **groups of
-  people**. The current `people` cue mixes them (issue 7) and must be split before H4.
+  people**. The current `people` cue mixes them and must be split before H4 (`reddit_pipeline.md`, Limitations).
 - Maps of perceived danger and crime go out with their uncertainty and without ranking neighbourhoods by "danger".
 
 ## Imagery and map data
@@ -39,8 +42,9 @@ stigmatization: Wacquant 2007; Meade 2021; Schwarze 2023, in `Reference/Literatu
 
 - All credentials live in `.env` at the repository root (`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`,
   `PRAW_USER_AGENT`, `COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`), with a copy in `.venv/keys.txt`.
-  Since October 2026 `.env` is committed to the private GitHub repository , so everyone with access to
+  Since October 2026 `.env` is committed to the private GitHub repository, so everyone with access to
   the repository can read the keys and the hash salt. Never paste them into code, notebooks or messages.
 - `Scripts/make_handoff.sh` builds a shareable zip without `.env`, `.git`, `.venv` and the private audit folders,
   and refuses to finish if any credential value appears inside the zip.
-- The Reddit secret that was hard-coded in the August package must be rotated (issue 15).
+- The Reddit app credentials are the ones used since August, kept the same on purpose for data collection. Whether
+  to rotate any key is left to the security decisions still to be made.

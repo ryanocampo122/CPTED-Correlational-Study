@@ -118,4 +118,4 @@ The report build writes the generated base, `Deliverables/2026-10_october_update
 
 - **Every number in a deliverable comes from a script** (`Scripts/reporting/report_numbers.py`), never typed by hand.
 
-- **Version control:** work on a branch, one commit per logical step; Reddit text snippets are never committed. `.env` is committed to the private repository, with a copy in `.venv/keys.txt`.
+- **Version control:** work on a branch, one commit per logical step. The private repository holds verbatim Reddit text (raw and cleaned files, `03_extracted_comment_samples/`, `Scripts/reddit_analysis/manual_review/`) so the pipeline can be rebuilt; only the `_local_audit_do_not_share/` folders stay out of git. No Reddit text is quoted outside the team (`data_ethics.md`). `.env` is committed to the private repository, with a copy in `.venv/keys.txt`.

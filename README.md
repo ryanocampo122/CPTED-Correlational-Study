@@ -17,7 +17,7 @@ segments in Downtown/CBD.
 | The literature review (CPTED evidence, crime and perception, pilot sites) | [`Docs/literature review/Master_lit_review.docx`](Docs/literature%20review/Master_lit_review.docx) |
 | How the whole study fits together, and how to run it | `Docs/workflow.md` |
 | What has been checked, and how | `Docs/verification/october_2026_checks.md` |
-| Open decisions and known problems | `Docs/decisions_and_issues.md` |
+| Open decisions and known problems | Decision D1 (image source) in `Docs/cv_pipeline.md`; Decision D2 (Reddit spatial unit) and the Reddit limitations in `Docs/reddit_pipeline.md`; gaps in the crime data in `Docs/crime_data.md` |
 | Any other documentation | `Docs/README.md` |
 
 ## Status

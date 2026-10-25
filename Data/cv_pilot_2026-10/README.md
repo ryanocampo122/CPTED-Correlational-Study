@@ -15,7 +15,7 @@ point tried, including misses), `image_manifest.csv`, `clip_scores.csv`, `run_me
 git commit).
 
 Headline: **0 of 423 CBD points have an image from 1 June – 31 August 2026**; the newest imagery is 2023
-(27 points) or 2020 (261). See `Docs/cv_pipeline.md` and Decision 1 in `Docs/decisions_and_issues.md`.
+(27 points) or 2020 (261). See Decision D1 in `Docs/cv_pipeline.md`.
 
 `_local_audit_do_not_share/` folders (git-ignored) contain Reddit text snippets for precision checks. Do not
 share or quote them. Images: © Mapillary contributors, CC BY-SA 4.0; credit Mapillary on any figure that shows them.

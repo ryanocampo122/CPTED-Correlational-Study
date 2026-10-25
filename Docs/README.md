@@ -6,11 +6,10 @@ The short version for supervisors is the October report in `Deliverables/2026-10
 | Page | Read it for |
 |---|---|
 | [workflow.md](workflow.md) | The research framework, the end-to-end pipeline, its status, and how to run every step |
-| [reddit_pipeline.md](reddit_pipeline.md) | Reddit collection and analysis: settings, adjustments, verification, limitations |
-| [cv_pipeline.md](cv_pipeline.md) | Sample points, street-level imagery, CLIP scoring: what ran, what was found, fixes due |
+| [reddit_pipeline.md](reddit_pipeline.md) | Reddit collection and analysis: settings, adjustments, verification, limitations; open Decision D2 (spatial unit) |
+| [cv_pipeline.md](cv_pipeline.md) | Sample points, street-level imagery, CLIP scoring: what ran, what was found, fixes due; open Decision D1 (image source) |
 | [crime_data.md](crime_data.md) | Final crime categories, how they map to SPS data, and what to check in the data |
 | [validation_plan.md](validation_plan.md) | What each measure must show before it is used, and how it will be checked |
-| [decisions_and_issues.md](decisions_and_issues.md) | Decisions needed and made; every problem found, its effect and its status |
 | [data_ethics.md](data_ethics.md) | Privacy, quoting, licences, credentials, describing places without labelling people |
 | [literature review/](literature%20review/) | `Master_lit_review.docx`: the literature review (CPTED evidence, crime and perception, candidate pilot sites); the only copy in the repository |
 | [verification/](verification/) | `october_2026_checks.md`: every October claim re-derived from the data (PASS/WARN/FAIL) |

@@ -14,11 +14,14 @@ package-lock.json
 .Rhistory
 .RData
 
-# Secrets. The root .env IS tracked .
+# Secrets. The root .env IS tracked.
 # Any other *.env and secrets.* file stays out of git.
 *.env
 !/.env
 secrets.*
+
+# Local working log of decisions and issues (open items are kept in the topic docs in Docs/)
+Docs/decisions_and_issues.md
 
 # ./flight --execute_flight runs: one EXECUTION-<n>/ folder per run, regenerated from code;
 # large, and holds Reddit text (see Docs/data_ethics.md)

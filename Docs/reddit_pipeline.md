@@ -82,8 +82,19 @@ Downtown sits at the corpus average in summer 2026; the 12-month collection had 
 
 - **Precision samples** (30 per cue) were judged on June-collection records; definitions are identical, but a Jun–Aug sample should be added in the coding step.
 
-- **Spatial resolution:** Reddit locates to neighbourhoods, not segments (the most-named Downtown street has 8 records). See Decision 2.
+- **Spatial resolution:** Reddit locates to neighbourhoods, not segments (the most-named Downtown street has 8 records). See Decision D2 below.
+
+- **Comment threads:** 6,452 of Reddit's 7,703 comments (84%) were collected; collapsed "load more" replies are not expanded. A re-collection could raise `replace_more_limit` in `reddit_scraper.py`.
 
 - **Who posts:** Reddit users are not the population of Saskatoon, and a seed-term corpus describes how safety is talked about, not how safe places are.
 
 - **Other-city review:** the 68 Jun–Aug decisions (17 exclude, 51 keep) were reconstructed from the run's changelog after the review file was lost; they are still to be confirmed by hand (`Scripts/reddit_analysis/manual_review/`).
+
+## Decision D2 (open): spatial unit for Reddit
+
+Reddit places records in neighbourhoods, not on 50 m segments: the most-named Downtown street (2nd Avenue) appears in
+8 of 238 Downtown records; 9 of 14 streets/landmarks appear fewer than 5 times. With Downtown alone, Reddit is one
+value and cannot be correlated with anything.
+
+**Recommended:** RQ1 (X ↔ Y1) at segment level; RQ2 and RQ3 across several neighbourhoods, adding comparison
+areas with enough Reddit records (Riverbank/Meewasin 155, Broadway 39; others are small).
