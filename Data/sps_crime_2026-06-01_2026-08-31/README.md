@@ -17,6 +17,7 @@ does not contain, and its caveats: `Docs/crime_data.md`.
 |---|---|---|
 | `01_raw_collection/` | `sps_criminal_offences_june_1_2026_to_august_31_2026.csv`, exactly as received (read-only; SHA-256 `912c3b25bee66d40e5a0cb18c31b7c5d07a61cb2c4100ef7893ce1c743f21df1`) | SPS; **never edit** |
 | `02_cleaned/` | the cleaned file, counts and a cleaning report (below) | `Scripts/crime_data/clean_sps_crime.py` |
+| `03_segments/` | the 257 CBD study-category records placed on the 218 study street segments: counts per segment by category and group, per 100 m, hot-spot flags (`segment_crime_counts.csv`); which segment(s) each record went to (`record_links.csv`); totals (`hotspot_summary.json`) | `Scripts/crime_data/hotspots.py` (November 2026) |
 
 Regenerate `02_cleaned/` with `.venv/bin/python Scripts/crime_data/clean_sps_crime.py`. The script checks the raw
 file's SHA-256 first and stops if it has changed; a second run reproduces every output byte for byte.

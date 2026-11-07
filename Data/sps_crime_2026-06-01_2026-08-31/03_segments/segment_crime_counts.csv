@@ -1,0 +1,219 @@
+segment_id,road_name,highway,length_m,n_points,break_and_enter,theft_from_vehicle,auto_theft,mischief_vandalism,street_robbery,assault,property,street_personal,all_study_crime,property_per_100m,hotspot_property,street_personal_per_100m,hotspot_street_personal,all_study_crime_per_100m,hotspot_all_study_crime
+1001894857_0,4th Avenue South,secondary,13.6,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1001894858_0,4th Avenue South,secondary,37.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1075519069_0,Idylwyld Drive North,primary,65.9,1,0.0,1.0,0.0,1.0,0.0,0.0,2.0,0.0,2.0,3.03,False,0.0,False,3.03,False
+1075519070_0,Idylwyld Drive North,primary,225.4,5,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,0.44,False,0.0,False,0.44,False
+1075519071_0,Idylwyld Drive South,primary,36.3,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1075519072_0,Idylwyld Freeway,primary,93.3,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1075524174_0,1st Avenue South,secondary,10.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1340689670_0,Spadina Crescent,tertiary,15.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1346026652_0,Spadina Crescent East,tertiary,70.7,1,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.41,False,0.0,False,1.41,False
+1346026653_0,Spadina Crescent East,tertiary,60.3,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1346027564_0,Spadina Crescent,tertiary,86.2,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1346027827_0,Spadina Crescent East,tertiary,33.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1371236070_0,22nd Street East,tertiary,32.8,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1371237471_0,20th Street East,secondary,115.2,2,0.0,3.0,0.0,2.0,0.0,0.333,5.0,0.333,5.333,4.34,True,0.29,False,4.63,False
+1371237472_0,4th Avenue South,secondary,43.1,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1384078820_0,23rd Street East,tertiary,71.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1389078156_0,Idylwyld Drive North,primary,35.2,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1394236670_0,19th Street East,secondary,58.6,1,0.0,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.167,0.0,False,0.28,False,0.28,False
+1394805489_0,Idylwyld Drive North,primary,78.4,2,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.28,False,0.0,False,1.28,False
+1394805490_0,23rd Street East,tertiary,68.2,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1408491827_1,25th Street East,primary,193.4,4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1444611596_0,19th Street East,secondary,27.2,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1502730479_0,24th Street East,tertiary,38.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1502736779_0,24th Street East,tertiary,121.7,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1502736779_1,24th Street East,tertiary,115.3,2,0.0,0.0,0.2,0.0,0.0,2.0,0.2,2.0,2.2,0.17,False,1.73,False,1.91,False
+1502736779_2,24th Street East,tertiary,10.7,1,0.0,0.0,0.2,0.0,0.0,0.0,0.2,0.0,0.2,1.87,False,0.0,False,1.87,False
+1502736779_3,24th Street East,tertiary,139.7,3,0.0,0.0,0.2,0.0,0.0,0.0,0.2,0.0,0.2,0.14,False,0.0,False,0.14,False
+1502737510_0,24th Street East,tertiary,75.5,2,0.0,0.0,0.0,0.0,1.0,0.0,0.0,1.0,1.0,0.0,False,1.32,False,1.32,False
+1529518299_0,Wall Street,unclassified,112.9,2,0.0,0.0,0.0,2.0,0.0,0.0,2.0,0.0,2.0,1.77,False,0.0,False,1.77,False
+1533259430_0,Spadina Crescent,residential,131.7,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1533259431_0,Spadina Crescent,tertiary,38.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1533259432_0,Spadina Crescent,residential,16.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+1539648897_0,Spadina Crescent,tertiary,63.6,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+165531563_0,Spadina Crescent East,tertiary,151.9,3,1.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,0.66,False,0.0,False,0.66,False
+165531564_0,Spadina Crescent East,tertiary,11.7,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+165531565_0,Spadina Crescent East,tertiary,224.5,4,0.0,2.0,0.0,2.0,0.0,0.0,4.0,0.0,4.0,1.78,True,0.0,False,1.78,False
+165531566_0,Spadina Crescent East,tertiary,82.9,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+165531567_0,Spadina Crescent East,tertiary,76.0,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+165531568_0,Spadina Crescent East,tertiary,80.7,2,0.0,3.0,0.0,4.0,1.0,1.0,7.0,2.0,9.0,8.67,True,2.48,False,11.15,True
+165531782_0,1st Avenue North,secondary,175.3,4,0.0,0.0,0.0,0.25,0.0,0.0,0.25,0.0,0.25,0.14,False,0.0,False,0.14,False
+165531782_1,1st Avenue North,secondary,182.5,4,2.0,0.0,0.0,1.25,0.0,1.0,3.25,1.0,4.25,1.78,False,0.55,False,2.33,False
+165531798_0,1 Avenue North,secondary,12.1,1,0.0,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.167,0.0,False,1.38,False,1.38,False
+165531798_1,1 Avenue North,secondary,176.0,4,0.0,0.0,0.0,1.0,0.167,0.0,1.0,0.167,1.167,0.57,False,0.09,False,0.66,False
+165531857_0,22nd Street East,secondary,119.5,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+165531984_0,23rd Street East,tertiary,143.4,3,0.0,2.0,0.0,0.0,0.0,0.0,2.0,0.0,2.0,1.39,False,0.0,False,1.39,False
+23448374_1,Auditorium Avenue,residential,288.6,6,1.0,2.0,0.0,0.0,0.0,0.0,3.0,0.0,3.0,1.04,False,0.0,False,1.04,False
+23448592_0,4th Avenue South,secondary,52.2,1,0.0,0.0,0.0,2.0,0.167,0.0,2.0,0.167,2.167,3.83,False,0.32,False,4.15,False
+23448592_1,4th Avenue South,secondary,10.4,1,0.0,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.167,0.0,False,1.61,False,1.61,False
+23448608_0,Broadway Avenue,secondary,14.3,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+23448720_0,Spadina Crescent,residential,51.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+23449050_0,3rd Avenue South,secondary,179.6,4,0.0,1.0,0.0,2.0,0.0,0.6,3.0,0.6,3.6,1.67,False,0.33,False,2.0,False
+23449050_1,3rd Avenue South,secondary,177.7,4,3.0,0.0,0.0,2.0,0.0,2.933,5.0,2.933,7.933,2.81,True,1.65,True,4.46,True
+23449168_0,21st Street East,residential,119.1,2,0.0,2.0,0.0,6.0,0.0,1.0,8.0,1.0,9.0,6.72,True,0.84,False,7.56,True
+23449168_1,21st Street East,residential,115.1,2,0.0,0.0,0.0,2.0,0.0,2.6,2.0,2.6,4.6,1.74,False,2.26,True,4.0,False
+23449168_2,21st Street East,residential,9.6,1,0.0,0.0,0.0,0.0,0.0,0.6,0.0,0.6,0.6,0.0,False,6.25,False,6.25,False
+23449207_0,3rd Avenue North,secondary,11.9,1,0.0,0.0,0.0,0.0,0.0,0.25,0.0,0.25,0.25,0.0,False,2.1,False,2.1,False
+23449281_0,Wall Street,residential,53.6,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+23495286_0,Saunders Place,residential,177.2,4,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,0.56,False,0.0,False,0.56,False
+23495332_0,Spadina Crescent,residential,11.7,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+23495332_1,Spadina Crescent,residential,17.1,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+23495332_2,Spadina Crescent,residential,17.8,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+23495332_3,Spadina Crescent,residential,11.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+23495332_4,Spadina Crescent,residential,48.9,1,0.0,0.0,0.0,0.0,1.0,0.0,0.0,1.0,1.0,0.0,False,2.04,False,2.04,False
+251587646_0,22nd Street East,tertiary,89.8,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+251587647_0,22nd Street East,secondary,119.5,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+251587648_0,22nd Street East,secondary,119.0,2,0.0,0.0,0.0,1.0,0.167,0.0,1.0,0.167,1.167,0.84,False,0.14,False,0.98,False
+251587648_1,22nd Street East,secondary,7.0,1,0.0,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.167,0.0,False,2.39,False,2.39,False
+251587648_2,22nd Street East,secondary,116.0,2,0.0,0.0,0.2,0.0,0.333,0.2,0.2,0.533,0.733,0.17,False,0.46,False,0.63,False
+251671404_0,25th Street East,primary,106.1,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+254080499_0,19th Street East,secondary,11.3,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+254080502_0,3rd Avenue South,secondary,32.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+256496806_0,2nd Avenue South,tertiary,12.8,1,0.0,0.143,0.286,0.0,0.0,0.143,0.429,0.143,0.572,3.35,False,1.12,False,4.47,False
+256496806_1,2nd Avenue South,tertiary,173.2,3,0.0,1.143,0.286,0.0,0.0,2.143,1.429,2.143,3.572,0.83,False,1.24,False,2.06,False
+256496806_2,2nd Avenue South,tertiary,9.3,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+256496806_3,2nd Avenue South,tertiary,175.9,4,0.0,0.0,0.0,0.25,0.0,0.75,0.25,0.75,1.0,0.14,False,0.43,False,0.57,False
+256496806_4,2nd Avenue South,tertiary,176.9,4,1.0,1.0,0.0,8.25,0.0,5.75,10.25,5.75,16.0,5.79,True,3.25,True,9.04,True
+256496811_0,2nd Avenue North,tertiary,33.7,1,0.0,0.0,0.0,0.0,0.167,0.167,0.0,0.333,0.333,0.0,False,0.99,False,0.99,False
+256496812_0,2nd Avenue North,tertiary,178.1,4,1.0,2.0,0.0,2.0,1.333,1.167,5.0,2.5,7.5,2.81,True,1.4,True,4.21,True
+256496816_0,2nd Avenue South,residential,64.1,1,0.0,1.143,0.286,0.0,1.0,0.143,1.429,1.143,2.572,2.23,False,1.78,False,4.01,False
+256496816_1,2nd Avenue South,residential,29.8,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+261161933_0,1st Avenue South,secondary,9.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+261161936_0,20th Street East,secondary,10.2,1,0.0,0.0,0.0,0.0,0.0,0.333,0.0,0.333,0.333,0.0,False,3.26,False,3.26,False
+261161938_0,1st Avenue South,secondary,65.1,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+261161943_0,1st Avenue North,secondary,13.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+261161944_0,23rd Street East,tertiary,117.8,2,0.0,1.0,0.0,1.25,1.167,4.917,2.25,6.083,8.333,1.91,False,5.16,True,7.07,True
+261161946_0,Ontario Avenue,unclassified,170.3,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+261161956_0,19th Street East,tertiary,147.3,2,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.0,0.167,0.11,False,0.0,False,0.11,False
+261161971_0,19th Street East,secondary,118.8,2,0.0,1.143,0.286,0.0,0.0,0.143,1.429,0.143,1.572,1.2,False,0.12,False,1.32,False
+261161974_0,19th Street East,secondary,141.6,3,0.0,0.143,0.286,0.167,0.0,0.143,0.595,0.143,0.738,0.42,False,0.1,False,0.52,False
+277744016_0,University Bridge,primary,396.3,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+285835114_0,Spadina Crescent,tertiary,43.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+285835115_0,3rd Avenue South,tertiary,72.6,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+285835116_0,19th Street East,secondary,86.1,2,0.0,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.167,0.0,False,0.19,False,0.19,False
+285835875_0,19th Street East,secondary,113.0,2,0.0,0.143,0.286,0.0,0.0,0.143,0.429,0.143,0.572,0.38,False,0.13,False,0.51,False
+288837162_0,2nd Avenue North,tertiary,177.0,4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+288837162_1,2nd Avenue North,tertiary,181.7,4,0.0,0.0,0.0,0.0,0.167,0.167,0.0,0.333,0.333,0.0,False,0.18,False,0.18,False
+334297029_0,Pacific Avenue,unclassified,207.9,4,0.0,1.167,0.0,2.167,0.0,0.0,3.333,0.0,3.333,1.6,False,0.0,False,1.6,False
+427624844_0,19th Street East,secondary,32.1,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+427624845_0,3rd Avenue South,secondary,141.1,3,0.0,0.0,0.0,0.0,0.0,0.333,0.0,0.333,0.333,0.0,False,0.24,False,0.24,False
+427624849_0,3rd Avenue North,secondary,178.1,4,0.0,3.0,0.0,1.0,0.0,0.5,4.0,0.5,4.5,2.25,False,0.28,False,2.53,False
+427624849_1,3rd Avenue North,secondary,130.2,3,0.0,0.0,0.0,2.0,1.0,3.25,2.0,4.25,6.25,1.54,False,3.26,True,4.8,True
+427624850_0,25th Street East,primary,62.6,1,0.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,0.0,False,1.6,False,1.6,False
+427624850_1,25th Street East,primary,121.5,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+427624850_2,25th Street East,primary,117.6,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+427624850_4,25th Street East,primary,164.6,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+428045601_0,23rd Street East,tertiary,7.3,1,0.0,0.0,0.0,0.0,0.167,0.167,0.0,0.333,0.333,0.0,False,4.56,False,4.56,False
+428045601_1,23rd Street East,tertiary,118.0,2,0.0,0.0,0.0,1.0,0.167,0.167,1.0,0.333,1.333,0.85,False,0.28,False,1.13,False
+428045602_0,23rd Street East,tertiary,93.5,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+428045602_1,23rd Street East,tertiary,93.4,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+428045602_2,23rd Street East,tertiary,96.1,2,0.0,0.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.04,False,0.0,False,1.04,False
+428045602_3,23rd Street East,tertiary,34.2,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+428045603_0,20th Street East,secondary,171.2,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+428274102_0,3rd Avenue North,secondary,178.1,4,0.0,1.0,0.0,1.25,0.0,2.75,2.25,2.75,5.0,1.26,False,1.54,True,2.81,False
+428274102_1,3rd Avenue North,secondary,9.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+428713568_0,2nd Avenue North,tertiary,147.3,3,0.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,2.0,0.68,False,0.68,False,1.36,False
+428713568_1,2nd Avenue North,tertiary,177.4,2,0.0,0.0,0.0,4.0,1.0,1.0,4.0,2.0,6.0,2.25,False,1.13,False,3.38,True
+430398929_0,Pacific Avenue,unclassified,13.5,1,0.0,0.167,0.0,0.167,0.0,0.0,0.333,0.0,0.333,2.47,False,0.0,False,2.47,False
+4319941_0,25th Street East,primary,117.6,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4319941_1,25th Street East,primary,10.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4319941_2,25th Street East,primary,112.5,2,0.0,0.0,0.0,0.0,0.0,0.25,0.0,0.25,0.25,0.0,False,0.22,False,0.22,False
+4319943_0,4th Avenue North,secondary,12.3,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4319943_1,4th Avenue North,secondary,176.6,4,0.0,0.0,0.0,1.0,0.0,1.0,1.0,1.0,2.0,0.57,False,0.57,False,1.13,False
+4319943_2,4th Avenue North,secondary,181.9,4,0.0,0.25,0.0,0.0,0.0,0.0,0.25,0.0,0.25,0.14,False,0.0,False,0.14,False
+4319943_3,4th Avenue North,secondary,177.9,4,0.0,0.25,0.0,0.0,0.0,0.0,0.25,0.0,0.25,0.14,False,0.0,False,0.14,False
+4319943_4,4th Avenue North,secondary,10.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4319947_0,5th Avenue North,tertiary,12.5,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4319947_1,5th Avenue North,tertiary,175.8,4,0.0,3.0,0.0,1.0,0.0,1.0,4.0,1.0,5.0,2.28,False,0.57,False,2.84,False
+4319947_2,5th Avenue North,tertiary,182.5,4,0.0,0.0,0.0,2.0,0.0,1.0,2.0,1.0,3.0,1.1,False,0.55,False,1.64,False
+4319948_0,Broadway Avenue,secondary,361.5,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4319949_0,19th Street East,secondary,147.4,3,0.0,0.143,0.286,1.167,0.0,0.143,1.595,0.143,1.738,1.08,False,0.1,False,1.18,False
+4323692_0,20th Street East,tertiary,142.9,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4323707_0,Spadina Crescent,tertiary,182.3,4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4326419_0,Idylwyld Freeway,motorway,64.1,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4329770_0,4th Avenue South,secondary,124.8,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4332886_0,Idylwyld Freeway,motorway,293.3,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4335066_0,Spadina Crescent,tertiary,250.2,5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4335067_0,6th Avenue North,tertiary,177.5,4,0.0,0.0,0.2,1.0,0.0,1.0,1.2,1.0,2.2,0.68,False,0.56,False,1.24,False
+4335067_1,6th Avenue North,tertiary,11.5,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4335068_0,6th Avenue North,residential,11.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4373673_0,22nd Street East,secondary,179.9,4,0.0,0.167,0.2,0.167,0.167,0.2,0.533,0.367,0.9,0.3,False,0.2,False,0.5,False
+4373674_0,,tertiary,2.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4373674_2,,tertiary,6.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4373674_4,,tertiary,6.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4373674_6,,tertiary,6.1,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4373675_0,3rd Avenue South,tertiary,32.5,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4373677_0,3rd Avenue South,tertiary,15.1,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4410046_0,Idylwyld Freeway,motorway,158.3,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4410047_0,Idylwyld Freeway,motorway,46.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4410048_0,19th Street East,tertiary,142.3,2,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.0,0.167,0.12,False,0.0,False,0.12,False
+4410049_0,1st Avenue South,secondary,112.8,2,0.0,13.0,0.0,5.0,2.333,19.0,18.0,21.333,39.333,15.96,True,18.91,True,34.87,True
+4410049_1,1st Avenue South,secondary,177.4,4,0.0,0.0,0.2,0.0,0.333,0.2,0.2,0.533,0.733,0.11,False,0.3,False,0.41,False
+4410051_0,22nd Street East,tertiary,81.8,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4447372_0,1st Avenue South,secondary,58.6,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4447373_0,1st Avenue South,secondary,13.6,1,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.0,0.167,1.23,False,0.0,False,1.23,False
+4447376_0,Idylwyld Freeway,motorway,37.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4447378_0,1st Avenue South,secondary,65.6,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4469020_0,Pacific Avenue,unclassified,130.3,3,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,0.77,False,0.0,False,0.77,False
+4469020_1,Pacific Avenue,unclassified,143.7,3,0.0,1.0,0.0,1.0,0.0,1.0,2.0,1.0,3.0,1.39,False,0.7,False,2.09,False
+4479627_0,,unclassified,75.3,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+4486395_0,24th Street East,tertiary,33.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477645483_0,Idylwyld Drive North,primary,12.1,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679681_0,4th Avenue South,secondary,10.6,1,0.0,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.167,0.0,False,1.58,False,1.58,False
+477679682_0,19th Street East,secondary,55.7,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679684_0,19th Street East,secondary,31.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679685_0,19th Street East,secondary,11.5,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679686_0,3rd Avenue South,tertiary,35.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679687_0,Idylwyld Drive South,primary,30.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679689_0,Idylwyld Drive South,primary,11.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679693_0,20th Street East,secondary,35.7,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679698_0,Idylwyld Drive South,primary,14.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679699_0,Idylwyld Drive South,primary,30.6,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+477679700_0,22nd Street East,secondary,29.6,1,0.0,0.0,0.0,0.0,0.0,0.333,0.0,0.333,0.333,0.0,False,1.12,False,1.12,False
+477679701_0,22nd Street East,secondary,27.7,1,0.0,0.0,0.0,0.0,0.0,0.333,0.0,0.333,0.333,0.0,False,1.2,False,1.2,False
+477679702_0,Idylwyld Drive North,primary,25.2,1,0.0,0.0,0.0,0.0,0.0,0.333,0.0,0.333,0.333,0.0,False,1.32,False,1.32,False
+478841353_0,3rd Avenue South,tertiary,24.3,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+480865341_0,23rd Street East,tertiary,120.5,2,0.0,0.25,0.0,0.25,1.0,0.75,0.5,1.75,2.25,0.41,False,1.45,False,1.87,False
+480865342_0,3rd Avenue North,secondary,50.7,1,0.0,0.0,0.0,0.25,0.0,0.75,0.25,0.75,1.0,0.49,False,1.48,False,1.97,False
+480865343_0,21st Street East,residential,116.8,2,0.0,0.0,0.0,0.25,0.333,1.75,0.25,2.083,2.333,0.21,False,1.78,False,2.0,False
+480865344_0,21st Street East,residential,114.1,2,0.0,0.0,0.0,1.25,0.0,2.35,1.25,2.35,3.6,1.1,False,2.06,False,3.16,False
+480865346_0,22nd Street East,secondary,52.3,1,1.0,9.0,0.2,5.0,0.167,1.2,15.2,1.367,16.567,29.06,True,2.61,False,31.68,True
+480865347_0,22nd Street East,secondary,89.2,2,0.0,0.167,0.0,0.167,0.0,0.0,0.333,0.0,0.333,0.37,False,0.0,False,0.37,False
+480865347_1,22nd Street East,secondary,23.3,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+480865348_0,22nd Street East,secondary,54.2,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+480865350_0,Wall Street,residential,185.4,4,0.0,2.0,0.0,0.0,0.0,0.0,2.0,0.0,2.0,1.08,False,0.0,False,1.08,False
+480869751_0,Ontario Avenue,unclassified,32.0,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+480869752_0,24th Street East,tertiary,25.1,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+480869754_0,Ontario Avenue,unclassified,14.6,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+481044565_0,6th Avenue North,tertiary,177.5,4,0.0,0.0,0.2,1.0,0.0,0.0,1.2,0.0,1.2,0.68,False,0.0,False,0.68,False
+4824395_0,Spadina Crescent East,tertiary,127.2,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+502711208_0,25th Street East,primary,60.8,1,0.0,0.0,0.0,0.0,0.0,1.25,0.0,1.25,1.25,0.0,False,2.06,False,2.06,False
+547699885_0,24th Street East,tertiary,51.8,1,0.0,0.0,0.0,0.25,0.0,0.0,0.25,0.0,0.25,0.48,False,0.0,False,0.48,False
+547699885_1,24th Street East,tertiary,116.4,2,0.0,0.0,0.0,0.25,0.0,0.0,0.25,0.0,0.25,0.21,False,0.0,False,0.21,False
+547699885_2,24th Street East,tertiary,10.7,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+547699885_3,24th Street East,tertiary,116.5,2,0.0,0.0,0.0,0.0,0.0,0.25,0.0,0.25,0.25,0.0,False,0.21,False,0.21,False
+547699885_4,24th Street East,tertiary,120.6,2,0.0,0.0,0.0,0.0,0.0,0.25,0.0,0.25,0.25,0.0,False,0.21,False,0.21,False
+548213086_0,19th Street East,secondary,62.5,1,0.0,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.167,0.0,False,0.27,False,0.27,False
+548214536_0,3rd Avenue South,secondary,169.7,3,0.0,0.0,0.0,0.0,0.0,0.333,0.0,0.333,0.333,0.0,False,0.2,False,0.2,False
+548214538_0,20th Street East,secondary,114.3,2,0.0,0.0,0.0,1.0,0.0,2.333,1.0,2.333,3.333,0.87,False,2.04,False,2.92,False
+548214538_2,20th Street East,secondary,111.6,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+548214542_1,20th Street East,secondary,111.4,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+548214544_0,1st Avenue South,secondary,175.1,4,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.0,0.167,0.1,False,0.0,False,0.1,False
+548215472_0,5th Avenue North,tertiary,181.1,4,0.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,0.0,False,0.55,False,0.55,False
+548215473_0,23rd Street East,tertiary,121.7,2,0.0,0.25,0.0,0.0,0.0,0.0,0.25,0.0,0.25,0.21,False,0.0,False,0.21,False
+548216793_0,25th Street East,primary,75.6,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+548218584_0,25th Street East,primary,172.8,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+548218585_0,Ontario Avenue,unclassified,126.3,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+552451335_0,24th Street East,tertiary,98.3,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+552451335_1,24th Street East,tertiary,100.3,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+552453805_0,4th Avenue South,secondary,57.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+552453805_1,4th Avenue South,secondary,176.6,4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+554294455_0,20th Street East,secondary,203.4,3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+565194023_0,19th Street East,secondary,16.9,1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+600140339_0,22nd Street East,secondary,116.5,2,0.0,0.0,0.2,0.0,0.333,0.2,0.2,0.533,0.733,0.17,False,0.46,False,0.63,False
+600140339_1,22nd Street East,secondary,6.6,1,0.0,0.0,0.0,0.0,0.167,0.0,0.0,0.167,0.167,0.0,False,2.53,False,2.53,False
+600140341_0,22nd Street East,secondary,54.3,1,0.0,5.167,0.0,0.167,0.0,1.0,5.333,1.0,6.333,9.82,True,1.84,False,11.66,True
+600140342_0,22nd Street East,secondary,129.9,3,0.0,0.167,0.0,0.167,0.0,0.0,0.333,0.0,0.333,0.26,False,0.0,False,0.26,False
+79277936_0,Idylwyld Drive South,primary,104.7,2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,0.0,False,0.0,False
+79277936_1,Idylwyld Drive South,primary,137.4,3,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,0.73,False,0.0,False,0.73,False

@@ -1,0 +1,41 @@
+{
+  "records": 257,
+  "placed": 255,
+  "unplaced": 2,
+  "intersection_records_split": 36,
+  "segments": 218,
+  "segments_with_any_record": 103,
+  "records_by_group": {
+    "property": 161.0,
+    "street_personal": 94.0
+  },
+  "records_by_category": {
+    "break_and_enter": 10.0,
+    "theft_from_vehicle": 71.0,
+    "auto_theft": 4.0,
+    "mischief_vandalism": 76.0,
+    "street_robbery": 16.0,
+    "assault": 78.0
+  },
+  "hotspot_rule": "segments holding the first 50% of records, largest counts first",
+  "hotspot_segments": {
+    "property": 10,
+    "street_personal": 8,
+    "all_study_crime": 11
+  },
+  "hotspot_share_of_segments": {
+    "property": 0.046,
+    "street_personal": 0.037,
+    "all_study_crime": 0.05
+  },
+  "placed_by_rule": {
+    "intersection_split": 36,
+    "named_street": 217,
+    "nearest": 2
+  },
+  "rule": {
+    "named_street_max_m": 100.0,
+    "intersection_max_m": 30.0,
+    "fallback_nearest_max_m": 30.0
+  }
+}

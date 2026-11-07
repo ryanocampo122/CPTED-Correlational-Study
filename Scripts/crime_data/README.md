@@ -27,3 +27,25 @@ What it does, in order:
 Output columns are documented in `Data/sps_crime_2026-06-01_2026-08-31/README.md`. Re-running reproduces every output
 byte for byte. For a later extract, give it its own dataset folder and pass `--raw`, `--out` and `--no-hash-check`
 (then record its hash in the script).
+
+## Crime per street segment and hot spots (November 2026)
+
+| Script | Reads | Writes |
+|---|---|---|
+| `hotspots.py` | `02_cleaned/` (CBD study-category records), `Data/cv_pilot_2026-10/cbd/sample_points.csv` and `run_meta.json`, `Data/boundaries/osm_roads_downtown_context.geojson` | `Data/sps_crime_2026-06-01_2026-08-31/03_segments/` |
+
+```bash
+.venv/bin/python Scripts/crime_data/hotspots.py
+.venv/bin/python Scripts/crime_data/tests/test_hotspots.py      # offline tests
+```
+
+1. Rebuilds the 218 study segments with the same road classes, box and splitting code as the sample points, and
+   stops if any segment's length differs from the published one by more than 1 m.
+
+2. Places each record by street name first, because SPS puts a hundred-block record 30–85 m from the road centreline:
+   a block record goes to the nearest segment of the street it names within 100 m; an intersection record is split
+   equally between the segments of its two streets within 30 m; otherwise the nearest segment within 30 m, else the
+   record is counted as unplaced (2 records, on a stretch of Spadina Crescent East with no sample point).
+
+3. Counts records per segment by category and group, and per 100 m. Hot spots are the segments that together hold
+   half of a group's records (largest counts first). Maps: `Scripts/reporting/make_figures_november.py` (fig09, fig10).
