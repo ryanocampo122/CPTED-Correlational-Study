@@ -55,11 +55,13 @@ stigmatization: Wacquant 2007; Meade 2021; Schwarze 2023, in `Reference/Literatu
   ```
 - **History.** From October 2026 until the November move, `.env` was committed to the private GitHub repository.
   Removing it from the current files does not remove it from git history, so everyone with access to the repository
-  can still read those values. The history is not rewritten (that would change every commit ID a third time);
-  instead the exposed keys are replaced. Never paste keys into code, notebooks or messages.
-- **Rotation (November 2026).** The Reddit app secret and the Mapillary token are replaced with new ones; the old
-  values in git history then no longer work. The hash salt is kept: changing it changes every `author_hash`, so new
-  collections could no longer be compared with June–August 2026, and its protection is limited anyway because the
-  repository holds verbatim Reddit text. Any change to the salt is a decision for the co-leads.
+  can still read those values. The history is not rewritten (that would change every commit ID again). The keys were
+  moved in November 2026, not replaced: the values in the private file are the same ones that are in git history.
+  Never paste keys into code, notebooks or messages.
+- **Replacing the keys (recommended, not yet done).** Making the copies in git history useless needs a new Reddit app
+  secret (reddit.com/prefs/apps) and a new Mapillary token (mapillary.com/dashboard/developers), pasted into the
+  private file by the key owner. The hash salt is kept: changing it changes every `author_hash`, so new collections
+  could no longer be compared with June–August 2026, and its protection is limited anyway because the repository
+  holds verbatim Reddit text. Any change to the salt is a decision for the co-leads.
 - `Scripts/make_handoff.sh` builds a shareable zip without `.env`, `.git`, `.venv` and the private audit folders,
   and refuses to finish if any credential value appears inside the zip (or if it cannot find the keys to check).
