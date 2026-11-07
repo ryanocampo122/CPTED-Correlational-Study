@@ -40,6 +40,7 @@ nbstripout==0.9.1
 #   CLIP ViT-B/32   openai/clip-vit-base-patch32 at revision 3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268
 #                   (Hugging Face, ~600 MB). Pinned in Scripts/cv_pilot/pilot_lib.py (CLIP_MODEL,
 #                   CLIP_REVISION); ./flight's install stage downloads it into ~/.cache/huggingface/
-#                   and checks it, or it downloads on first use.
+#                   and checks it, or it downloads on first use.\
+#
 #   VADER           its lexicon ships inside vaderSentiment (above); the project's adjustments are in
 #                   Scripts/reddit_analysis/scripts/common.py
