@@ -46,9 +46,10 @@ USAGE
 CREDENTIALS
 -----------
 PRAW_CLIENT_ID, PRAW_CLIENT_SECRET, PRAW_USER_AGENT and COMPUTERVISION_SENTINEL_HASH_SALT
-are read from the environment, or from the `.env` file at the repository root
-(tracked in the private repo; a copy is in .venv/keys.txt). The salt keys the author hashes. It stays private
-and is reused across collections so hashes remain comparable.
+are read from the environment, or from the key files in key_files() order:
+$COMPUTERVISION_SENTINEL_ENV_FILE, then ~/.config/computervision_sentinel/secrets.env (outside the
+repository; Docs/data_ethics.md), then a legacy `.env` at the repository root. The salt keys the author
+hashes. It stays private and is reused across collections so hashes remain comparable.
 
 OUTPUTS (in --out)
 ------------------
@@ -610,8 +611,17 @@ REQUIRED_ENV = {
 }
 
 
+def key_files() -> list[Path]:
+    """Credential files, in the order they are read (same order as Scripts/flight/execute_flight.py):
+    1. $COMPUTERVISION_SENTINEL_ENV_FILE, 2. ~/.config/computervision_sentinel/secrets.env,
+    3. the repository's .env (legacy, git-ignored)."""
+    override = os.environ.get("COMPUTERVISION_SENTINEL_ENV_FILE", "").strip()
+    files = [Path(override).expanduser()] if override else []
+    return files + [Path.home() / ".config" / "computervision_sentinel" / "secrets.env", REPO_ROOT / ".env"]
+
+
 def load_env_file(path: Path) -> None:
-    """Minimal .env reader (KEY=VALUE lines); existing env vars win."""
+    """Minimal KEY=VALUE reader; existing env vars win (so the first file holding a key wins)."""
     if not path.exists():
         return
     for line in path.read_text().splitlines():
@@ -644,11 +654,14 @@ def parse_args(argv=None) -> argparse.Namespace:
 def main(argv=None) -> None:
     """CLI entry point: check credentials, collect, export."""
     args = parse_args(argv)
-    load_env_file(REPO_ROOT / ".env")
+    for path in key_files():
+        load_env_file(path)
     missing = [k for k in REQUIRED_ENV if not os.getenv(k)]
 
     if missing:
-        raise SystemExit("Missing environment variables (set them or add to " f"{REPO_ROOT / '.env'}):\n" + "\n".join(f"  {k}: {REQUIRED_ENV[k]}" for k in missing))
+        raise SystemExit("Missing environment variables (set them or add to "
+                         "~/.config/computervision_sentinel/secrets.env):\n"
+                         + "\n".join(f"  {k}: {REQUIRED_ENV[k]}" for k in missing))
     creds = {"client_id": os.environ["PRAW_CLIENT_ID"],
              "client_secret": os.environ["PRAW_CLIENT_SECRET"],
              "user_agent": os.getenv("PRAW_USER_AGENT", "ComputerVision_Sentinel/1.0 by /u/ocamporyan")}

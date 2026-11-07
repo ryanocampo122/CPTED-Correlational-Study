@@ -6,7 +6,8 @@
 # Leaves out: .env (credentials), .venv, .git, node_modules, OS/editor clutter, caches,
 # scratch pipeline output, flight runs (RESULTS_FINAL/), and every _local_audit_do_not_share/ folder
 # (Reddit user text).
-# Aborts if any credential value from .env is found inside the zip.
+# Aborts if any credential value (from the shell or any key file: $COMPUTERVISION_SENTINEL_ENV_FILE,
+# ~/.config/computervision_sentinel/secrets.env, a legacy root .env) is found inside the zip.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ROOT="$PWD"
@@ -32,18 +33,27 @@ rm -f "$OUT"
 rm -rf "$TMP"
 
 # 3. refuse to hand over a zip that contains any credential
-"$PY" - "$OUT" "$ROOT/.env" <<'EOF'
-import sys, zipfile, pathlib
-zpath, envpath = sys.argv[1], pathlib.Path(sys.argv[2])
-secrets = []
-if envpath.exists():
+"$PY" - "$OUT" "${COMPUTERVISION_SENTINEL_ENV_FILE:-}" "$HOME/.config/computervision_sentinel/secrets.env" "$ROOT/.env" <<'EOF'
+import os, sys, zipfile, pathlib
+zpath = sys.argv[1]
+hints = ("SECRET", "TOKEN", "SALT", "CLIENT_ID", "PASSWORD", "KEY")
+secrets = [v for k, v in os.environ.items() if k.startswith(("PRAW_", "MAPILLARY_", "COMPUTERVISION_SENTINEL_"))
+           and any(t in k.upper() for t in hints) and len(v) >= 8]
+for arg in sys.argv[2:]:
+    envpath = pathlib.Path(arg) if arg else None
+    if envpath is None or not envpath.exists():
+        continue
     for line in envpath.read_text().splitlines():
         line = line.strip()
         if line and not line.startswith("#") and "=" in line:
             k, v = line.split("=", 1)
             v = v.strip().strip('"').strip("'")
-            if any(t in k.upper() for t in ("SECRET", "TOKEN", "SALT", "CLIENT_ID", "PASSWORD", "KEY")) and len(v) >= 8:
+            if any(t in k.upper() for t in hints) and len(v) >= 8:
                 secrets.append(v)
+if not secrets:
+    pathlib.Path(zpath).unlink()
+    sys.exit("STOPPED: no credential values found to scan for (is ~/.config/computervision_sentinel/secrets.env "
+             "in place?). The zip could not be checked and was deleted.")
 bad = []
 with zipfile.ZipFile(zpath) as z:
     names = z.namelist()

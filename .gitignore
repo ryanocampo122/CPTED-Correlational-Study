@@ -14,11 +14,12 @@ package-lock.json
 .Rhistory
 .RData
 
-# Secrets. The root .env IS tracked.
-# Any other *.env and secrets.* file stays out of git.
+# Secrets never go in git. Keys live outside the repository, in
+# ~/.config/computervision_sentinel/secrets.env (Docs/data_ethics.md).
+.env
 *.env
-!/.env
 secrets.*
+keys.txt
 
 # Local working log of decisions and issues (open items are kept in the topic docs in Docs/)
 Docs/decisions_and_issues.md

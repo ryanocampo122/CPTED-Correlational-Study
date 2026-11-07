@@ -76,8 +76,8 @@ copy of `manual_review/` inside the execution folder; the tracked review file is
 ## Running single steps
 
 The flight runs all of these. To run one on its own, from the repository root, with the environment from
-`requirements.txt` (`python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`) and credentials in `.env`
-(`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`, `COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`):
+`requirements.txt` (`python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`) and credentials in
+`~/.config/computervision_sentinel/secrets.env`, outside the repository (`data_ethics.md`) (`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`, `COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`):
 
 ```bash
 # Reddit: collect (network), then analyse (offline; scratch first, then publish)
@@ -129,4 +129,4 @@ works.
 
 - **Every number in a deliverable comes from a script** (`Scripts/reporting/report_numbers.py`), never typed by hand.
 
-- **Version control:** work on a branch, one commit per logical step. The private repository holds verbatim Reddit text (raw and cleaned files, `03_extracted_comment_samples/`, `Scripts/reddit_analysis/manual_review/`) so the pipeline can be rebuilt; only the `_local_audit_do_not_share/` folders stay out of git. No Reddit text is quoted outside the team (`data_ethics.md`). `.env` is committed to the private repository, with a copy in `.venv/keys.txt`.
+- **Version control:** work on a branch, one commit per logical step. The private repository holds verbatim Reddit text (raw and cleaned files, `03_extracted_comment_samples/`, `Scripts/reddit_analysis/manual_review/`) so the pipeline can be rebuilt; only the `_local_audit_do_not_share/` folders stay out of git. No Reddit text is quoted outside the team (`data_ethics.md`). Credentials are never committed: they live in `~/.config/computervision_sentinel/secrets.env` (`data_ethics.md`, "Credentials and sharing").

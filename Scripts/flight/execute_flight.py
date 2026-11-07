@@ -66,7 +66,19 @@ PILOT_PY = REPO / "Scripts" / "cv_pilot" / "pilot.py"
 SCRAPER = REPO / "Scripts" / "reddit_collection" / "reddit_scraper.py"
 STUDY = ("2026-06-01", "2026-08-31")
 
-KEY_FILES = (REPO / ".env", VENV / "keys.txt")      # read in this order; the first holding a key wins
+LEGACY_KEY_FILE = REPO / ".env"        # before November 2026 the keys lived here; still read, with a WARN
+
+
+def key_files() -> list[Path]:
+    """Credential files, in the order they are read; the first file holding a key wins, and variables already
+    set in the shell win over every file. The same order is used by pilot_lib.py, reddit_scraper.py and
+    make_handoff.sh: 1. $COMPUTERVISION_SENTINEL_ENV_FILE, 2. ~/.config/computervision_sentinel/secrets.env,
+    3. the repository's .env (legacy; git-ignored)."""
+    override = os.environ.get("COMPUTERVISION_SENTINEL_ENV_FILE", "").strip()
+    files = [Path(override).expanduser()] if override else []
+    return files + [Path.home() / ".config" / "computervision_sentinel" / "secrets.env", LEGACY_KEY_FILE]
+
+
 NEEDS = {"reddit": ("PRAW_CLIENT_ID", "PRAW_CLIENT_SECRET", "COMPUTERVISION_SENTINEL_HASH_SALT"),
          "mapillary": ("MAPILLARY_TOKEN",)}
 SECRET_HINTS = ("SECRET", "TOKEN", "SALT", "CLIENT_ID", "PASSWORD", "KEY")
@@ -86,11 +98,15 @@ def hms(s: float) -> str:
 
 
 def secret_values() -> list[str]:
-    """Values of secret-looking keys in either key file, to scan the output for (never printed)."""
+    """Values of secret-looking keys in any key file or in the shell, to scan the output for (never printed)."""
     keys = {}
-    for p in KEY_FILES:
+    for names in NEEDS.values():
+        for k in names:
+            if os.environ.get(k):
+                keys[k] = os.environ[k]
+    for p in key_files():
         keys.update({k: v for k, v in read_keyfile(p).items() if k not in keys})
-    return [v for k, v in keys.items() if any(h in k.upper() for h in SECRET_HINTS) and len(v) >= 8]
+    return sorted({v for k, v in keys.items() if any(h in k.upper() for h in SECRET_HINTS) and len(v) >= 8})
 
 
 def read_keyfile(path: Path) -> dict:
@@ -554,32 +570,39 @@ def stage_install(F: Flight) -> bool:
 
 
 def stage_keys(F: Flight) -> dict:
-    """Credentials from .env, falling back to .venv/keys.txt. Names only are ever printed."""
+    """Credentials from the key files in key_files() order (shell variables win). Names only are ever printed."""
     S = "2 collect"
-    primary, backup = (read_keyfile(p) for p in KEY_FILES)
-    merged = {**backup, **primary}
+    merged, source = {}, {}
+    for p in key_files():
+        for k, v in read_keyfile(p).items():
+            if k not in merged:
+                merged[k], source[k] = v, p
     for k, v in merged.items():
         F.env.setdefault(k, v)                    # values already in the shell win, as in the scripts
     have = lambda k: bool(os.environ.get(k) or merged.get(k))  # noqa: E731
     ready = {use: all(have(k) for k in keys) for use, keys in NEEDS.items()}
+    needed = [k for keys in NEEDS.values() for k in keys]
+    used = sorted({str(source[k]).replace(str(Path.home()), "~") for k in needed
+                   if k in source and not os.environ.get(k)})
     notes, status = [], "PASS"
-    if not KEY_FILES[0].exists():
-        notes.append(".env not found")
-    from_backup = sorted(k for k in backup if k not in primary)
-    if from_backup:
+    if any(not os.environ.get(k) and source.get(k) == LEGACY_KEY_FILE for k in needed):
         status = "WARN"
-        notes.append(f"taken from .venv/keys.txt because .env lacks them: {', '.join(from_backup)}")
-    differ = sorted(k for k in set(primary) & set(backup) if primary[k] != backup[k])
-    if differ:
+        notes.append("keys read from the repository's .env; move them to "
+                     "~/.config/computervision_sentinel/secrets.env (Docs/data_ethics.md)")
+    for p in {source[k] for k in needed if k in source and source[k] != LEGACY_KEY_FILE}:
+        if p.stat().st_mode & 0o077:
+            status = "WARN"
+            notes.append(f"{str(p).replace(str(Path.home()), '~')} is readable by other users; run chmod 600 on it")
+    if (VENV / "keys.txt").exists():
         status = "WARN"
-        notes.append(f".env and .venv/keys.txt disagree on {', '.join(differ)} (.env used)")
+        notes.append(".venv/keys.txt still exists and is no longer read; delete it")
     for use, keys in NEEDS.items():
         if not ready[use]:
             status = "FAIL"
             notes.append(f"{use} collection skipped, missing: {', '.join(k for k in keys if not have(k))}")
-    F.record("keys", S, "Credentials present (.env, fallback .venv/keys.txt)", status,
-             "; ".join(notes) or f"all {sum(map(len, NEEDS.values()))} needed keys present in .env; "
-                                 ".venv/keys.txt matches")
+    F.record("keys", S, "Credentials present (shell, then ~/.config/computervision_sentinel/secrets.env)", status,
+             "; ".join(notes) or f"all {len(needed)} needed keys present; read from "
+                                 f"{', '.join(used) or 'the shell environment'}")
     F.secrets = secret_values()
     return ready
 

@@ -11,8 +11,9 @@ Design choices
   torch + transformers are imported lazily and ONLY by ClipEncoder.
 * Every network call goes through a small function so it can be mocked in
   tests/test_pilot.py (the test-suite never touches the internet).
-* Secrets are read from the .env at the repo root and are never
-  written to logs, CSVs or exception messages.
+* Secrets are read from the shell, then from the key files in key_files()
+  (~/.config/computervision_sentinel/secrets.env; never the repository), and
+  are never written to logs, CSVs or exception messages.
 """
 from __future__ import annotations
 
@@ -77,28 +78,38 @@ CLIP_REVISION = "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268"
 # --------------------------------------------------------------------------- #
 # Environment / secrets
 # --------------------------------------------------------------------------- #
+def key_files() -> list[Path]:
+    """Credential files, in the order they are read (same order as Scripts/flight/execute_flight.py):
+    1. $COMPUTERVISION_SENTINEL_ENV_FILE, 2. ~/.config/computervision_sentinel/secrets.env,
+    3. the repository's .env (legacy, git-ignored). Variables already in the shell win over every file."""
+    override = os.environ.get("COMPUTERVISION_SENTINEL_ENV_FILE", "").strip()
+    files = [Path(override).expanduser()] if override else []
+    return files + [Path.home() / ".config" / "computervision_sentinel" / "secrets.env", REPO_ROOT / ".env"]
+
+
 def load_env(path: Path | None = None) -> None:
-    """Minimal .env reader (KEY=VALUE). Existing environment variables win."""
-    path = path or (REPO_ROOT / ".env")
-    if not path.exists():
-        return
-    for line in path.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            k, v = line.split("=", 1)
-            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+    """Minimal KEY=VALUE reader. Reads `path` if given, else every file in key_files(), in order.
+    Existing environment variables win, and the first file holding a key wins."""
+    for p in [path] if path else key_files():
+        if not p.exists():
+            continue
+        for line in p.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
 
 def get_mapillary_token() -> str:
-    """MAPILLARY_TOKEN from the environment or .env. Exits with setup steps if unset.
+    """MAPILLARY_TOKEN from the environment or the key files. Exits with setup steps if unset.
     A value starting with PASTE is the August prototype's placeholder and is rejected."""
     load_env()
     tok = os.environ.get("MAPILLARY_TOKEN", "").strip()
     if not tok or tok.upper().startswith("PASTE"):
         raise SystemExit(
             "MAPILLARY_TOKEN is empty or still a placeholder.\n"
-            f"  The keys live in {REPO_ROOT / '.env'} (copy: {REPO_ROOT / '.venv' / 'keys.txt'}).\n"
-            "  Set the line  MAPILLARY_TOKEN=MLY|...  there. To get a token:\n"
+            "  The keys live in ~/.config/computervision_sentinel/secrets.env (outside the repository;\n"
+            "  see Docs/data_ethics.md). Set the line  MAPILLARY_TOKEN=MLY|...  there. To get a token:\n"
             "  1. Sign in at https://www.mapillary.com/dashboard/developers\n"
             "  2. Register an application and copy its Client Token (starts with 'MLY|')\n"
         )
@@ -562,7 +573,7 @@ class MapillaryClient:
             if r.status_code == 400:                  # field rejected -> retry with the minimal set
                 r = self._get({**params, "fields": MAPILLARY_FIELDS_MINIMAL})
             if r.status_code in (401, 403):
-                raise SystemExit("Mapillary rejected the token (HTTP %d). Check MAPILLARY_TOKEN in .env." % r.status_code)
+                raise SystemExit("Mapillary rejected the token (HTTP %d). Check MAPILLARY_TOKEN in ~/.config/computervision_sentinel/secrets.env." % r.status_code)
             r.raise_for_status()
             time.sleep(self.pause_s)
             return r.json().get("data", [])

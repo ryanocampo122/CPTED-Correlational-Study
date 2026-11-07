@@ -40,11 +40,26 @@ stigmatization: Wacquant 2007; Meade 2021; Schwarze 2023, in `Reference/Literatu
 
 ## Credentials and sharing
 
-- All credentials live in `.env` at the repository root (`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`,
-  `PRAW_USER_AGENT`, `COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`), with a copy in `.venv/keys.txt`.
-  Since October 2026 `.env` is committed to the private GitHub repository, so everyone with access to
-  the repository can read the keys and the hash salt. Never paste them into code, notebooks or messages.
+- **Since November 2026 credentials live outside the repository**, in
+  `~/.config/computervision_sentinel/secrets.env` (`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`,
+  `COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`; `KEY=VALUE` lines). The folder is `chmod 700` and the file
+  `chmod 600`, so only your user account can read it. Every script reads, in order: variables already set in the shell,
+  the file named by `COMPUTERVISION_SENTINEL_ENV_FILE` (if set), that file, and, as a legacy fallback, a `.env`
+  at the repository root (git-ignored; the flight marks it WARN). `.venv/keys.txt` is no longer read; delete it.
+  `.env`, `*.env`, `secrets.*` and `keys.txt` are git-ignored. New team members get the keys through a password
+  manager share, never by chat or email.
+- Setting up on a machine:
+  ```bash
+  mkdir -p ~/.config/computervision_sentinel && chmod 700 ~/.config/computervision_sentinel
+  $EDITOR ~/.config/computervision_sentinel/secrets.env && chmod 600 ~/.config/computervision_sentinel/secrets.env
+  ```
+- **History.** From October 2026 until the November move, `.env` was committed to the private GitHub repository.
+  Removing it from the current files does not remove it from git history, so everyone with access to the repository
+  can still read those values. The history is not rewritten (that would change every commit ID a third time);
+  instead the exposed keys are replaced. Never paste keys into code, notebooks or messages.
+- **Rotation (November 2026).** The Reddit app secret and the Mapillary token are replaced with new ones; the old
+  values in git history then no longer work. The hash salt is kept: changing it changes every `author_hash`, so new
+  collections could no longer be compared with June–August 2026, and its protection is limited anyway because the
+  repository holds verbatim Reddit text. Any change to the salt is a decision for the co-leads.
 - `Scripts/make_handoff.sh` builds a shareable zip without `.env`, `.git`, `.venv` and the private audit folders,
-  and refuses to finish if any credential value appears inside the zip.
-- The Reddit app credentials are the ones used since August, kept the same on purpose for data collection. Whether
-  to rotate any key is left to the security decisions still to be made.
+  and refuses to finish if any credential value appears inside the zip (or if it cannot find the keys to check).
