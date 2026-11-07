@@ -1,0 +1,27 @@
+{
+  "rule": "Decision D1: newest Mapillary image captured from 2020-01-01 on, within 30 m, camera heading within 30 degrees of the point's road (up- or down-road); points on bridges or freeway-type roads excluded; panoramas cut into two 90-degree side views",
+  "points": 423,
+  "points_with_image": 246,
+  "segments_with_image": 121,
+  "status_counts": {
+    "ok": 246,
+    "no_images_in_search_box": 100,
+    "none_usable": 66,
+    "excluded_bridge": 9,
+    "excluded_freeway": 2
+  },
+  "points_lost_to_heading_rule": 66,
+  "capture_years": {
+    "2020": 225,
+    "2023": 21
+  },
+  "capture_dates_local": [
+    "2020-05-21",
+    "2023-05-13",
+    "2023-05-14"
+  ],
+  "panoramas": 238,
+  "mapillary_license": "CC BY-SA 4.0 (attribute Mapillary and contributors; share-alike on derivatives)",
+  "git_commit": "9ea6a36",
+  "created_utc": "2026-11-07T23:56:16+00:00"
+}
