@@ -56,17 +56,49 @@ Street View images, and 3.2.3(c) forbid using Google Maps content to train, test
 (read 16 Oct 2026). The work plan allowed Street View only "after confirming its terms of use allow this kind of
 analysis"; they do not.
 
-**Decision D1 (open): image source for the study period.** No Mapillary imagery from June–August 2026, or from
-any date after 2023, exists over the CBD, and Google Street View's terms forbid bulk download and model use.
+**Decision D1 (decided November 2026): image source for the study period.** No open source has street-level
+imagery of the CBD from June–August 2026 (searched 30 Oct 2026):
+
+- **Mapillary:** none of the 423 points has a study-period image; the newest CBD image is from May 2023. Across
+  Saskatoon the only newer images are 181 from May 2024, the closest about 5 km from Downtown.
+- **Panoramax:** no Downtown images. **KartaView:** newest image 2019.
+- **Google Street View:** terms forbid bulk download and model use (above).
 
 | Option | For | Against |
 |---|---|---|
-| (a) Newest Mapillary imagery, date stated | available now; 288 of 423 points have 2020 or 2023 imagery | 3–6 year gap (12 for 2014-only points); 26 points have none |
+| (a) Newest Mapillary image at each point, with the 2026 crime and Reddit data | available now; 288 of 423 points (163 of 218 segments) have 2020 or 2023 imagery | 3–6 year gap; May, not summer; 55 segments without a 2020/2023 image |
 | (b) Ask the City for recent street-level imagery (e.g. road-survey imagery; the 2014 Mapillary frames came from a survey vehicle) | could be recent and complete | depends on the City; data-sharing terms |
 | (c) Capture new imagery | current, complete | primary data collection (the plan is secondary-only); cannot cover summer 2026 |
+| (d) Match the outcomes to the images: 2023 images with 2023 crime and Reddit | no date gap | 2023 imagery covers only 27 points on 19 of 218 segments; needs a new SPS extract (the SPS crime map warns against comparing its data over time) and a new Reddit collection, which reaches fewer older posts (122 for June–August 2023 against 168 for 2026, same terms and settings, 7 Nov 2026) |
 
-**Recommended:** (b) now through Elisabeth Miller; (a) as fallback, describing imagery as typical built form and
-testing stability where 2020 and 2023 images both exist.
+**Decision: (a).** Each point uses its newest Mapillary image within 30 m: 2023 at 27 points and 2020 at 261, so
+288 points on 163 of the 218 segments (75%). The outcomes stay June–August 2026 (the SPS extract and the Reddit
+collection). The other 135 points (newest image 2014–2019, or none) get no image score, so 55 segments have no X
+value and are left out of the correlations; every result says it describes the 163 covered segments. The capture
+year is kept with every image score.
+
+**Assumption, stated with every result that uses X:** the street features measured (building frontage, greenery,
+lighting infrastructure, fences and walls, sidewalks, signs of disorder) did not change substantially between the
+image year (2020 or 2023) and summer 2026. X therefore describes the typical built form of each segment, not its
+state in summer 2026.
+
+**Limitations:**
+
+1. **Date gap:** the images are 3 years (2023) or 6 years (2020) older than the crime and Reddit data. Changes in
+   between (new buildings, closures, removed or added lighting) are not seen.
+2. **Season:** every 2020 and 2023 image was taken in May (21 May 2020; 13–14 May 2023), not June–August, so trees
+   have less foliage and greenery shares are likely lower than in summer.
+3. **COVID-19:** the 2020 images were captured in a single day during COVID-19 restrictions. Cues that depend on
+   activity (people present, open storefronts, parked cars) describe that day, not a normal summer; they are flagged
+   in the results and not read as fixed features of the street.
+4. **Coverage:** a quarter of the segments (55 of 218) have no 2020 or 2023 image.
+5. **Mixed years:** 27 points use 2023 images and 261 use 2020 images; the capture year is recorded so results can be
+   checked by year.
+
+**How the assumption is tested** (validation plan, "Image currency"): the same points are labelled and scored on
+their 2014 and 2020 images, which exist together at 243 points on 144 segments. If the measured features were stable
+over those six years, stability over the six years to 2026 is plausible; features that change are reported and
+treated with caution. A 2020-against-2023 comparison is not possible: only 3 points have both.
 
 ## Pilot on the newest imagery (`cbd_latest_imagery/`)
 

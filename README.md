@@ -18,7 +18,7 @@ segments in Downtown/CBD.
 | How the whole study fits together, and how to run it | `Docs/workflow.md` |
 | The results, step by step, in notebooks | `Notebooks/` (start with `00_replicate_system.ipynb`) |
 | What has been checked, and how | `Docs/verification/october_2026_checks.md` |
-| Open decisions and known problems | Decision D1 (image source) in `Docs/cv_pipeline.md`; Decision D2 (Reddit spatial unit) and the Reddit limitations in `Docs/reddit_pipeline.md`; gaps in the crime data in `Docs/crime_data.md` |
+| Decisions and known problems | Decision D1 (image source: newest image at each point, decided November 2026) in `Docs/cv_pipeline.md`; Decision D2 (Reddit spatial unit) and the Reddit limitations in `Docs/reddit_pipeline.md`; gaps in the crime data in `Docs/crime_data.md` |
 | Any other documentation | `Docs/README.md` |
 
 ## Status

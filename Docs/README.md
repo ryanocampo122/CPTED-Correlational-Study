@@ -7,7 +7,7 @@ The short version for supervisors is the October report in `Deliverables/2026-10
 |---|---|
 | [workflow.md](workflow.md) | The research framework, the end-to-end pipeline, its status, and how to run every step |
 | [reddit_pipeline.md](reddit_pipeline.md) | Reddit collection and analysis: settings, adjustments, verification, limitations; open Decision D2 (spatial unit) |
-| [cv_pipeline.md](cv_pipeline.md) | Sample points, street-level imagery, CLIP scoring: what ran, what was found, fixes due; open Decision D1 (image source) |
+| [cv_pipeline.md](cv_pipeline.md) | Sample points, street-level imagery, CLIP scoring: what ran, what was found, fixes due; Decision D1 (image source: newest image at each point, decided November 2026) |
 | [crime_data.md](crime_data.md) | Final crime categories, how they map to SPS data, and what to check in the data |
 | [validation_plan.md](validation_plan.md) | What each measure must show before it is used, and how it will be checked |
 | [data_ethics.md](data_ethics.md) | Privacy, quoting, licences, credentials, describing places without labelling people |
