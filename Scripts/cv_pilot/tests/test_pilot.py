@@ -126,6 +126,48 @@ def test_choose_image_prefers_summer_then_recent_then_near():
     assert L.parse_captured_at(1690000000000).year == 2023              # epoch ms
 
 
+def test_choose_image_heading_rule():
+    """With the November rule on, a camera facing across the point's road is not used."""
+    # A point on an east-west road (bearing 90), and a 2023 panorama 10 m along it facing east
+    lon, lat = -106.66, 52.13
+    along = cand(1, lon + 0.00015, lat, "2023-05-13T12:00:00Z", pano=True)
+    # A 2023 panorama right at the point whose camera faces north: it stands on the cross street
+    across = {**cand(2, lon, lat, "2023-05-14T12:00:00Z", pano=True), "compass_angle": 0.0}
+    # Without the rule the nearer cross-street image wins; with it the along-road image is chosen
+    c, _ = L.choose_image([along, across], lon, lat, 30, allow_pano=True)
+    assert c["id"] == "2"
+    c, why = L.choose_image([along, across], lon, lat, 30, allow_pano=True, road_bearing=90.0, max_off_road_deg=30)
+    assert why == "ok" and c["id"] == "1"
+    # Facing west (270) is still along the road, since up- and down-road count the same
+    west = {**cand(3, lon, lat, "2023-05-13T12:00:00Z", pano=True), "compass_angle": 265.0}
+    c, _ = L.choose_image([west], lon, lat, 30, allow_pano=True, road_bearing=90.0, max_off_road_deg=30)
+    assert c["id"] == "3"
+    # When only the cross-street image exists, the point gets no image and the reason says why
+    c, why = L.choose_image([across], lon, lat, 30, allow_pano=True, road_bearing=90.0, max_off_road_deg=30)
+    assert c is None and "off_road_heading=1" in why
+
+
+def test_bridge_or_freeway():
+    """Points on bridges or freeway-type roads are flagged; ordinary streets are not."""
+    # Way 111 is on a bridge in this made-up bridge list
+    bridges = {"111"}
+    assert L.bridge_or_freeway({"osm_way_id": 111, "highway": "primary"}, bridges) == "bridge"
+    assert L.bridge_or_freeway({"osm_way_id": 222, "highway": "trunk"}, bridges) == "freeway"
+    assert L.bridge_or_freeway({"osm_way_id": 333, "highway": "residential"}, bridges) == ""
+
+
+def test_bridge_or_freeway_flags_the_11_published_points():
+    """On the published CBD points the flag reproduces the 11 bridge and freeway points of the October checks."""
+    # The published sample points and the cached OSM bridge list
+    cbd = L.REPO_ROOT / "Data" / "cv_pilot_2026-10" / "cbd"
+    bridges = L.load_bridge_way_ids(cbd / "osm_bridge_way_ids.json")
+    points = json.loads((cbd / "sample_points.geojson").read_text())["features"]
+    import pandas as pd
+    rows = pd.read_csv(cbd / "sample_points.csv").to_dict("records")
+    flagged = [r["point_id"] for r in rows if L.bridge_or_freeway(r, bridges)]
+    assert len(points) == 423 and len(flagged) == 11
+
+
 def test_local_window_is_saskatoon_time():
     s, e = L.local_window("2026-06-01", "2026-08-31")
     assert L.iso_z(s) == "2026-06-01T06:00:00Z" and L.iso_z(e) == "2026-09-01T05:59:59Z"

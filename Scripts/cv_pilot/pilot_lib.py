@@ -461,11 +461,14 @@ def heading_of(c: dict):
 
 def choose_image(cands: list[dict], lon: float, lat: float, max_dist_m: float,
                  summer_months=SUMMER_MONTHS, window: tuple | None = None,
-                 allow_pano: bool = False, prefer: str = "recent") -> tuple[dict | None, str]:
+                 allow_pano: bool = False, prefer: str = "recent",
+                 road_bearing: float | None = None, max_off_road_deg: float | None = None) -> tuple[dict | None, str]:
     """Pick one image for a sample point. Rule (fixed in advance, see README):
     drop images farther than max_dist_m, without a thumbnail, outside the capture
     window (if one is set), and panoramas unless allow_pano (a panorama also needs a
-    heading so it can be cropped). Then rank:
+    heading so it can be cropped). With road_bearing and max_off_road_deg set (November 2026 rule),
+    also drop images whose camera heading is more than max_off_road_deg away from the point's road
+    (up- or down-road count the same), so a camera standing on the cross street is not used. Then rank:
       prefer="recent": most recent year > Jun-Aug capture > flat over panorama > nearest
       prefer="summer": Jun-Aug capture > most recent year > flat over panorama > nearest
     Returns (candidate_or_None, reason)."""
@@ -484,6 +487,21 @@ def choose_image(cands: list[dict], lon: float, lat: float, max_dist_m: float,
         if pano and heading_of(c) is None:
             dropped["panorama_no_heading"] += 1
             continue
+        # November rule: the camera must face along the point's own road, not across it
+        if road_bearing is not None and max_off_road_deg is not None:
+            # Camera heading, or None when Mapillary has no compass angle for the image
+            heading = heading_of(c)
+            # An image with no heading cannot be checked, so it is not used
+            if heading is None:
+                dropped["no_heading"] += 1
+                continue
+            # Angle between camera and road, folded so facing up- or down-road both count as 0
+            off_road = angle_diff(heading, road_bearing)
+            off_road = min(off_road, 180 - off_road)
+            # Too far off the road's direction: the camera is most likely on the cross street
+            if off_road > max_off_road_deg:
+                dropped["off_road_heading"] += 1
+                continue
         ll, dt = image_lonlat(c), parse_captured_at(c.get("captured_at"))
         if ll is None or dt is None:
             dropped["no_geometry_or_date"] += 1
@@ -505,6 +523,35 @@ def choose_image(cands: list[dict], lon: float, lat: float, max_dist_m: float,
         key = lambda c: (-c["_dt"].year, not c["_summer"], c["_pano"], c["_dist_m"])  # noqa: E731
     usable.sort(key=key)
     return usable[0], "ok"
+
+
+# Road classes with no building frontage to measure (freeway-type roads)
+FREEWAY_CLASSES = ("motorway", "trunk")
+
+
+def load_bridge_way_ids(path: Path) -> set[str]:
+    """OSM way IDs of roads on bridges, from the cached Overpass answer (osm_bridge_way_ids.json).
+
+    :param path: the cached bridge list written by Scripts/verification/verify_october_2026.py
+    :return: the way IDs as strings
+    """
+    return {str(w) for w in json.loads(Path(path).read_text())["way_ids"]}
+
+
+def bridge_or_freeway(point: dict, bridge_way_ids: set[str]) -> str:
+    """Why a sample point has no frontage to measure, or "" if it has one.
+
+    :param point: a sample-point row with osm_way_id and highway
+    :param bridge_way_ids: OSM way IDs of roads on bridges
+    :return: "bridge", "freeway" or ""
+    """
+    # A point on a bridge looks at the river or the deck, not at buildings
+    if str(point.get("osm_way_id")) in bridge_way_ids:
+        return "bridge"
+    # A point on a freeway-type road has no buildings facing it
+    if point.get("highway") in FREEWAY_CLASSES:
+        return "freeway"
+    return ""
 
 
 def equirect_to_perspective(pano, yaw_deg: float, fov_deg: float = 90.0,
