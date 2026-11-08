@@ -74,7 +74,7 @@ imagery of the CBD from June–August 2026 (searched 30 Oct 2026):
 **Decision: (a).** Each point uses its newest Mapillary image from 2020 on within 30 m whose camera faces along the
 point's own road (within 30°; the fix the pilot showed was needed, below). The outcomes stay June–August 2026 (the SPS
 extract and the Reddit collection). Before the camera-direction rule, 288 points on 163 of the 218 segments had a
-2020 or 2023 image; with it, **246 points on 121 segments (55%)** have one: 225 from 21 May 2020 and 21 from
+2020 or 2023 image; with it, **246 points on 121 segments (56%)** have one: 225 from 21 May 2020 and 21 from
 13–14 May 2023 (`Data/cv_study_2026-11/`, made by `Scripts/cv_study/images.py`). The rule removed 66 points whose only
 images were taken from the cross street; most are on the east–west streets (19th to 25th Street), because the 2020
 survey drove the avenues. The other points get no image score, so 97 segments have no X value and are left out of

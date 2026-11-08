@@ -827,6 +827,24 @@ def stage_results(F: Flight) -> None:
               note_fn=lambda: f"{docx.stat().st_size / 1e6:.1f} MB; the hand-edited CPTED_ComputerVis_2026.docx "
                               "is the version sent")
 
+    # November update: its numbers from the published data, then the Word report and Markdown page built from them
+    nov_numbers = report / "november_2026_numbers.json"
+    F.run("november_numbers", S, "Every number quoted in the November update",
+          [("numbers", [py, REPORTING / "november_numbers.py", "--out", nov_numbers])])
+    nov_docx = report / "ComputerVision_Sentinel_November2026_Midpoint_Update.docx"
+    nov_figs = figs_nov if len(list(figs_nov.glob("fig*.png"))) >= 5 else FIGS_NOV
+    if F.args.skip_report:
+        F.skip("november_docx", S, "November update (.docx and Markdown)", "--skip-report")
+    elif not (shutil.which("node") and (REPORTING / "node_modules" / "docx").exists()):
+        F.skip("november_docx", S, "November update (.docx and Markdown)", "node or the docx package is missing")
+    elif not nov_numbers.exists():
+        F.skip("november_docx", S, "November update (.docx and Markdown)", "numbers missing")
+    else:
+        F.run("november_docx", S, "November update (.docx and Markdown)",
+              [("docx", ["node", REPORTING / "build_november_report.js", "--numbers", nov_numbers, "--figures", nov_figs,
+                         "--out", nov_docx, "--md", report / "November2026_update.md"])],
+              note_fn=lambda: f"{nov_docx.stat().st_size / 1e6:.1f} MB")
+
     # Notebooks 01-09: each one run top to bottom; the copies with outputs stay in this execution --------
     # (00_replicate_system runs the flight itself, so the flight never runs it)
     notebooks = sorted((REPO / "Notebooks").glob("0[1-9]_*.ipynb"))
@@ -892,6 +910,10 @@ def stage_checks(F: Flight, snapshot: dict) -> None:
     if num.exists():
         st, note = compare_file(num, VERIF / "october_2026_numbers.json")
         rows.append({"area": "Report numbers", "file": "october_2026_numbers.json", "status": st, "note": note})
+    num = F.exec_dir / "report" / "november_2026_numbers.json"
+    if num.exists():
+        st, note = compare_file(num, VERIF / "november_2026_numbers.json")
+        rows.append({"area": "Report numbers", "file": "november_2026_numbers.json", "status": st, "note": note})
     with open(cmp_dir / "reproduction_vs_published.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["area", "file", "status", "note"])
         w.writeheader()

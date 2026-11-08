@@ -13,7 +13,7 @@ segments in Downtown/CBD.
 
 | You want | Open |
 |---|---|
-| The latest update for supervisors | `Deliverables/2026-10_october_update/` |
+| The latest update for supervisors | `Deliverables/2026-11_midpoint/` (November midpoint; October: `Deliverables/2026-10_october_update/`) |
 | The literature review (CPTED evidence, crime and perception, pilot sites) | [`Docs/literature review/Master_lit_review.docx`](Docs/literature%20review/Master_lit_review.docx) |
 | How the whole study fits together, and how to run it | `Docs/workflow.md` |
 | The results, step by step, in notebooks | `Notebooks/` (start with `00_replicate_system.ipynb`) |
@@ -64,7 +64,7 @@ Scripts/
   reporting/           figures, report numbers, the October and November .docx builders
   make_handoff.sh      builds a shareable zip without credentials or private text
 Notebooks/       notebooks on top of the scripts: replicate the system, Reddit, crime, street images (outputs never committed)
-Deliverables/    dated copies of what was sent (2026-08, 2026-10); later edits noted in each README
+Deliverables/    dated copies of what was sent (2026-08, 2026-10, 2026-11); later edits noted in each README
 Reference/       literature (incl. computer-vision papers), presentations, maps
 Archive/         surveys dropped in the revised plan (the August CV prototype is in git history)
 RESULTS_FINAL/   one EXECUTION-<n>/ folder per flight run, plus executions.csv (git-ignored)

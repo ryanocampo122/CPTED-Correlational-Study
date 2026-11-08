@@ -110,6 +110,9 @@ done
 .venv/bin/python Scripts/reporting/make_figures.py
 .venv/bin/python Scripts/reporting/report_numbers.py
 (cd Scripts/reporting && npm install && node build_october_report.js)
+.venv/bin/python Scripts/reporting/make_figures_november.py
+.venv/bin/python Scripts/reporting/november_numbers.py
+node Scripts/reporting/build_november_report.js
 
 # Tests (offline)
 .venv/bin/python Scripts/cv_pilot/tests/test_pilot.py

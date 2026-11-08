@@ -1,0 +1,201 @@
+{
+  "images": {
+    "points": 423,
+    "points_with_image": 246,
+    "segments": 218,
+    "segments_with_image": 121,
+    "years": {
+      "2020": 225,
+      "2023": 21
+    },
+    "dates_local": [
+      "2020-05-21",
+      "2023-05-13",
+      "2023-05-14"
+    ],
+    "panoramas": 238,
+    "side_views": 492,
+    "no_image_in_search": 100,
+    "lost_to_heading_rule": 66,
+    "excluded_bridge": 9,
+    "excluded_freeway": 2
+  },
+  "models": {
+    "views": 492,
+    "points": 246,
+    "segments": 121,
+    "device": "mps",
+    "minutes": 11.1,
+    "segmentation_model": "facebook/mask2former-swin-large-mapillary-vistas-panoptic",
+    "segmentation_revision": "b9a3e9e",
+    "clip_model": "openai/clip-vit-base-patch32",
+    "clip_revision": "3d74acf",
+    "surface_share_pct": {
+      "building": 21.4,
+      "vegetation": 16.0,
+      "sky": 19.1,
+      "road": 21.4,
+      "sidewalk": 7.1,
+      "fence": 1.2,
+      "wall": 0.4
+    },
+    "objects": {
+      "street_light": {
+        "views_with_any": 274,
+        "total": 472
+      },
+      "pole": {
+        "views_with_any": 466,
+        "total": 2316
+      },
+      "utility_pole": {
+        "views_with_any": 101,
+        "total": 189
+      },
+      "traffic_light": {
+        "views_with_any": 132,
+        "total": 301
+      },
+      "cctv_camera": {
+        "views_with_any": 4,
+        "total": 4
+      },
+      "bench": {
+        "views_with_any": 92,
+        "total": 136
+      },
+      "trash_can": {
+        "views_with_any": 182,
+        "total": 237
+      },
+      "bike_rack": {
+        "views_with_any": 24,
+        "total": 29
+      },
+      "fire_hydrant": {
+        "views_with_any": 65,
+        "total": 74
+      },
+      "mailbox": {
+        "views_with_any": 1,
+        "total": 1
+      },
+      "phone_booth": {
+        "views_with_any": 0,
+        "total": 0
+      },
+      "billboard": {
+        "views_with_any": 306,
+        "total": 688
+      },
+      "person": {
+        "views_with_any": 57,
+        "total": 71
+      },
+      "bicyclist": {
+        "views_with_any": 1,
+        "total": 1
+      },
+      "car": {
+        "views_with_any": 261,
+        "total": 937
+      }
+    },
+    "camera_car_pct_2023_views": 17.9,
+    "typology_counts": {
+      "surface_parking": 230,
+      "transit_node": 70,
+      "park_open_space": 62,
+      "road_corridor": 48,
+      "institutional": 42,
+      "residential": 18,
+      "riverfront_walkway": 14,
+      "commercial_street": 8
+    },
+    "typology_low_confidence": 109
+  },
+  "validation": {
+    "n_sample": 150,
+    "n_second_coder": 30,
+    "strata": 12,
+    "population_views": 492,
+    "status": "pending"
+  },
+  "crime": {
+    "records": 257,
+    "placed": 255,
+    "unplaced": 2,
+    "segments": 218,
+    "segments_with_any_record": 103,
+    "records_by_group": {
+      "property": 161.0,
+      "street_personal": 94.0
+    },
+    "records_by_category": {
+      "break_and_enter": 10.0,
+      "theft_from_vehicle": 71.0,
+      "auto_theft": 4.0,
+      "mischief_vandalism": 76.0,
+      "street_robbery": 16.0,
+      "assault": 78.0
+    },
+    "hotspot_segments": {
+      "property": 10,
+      "street_personal": 8,
+      "all_study_crime": 11
+    },
+    "hotspot_share_of_segments": {
+      "property": 0.046,
+      "street_personal": 0.037,
+      "all_study_crime": 0.05
+    },
+    "placed_by_rule": {
+      "intersection_split": 36,
+      "named_street": 217,
+      "nearest": 2
+    },
+    "top_segments": [
+      {
+        "road": "1st Avenue South",
+        "length_m": 113,
+        "records": 39.3,
+        "property": 18.0,
+        "street_personal": 21.3
+      },
+      {
+        "road": "22nd Street East",
+        "length_m": 52,
+        "records": 16.6,
+        "property": 15.2,
+        "street_personal": 1.4
+      },
+      {
+        "road": "2nd Avenue South",
+        "length_m": 177,
+        "records": 16.0,
+        "property": 10.2,
+        "street_personal": 5.8
+      },
+      {
+        "road": "Spadina Crescent East",
+        "length_m": 81,
+        "records": 9.0,
+        "property": 7.0,
+        "street_personal": 2.0
+      },
+      {
+        "road": "21st Street East",
+        "length_m": 119,
+        "records": 9.0,
+        "property": 8.0,
+        "street_personal": 1.0
+      }
+    ]
+  },
+  "join": {
+    "segments_with_image": 121,
+    "records_on_imaged_segments": 163.5,
+    "imaged_segments_with_any_record": 57,
+    "hotspots_with_image": 6
+  }
+}
