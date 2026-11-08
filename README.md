@@ -23,11 +23,17 @@ segments in Downtown/CBD.
 
 ## Status
 
+| November task (work plan p. 5) | Status (7 Nov 2026) |
+|---|---|
+| Run segmentation, detection and CLIP | **Done, not yet validated**: 492 side views from 246 points on 121 of the 218 segments (newest 2020/2023 image per point, Decision D1); Mask2Former (Mapillary Vistas) for segmentation and objects, CLIP for cues (`Docs/cv_pipeline.md`) |
+| Check accuracy against hand-labelled images | **Sheet ready**: 150 side views drawn blind, 30 for a second coder; labelling next (`Docs/validation_plan.md`) |
+| Map crime hot spots by category | **Done**: 255 of 257 CBD study-category records placed on street segments; half of all study crime on 11 of 218 segments (`Docs/crime_data.md`) |
+
 | October task (work plan p. 5) | Status |
 |---|---|
 | Finalize crime categories | **Done**: 5 included, assault conditional, 4 excluded; SPS June–August 2026 extract added and cleaned: 9,650 records, 2,982 in the study categories (`Docs/crime_data.md`) |
 | Extend Reddit to June–August 2026 | **Done, verified**: 195 posts, 6,452 comments; every table reproduces byte-for-byte; 30 checks pass |
-| Generate sample points | **In progress**: 423 points on 218 street segments generated and checked; being refined (about two more weeks), not yet reported |
+| Generate sample points | **Done**: 423 points on 218 street segments; refined in November (11 bridge/freeway points flagged; images must face along the point's road) |
 | Collect street-level images | **Done: method validated**: 10 Mapillary images sourced and read by CLIP ViT-B/32 in the pipeline; no June–August 2026 imagery exists yet (newest 2020/2023), so the full set is sourced next |
 
 ![Workflow](Docs/figures/mid_point_october/fig01_workflow_status.png)
@@ -40,8 +46,9 @@ Docs/            detailed documentation, verification checks, figures, the liter
 Data/
   reddit_2026-06-01_2026-08-31/   CURRENT  study-period Reddit: raw, cleaned, tables, audits, charts
   reddit_2025-06-11_2026-06-11/   earlier  12-month collection behind the July/August reports (corrected)
-  sps_crime_2026-06-01_2026-08-31/ CURRENT  SPS recorded crime (Y1): raw extract, cleaned rows, category counts
+  sps_crime_2026-06-01_2026-08-31/ CURRENT  SPS recorded crime (Y1): raw extract, cleaned rows, category counts, per segment
   cv_pilot_2026-10/               CURRENT  CBD sample points, imagery coverage audit, 10-image pilot
+  cv_study_2026-11/               CURRENT  study image set (246 points), segmentation/detection/CLIP outputs, labelling sheet
   boundaries/                              CBD polygon (interim, from OSM) and map context
   climate_2010_2025/                       ECCC climate 2010–2025, four prairie cities; kept for possible use
 flight           ./flight --execute_flight: the whole pipeline in one command (Scripts/flight/)
@@ -49,11 +56,12 @@ Scripts/
   flight/              the flight: execute_flight.py (stages, comparisons, summary), load_models.py, run_notebook.py
   reddit_collection/   Reddit collector (reddit_scraper.py)
   reddit_analysis/     cleaning, tagging, analysis and self-checks (run_all.sh <dataset>)
-  crime_data/          cleans the SPS extract into study categories (clean_sps_crime.py)
+  crime_data/          cleans the SPS extract into study categories (clean_sps_crime.py); crime per segment (hotspots.py)
   climate_data/        ECCC download scripts behind Data/climate_2010_2025/
   cv_pilot/            sample points, Mapillary imagery, CLIP scoring, Reddit link (pilot.py)
+  cv_study/            November: full image set (images.py), segmentation/detection/CLIP (models.py), labelling (validation.py)
   verification/        independent checks of every October claim
-  reporting/           figures, report numbers, the October .docx builder
+  reporting/           figures, report numbers, the October and November .docx builders
   make_handoff.sh      builds a shareable zip without credentials or private text
 Notebooks/       notebooks on top of the scripts: replicate the system, Reddit, crime, street images (outputs never committed)
 Deliverables/    dated copies of what was sent (2026-08, 2026-10); later edits noted in each README
@@ -69,6 +77,7 @@ RESULTS_FINAL/   one EXECUTION-<n>/ folder per flight run, plus executions.csv (
 ```bash
 ./flight --execute_flight             # install -> collect (Reddit, Mapillary APIs) -> load CLIP + VADER -> results
 ./flight --execute_flight --offline   # the same without API calls
+./flight --execute_flight --offline --skip-models   # quick check: all but re-running the image models (~11 min)
 ```
 
 Each run writes everything it produces (results, JSON, status logs, figures, the report, file-by-file comparisons
@@ -86,6 +95,8 @@ bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31            
 .venv/bin/python Scripts/cv_pilot/pilot.py coverage --out Data/cv_pilot_2026-10/cbd
 .venv/bin/python Scripts/verification/verify_october_2026.py                      # re-check October claims
 .venv/bin/python Scripts/reporting/make_figures.py                                # rebuild figures
+.venv/bin/python Scripts/crime_data/hotspots.py                                   # crime per street segment
+.venv/bin/python Scripts/cv_study/models.py                                       # image models (~11 min)
 ```
 
 **Notebooks** (`Notebooks/`, see its README): open them in VS Code with the `.venv` kernel. They read `Data/` and

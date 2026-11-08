@@ -71,11 +71,15 @@ imagery of the CBD from June–August 2026 (searched 30 Oct 2026):
 | (c) Capture new imagery | current, complete | primary data collection (the plan is secondary-only); cannot cover summer 2026 |
 | (d) Match the outcomes to the images: 2023 images with 2023 crime and Reddit | no date gap | 2023 imagery covers only 27 points on 19 of 218 segments; needs a new SPS extract (the SPS crime map warns against comparing its data over time) and a new Reddit collection, which reaches fewer older posts (122 for June–August 2023 against 168 for 2026, same terms and settings, 7 Nov 2026) |
 
-**Decision: (a).** Each point uses its newest Mapillary image within 30 m: 2023 at 27 points and 2020 at 261, so
-288 points on 163 of the 218 segments (75%). The outcomes stay June–August 2026 (the SPS extract and the Reddit
-collection). The other 135 points (newest image 2014–2019, or none) get no image score, so 55 segments have no X
-value and are left out of the correlations; every result says it describes the 163 covered segments. The capture
-year is kept with every image score.
+**Decision: (a).** Each point uses its newest Mapillary image from 2020 on within 30 m whose camera faces along the
+point's own road (within 30°; the fix the pilot showed was needed, below). The outcomes stay June–August 2026 (the SPS
+extract and the Reddit collection). Before the camera-direction rule, 288 points on 163 of the 218 segments had a
+2020 or 2023 image; with it, **246 points on 121 segments (55%)** have one: 225 from 21 May 2020 and 21 from
+13–14 May 2023 (`Data/cv_study_2026-11/`, made by `Scripts/cv_study/images.py`). The rule removed 66 points whose only
+images were taken from the cross street; most are on the east–west streets (19th to 25th Street), because the 2020
+survey drove the avenues. The other points get no image score, so 97 segments have no X value and are left out of
+the correlations; every result says it describes the 121 covered segments. The capture year is kept with every image
+score.
 
 **Assumption, stated with every result that uses X:** the street features measured (building frontage, greenery,
 lighting infrastructure, fences and walls, sidewalks, signs of disorder) did not change substantially between the
@@ -91,9 +95,10 @@ state in summer 2026.
 3. **COVID-19:** the 2020 images were captured in a single day during COVID-19 restrictions. Cues that depend on
    activity (people present, open storefronts, parked cars) describe that day, not a normal summer; they are flagged
    in the results and not read as fixed features of the street.
-4. **Coverage:** a quarter of the segments (55 of 218) have no 2020 or 2023 image.
-5. **Mixed years:** 27 points use 2023 images and 261 use 2020 images; the capture year is recorded so results can be
-   checked by year.
+4. **Coverage:** 97 of the 218 segments (44%) have no usable 2020 or 2023 image, and they are not spread evenly:
+   the avenues are covered and most east–west streets are not, so X describes mainly the avenues.
+5. **Mixed years:** 21 points use 2023 images and 225 use 2020 images; the capture year is recorded so results can be
+   checked by year. The 2023 panoramas were taken from a car roof; the camera car is left out of every share.
 
 **How the assumption is tested** (validation plan, "Image currency"): the same points are labelled and scored on
 their 2014 and 2020 images, which exist together at 243 points on 144 segments. If the measured features were stable
@@ -114,23 +119,40 @@ What the pilot showed:
 
 - Side views from 360° images show frontages, which natural-surveillance cues need.
 - **2 of 10 images were captured on the cross street** (camera ~89° off the point's road), so their "side" views
-  look down the road. Fix for November: in `choose_image()`, require the camera heading within ~30° of the road
-  bearing (mod 180°) before distance ranking.
-- Points on bridges (University Bridge) and freeways (Idylwyld) have no frontage: drop or flag them.
+  look down the road. **Fixed (November):** `choose_image()` takes `road_bearing` and `max_off_road_deg`; the study
+  image set requires the camera heading within 30° of the road bearing (mod 180°).
+- Points on bridges (University Bridge) and freeways (Idylwyld) have no frontage. **Fixed (November):**
+  `bridge_or_freeway()` flags the 11 points (9 bridge, 2 freeway); they stay in the point list and get no image.
 - Some CLIP land-use labels are visibly wrong (a building frontage labelled `transit_node`); 1 of 10 is
   low-confidence. Nothing from CLIP is used until it is checked against hand labels.
 - The 2014 frames carry a road-survey overlay (distance-measuring instrument, street names), so they came from a
   survey vehicle: worth asking the City whether newer survey imagery exists.
 
-## Steps 3–8 (November onward)
+## Steps 3–8 (November)
 
-- **3 Segmentation:** a model trained on Mapillary Vistas; share of building, greenery, sky, road, sidewalk,
-  fence/wall per image.
-- **4 Detection:** streetlights (lighting infrastructure, H3), people, cars, benches, transit stops. Streetlights are
-  deliberately not scored by CLIP (thin objects are a CLIP weakness).
-- **5 CLIP:** cues that are hard to segment (graffiti, litter, boarded windows, active storefronts).
-- **6 Indicators:** combine per CPTED principle; average per segment.
-- **7 Validation:** ~150 hand-labelled images (`validation_plan.md`).
-- **8 Integration:** join with crime counts and Reddit (see Decision D2 in `reddit_pipeline.md` on the Reddit unit).
+All model outputs are in `Data/cv_study_2026-11/` (made by `Scripts/cv_study/models.py`, about 11 minutes on the
+Mac's GPU; a repeat run writes identical files). **None is validated yet**: nothing is used until it passes the
+hand-label check.
+
+- **3 Segmentation (done, not validated):** one panoptic model, Mask2Former (Swin-L) trained on Mapillary Vistas,
+  pinned to revision `b9a3e9e`, run at the side views' full 1024 × 768 size. It gives the share of each view's street
+  scene in each of 63 classes; across the 492 side views: building 21%, road 21%, sky 19%, vegetation 16%,
+  sidewalk 7%, fence 1.2%. The camera car of the 2023 panoramas (18% of those pictures) is left out of every share.
+- **4 Detection (done, not validated):** the same model counts street-furniture objects: street lights in 274 of 492
+  views, poles in 466, benches in 92, trash cans in 182, people in 57, cars in 261. Streetlights are deliberately not
+  scored by CLIP (thin objects are a CLIP weakness). People and cars in 2020 images are flagged (COVID-19 day).
+- **5 CLIP (done, not validated):** land-use type and the nine cues on every side view. The land-use label looks
+  unreliable: it calls 230 of 492 views `surface_parking` and only 8 `commercial_street`, and 109 are low-confidence.
+  The hand labels will show how far it can be used.
+- **6 Indicators (first pass):** `segment_indicators.csv` averages the two sides of each point, then the points of
+  each segment (121 segments). Combining them per CPTED principle waits for the validation results.
+- **7 Validation (sheet ready, labelling next):** 150 side views drawn blind by a fixed rule, 30 shared with a second
+  coder (`Data/cv_study_2026-11/validation/`, `validation_plan.md`).
+- **8 Integration:** join with crime counts (done per segment, `crime_data.md`) and Reddit (see Decision D2 in
+  `reddit_pipeline.md` on the Reddit unit).
+
+![Image set](figures/mid_point_november/fig11_image_set.png)
+
+![Segmentation examples](figures/mid_point_november/fig12_segmentation_examples.png)
 
 Images: © Mapillary contributors, CC BY-SA 4.0. Map data © OpenStreetMap contributors (ODbL).

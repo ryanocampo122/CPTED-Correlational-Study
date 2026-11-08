@@ -41,5 +41,8 @@ nbstripout==0.9.1
 #                   (Hugging Face, ~600 MB). Pinned in Scripts/cv_pilot/pilot_lib.py (CLIP_MODEL,
 #                   CLIP_REVISION); ./flight's install stage downloads it into ~/.cache/huggingface/
 #                   and checks it, or it downloads on first use.
+#   Mask2Former     facebook/mask2former-swin-large-mapillary-vistas-panoptic at revision
+#                   b9a3e9eb06a6477a741c98cf91cfca11e620e59d (Hugging Face, ~0.9 GB). Pinned in
+#                   Scripts/cv_study/models.py (SEG_MODEL, SEG_REVISION); downloads on first use.
 #   VADER           its lexicon ships inside vaderSentiment (above); the project's adjustments are in
 #                   Scripts/reddit_analysis/scripts/common.py

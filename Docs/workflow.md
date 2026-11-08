@@ -97,6 +97,14 @@ for s in images score reddit report; do
   .venv/bin/python Scripts/cv_pilot/pilot.py $s --any-date --out Data/cv_pilot_2026-10/cbd_latest_imagery
 done
 
+# November: crime per street segment (offline), the study image set (network), image models (offline, ~11 min),
+# the blind labelling sheet and its score (offline; "pending" until labelled)
+.venv/bin/python Scripts/crime_data/hotspots.py
+.venv/bin/python Scripts/cv_study/images.py                    # or --recrop-to <folder> to re-cut offline
+.venv/bin/python Scripts/cv_study/models.py
+.venv/bin/python Scripts/cv_study/validation.py sample
+.venv/bin/python Scripts/cv_study/validation.py score
+
 # Checks, figures, report
 .venv/bin/python Scripts/verification/verify_october_2026.py [--rerun-pipeline] [--network]
 .venv/bin/python Scripts/reporting/make_figures.py
@@ -105,6 +113,8 @@ done
 
 # Tests (offline)
 .venv/bin/python Scripts/cv_pilot/tests/test_pilot.py
+.venv/bin/python Scripts/cv_study/tests/test_cv_study.py
+.venv/bin/python Scripts/crime_data/tests/test_hotspots.py
 ```
 
 The report build writes the generated base, `Deliverables/2026-10_october_update/ComputerVision_Sentinel_October2026_Progress_Report.docx`. The report as sent, `CPTED_ComputerVis_2026.docx` (and its PDF), was edited by hand after that, so a rebuild neither reproduces nor overwrites it.

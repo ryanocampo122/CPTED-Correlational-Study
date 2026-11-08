@@ -79,6 +79,31 @@ CBD polygon, which agrees with SPS's own neighbourhood for 9,614 of 9,650 record
 
 Record any data-sharing terms in `Docs/data_ethics.md`.
 
+## Crime per street segment and hot spots (November 2026)
+
+`Scripts/crime_data/hotspots.py` places the 257 CBD study-category records on the 218 study street segments (the
+segments the sample points sit on) and writes `Data/sps_crime_2026-06-01_2026-08-31/03_segments/`.
+
+- **Placement by street name first.** SPS puts a hundred-block record at a general point 30–85 m from the road
+  centreline, so plain distance would put it on the wrong street or nowhere. A block record goes to the nearest
+  segment of the street it names (SPS "21ST ST E" = OSM "21st Street East") within 100 m (217 records); an
+  intersection record is split equally between the segments of its two streets within 30 m (36); the nearest segment
+  within 30 m otherwise (2). 2 records are unplaced (400 block Spadina Crescent East, which has no sample point).
+- **Counts:** 255 records on 103 of the 218 segments: property crime 161 (theft from vehicle 71, mischief/vandalism
+  76, break and enter 10, auto theft 4) and street-based personal crime 94 (assault 78, conditional; robbery 16).
+  Counts per category are small, so the groups (property; street-based personal) are the unit for analysis, as
+  planned above.
+- **Hot spots:** the segments that together hold half of a group's records, largest counts first (the usual
+  crime-concentration measure). Half of all study crime lies on 11 segments (5%): property 10 segments, street-based
+  personal 8. The busiest segment is a 113 m block of 1st Avenue South (about 39 records: 18 property, 21
+  street-based personal), more than twice the next (22nd Street East and 2nd Avenue South, about 16 each). A formal
+  hot-spot statistic (e.g. Getis-Ord Gi*) can follow once the unit is settled.
+- **Overlap with the street images:** the 121 segments with an image hold 164 of the 255 placed records (64%) and 6 of
+  the 11 hot spots. The other 5 hot spots (21st, 22nd and 23rd Street East, Spadina Crescent East) have no usable
+  image (`cv_pipeline.md`, coverage), which limits the image-to-crime analysis.
+
+![Crime hot spots](figures/mid_point_november/fig09_crime_hotspots.png)
+
 ## Validation for crime data
 
 - Locations are generalized to the hundred-block or intersection: 9,650 records sit on 2,625 points, and 199

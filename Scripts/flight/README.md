@@ -3,6 +3,7 @@
 ```bash
 ./flight --execute_flight             # from the repository root
 ./flight --help                       # options
+./flight --execute_flight --offline --skip-models   # quick: everything but re-running the image models (~11 min)
 ```
 
 | File | Does |
@@ -13,7 +14,9 @@
 | `run_notebook.py` | stage 4: runs one notebook from `Notebooks/` top to bottom and saves the copy with outputs in the execution's `notebooks/` |
 
 Stages: **1 install** (packages and the pinned CLIP model) → **2 collect** (Reddit and Mapillary APIs) → **3 load models** (CLIP, VADER) → **4 results**
-(reproduction from the committed raw data, and the same analysis on the fresh collection) → **5 checks**
+(reproduction from the committed raw data, and the same analysis on the fresh collection; since November also crime
+per street segment, the 492 study side views re-cut from the committed panoramas, segmentation/detection/CLIP on
+every side view, the blind labelling sheet and the November figures) → **5 checks**
 (file-by-file comparison with the published outputs, repository unchanged, no credential in the output).
 `Docs/workflow.md` ("One command") describes each stage and what it writes.
 

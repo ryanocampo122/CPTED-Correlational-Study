@@ -11,7 +11,10 @@ ComputerVision_Sentinel | The whole pipeline in one command:  ./flight --execute
   3 load models   CLIP ViT-B/32 and VADER (stock and adjusted), each smoke-tested (load_models.py)
   4 results       reproduction: every published output rebuilt from the committed raw data; live: the same
                   analysis on the fresh collection; CV tests; verification checks; figures; report numbers;
-                  the October report (.docx); notebooks 01-09 in Notebooks/, run top to bottom
+                  the October report (.docx); notebooks 01-09 in Notebooks/, run top to bottom; November:
+                  crime per street segment, the study side views re-cut from the committed panoramas,
+                  segmentation/detection/CLIP on every side view (--skip-models to leave out, ~11 min), the
+                  blind labelling sheet, the November figures
   5 checks        reproduction compared with Data/ and Docs/ file by file; fresh collection compared with the
                   published numbers; Data/, Docs/, Deliverables/, Scripts/ and Notebooks/ unchanged; no
                   credential in the output
@@ -27,6 +30,7 @@ USAGE (repository root)
   ./flight --execute_flight                      everything (~20 min once installed; the Reddit collection is ~10)
   ./flight --execute_flight --offline            no API calls: install, models, reproduction, checks
   ./flight --execute_flight --skip-install --skip-reddit-collection --skip-coverage
+  ./flight --execute_flight --offline --skip-models   quick check: everything except the image models
 """
 from __future__ import annotations
 
@@ -58,6 +62,9 @@ CV = DATA / "cv_pilot_2026-10"
 CBD, PILOT = CV / "cbd", CV / "cbd_latest_imagery"
 VERIF = REPO / "Docs" / "verification"
 FIGS = REPO / "Docs" / "figures" / "mid_point_october"
+FIGS_NOV = REPO / "Docs" / "figures" / "mid_point_november"
+STUDY_IMAGES = DATA / "cv_study_2026-11"                  # November: the full image set and the model outputs
+CV_STUDY = REPO / "Scripts" / "cv_study"
 ANALYSIS = REPO / "Scripts" / "reddit_analysis"
 AUGUST = REPO / "Deliverables" / "2026-08_august_report"      # rebuilt with its own analysis_code/
 REVIEW = ANALYSIS / "manual_review"
@@ -285,7 +292,7 @@ def tree_snapshot(skip_root: Path) -> dict:
 # --------------------------------------------------------------------------- #
 # Comparing a rebuilt file with its published copy
 # --------------------------------------------------------------------------- #
-VOLATILE_JSON_KEYS = re.compile(r"(_utc|^git_commit|^libs|^device)$")
+VOLATILE_JSON_KEYS = re.compile(r"(_utc|^git_commit|^libs|^device|^seconds)$")
 
 
 def _strip_volatile(obj):
@@ -741,6 +748,29 @@ def stage_results(F: Flight) -> None:
     else:
         F.skip("cv_live", S, "CLIP-score the fresh images", "no fresh images in this run")
 
+    # November: crime per street segment, the study image set, the image models, the labelling sheet ---------
+    hot_out = rep / SPS.name / "03_segments"
+    F.run("crime_hotspots", S, "Crime per street segment and hot spots",
+          [("hotspots", [py, REPO / "Scripts" / "crime_data" / "hotspots.py", "--out", hot_out])],
+          note_fn=lambda: (lambda h: f"{h['placed']} of {h['records']} CBD study-category records placed; half of all "
+                                     f"study crime on {h['hotspot_segments']['all_study_crime']} of {h['segments']} "
+                                     f"segments")(json.loads((hot_out / "hotspot_summary.json").read_text())))
+    study_rep = rep / STUDY_IMAGES.name
+    F.run("study_images_recut", S, "Cut every study side view again from the committed panoramas",
+          [("recut", [py, CV_STUDY / "images.py", "--out", STUDY_IMAGES, "--recrop-to", study_rep])],
+          note_fn=lambda: f"{len(list((study_rep / 'images').glob('*.jpg')))} side views")
+    if F.args.skip_models:
+        F.skip("study_models", S, "Segmentation, detection and CLIP on every study side view", "--skip-models")
+    else:
+        F.run("study_models", S, "Segmentation, detection and CLIP on every study side view (~11 min)",
+              [("models", [py, CV_STUDY / "models.py", "--study", STUDY_IMAGES, "--out", study_rep])],
+              note_fn=lambda: (lambda m: f"{m['views']} side views, {m['segments']} segments, {m['seconds'] // 60} min "
+                                         f"on {m['device']}")(json.loads((study_rep / "models_meta.json").read_text())))
+    F.run("study_validation_sheet", S, "Blind labelling sample (150 views) and its score",
+          [(step, [py, CV_STUDY / "validation.py", step, "--study", STUDY_IMAGES, "--out", study_rep / "validation"])
+           for step in ("sample", "score")],
+          note_fn=lambda: "score: " + json.loads((study_rep / "validation" / "validation_results.json").read_text())["status"])
+
     # Tests, verification, figures, numbers, report -----------------------
     F.run("cv_tests", S, "CV pilot tests (offline)",
           [("tests", [py, REPO / "Scripts" / "cv_pilot" / "tests" / "test_pilot.py"])],
@@ -765,6 +795,16 @@ def stage_results(F: Flight) -> None:
     F.run("figures", S, "Figures fig01-fig08",
           [("figures", [py, REPORTING / "make_figures.py", "--out", figs])],
           note_fn=lambda: f"{len(list(figs.glob('fig*.png')))} figures")
+    F.run("study_tests", S, "November tests (offline): crime segments, study images, models, labelling sheet",
+          [("crime", [py, REPO / "Scripts" / "crime_data" / "tests" / "test_hotspots.py"]),
+           ("cv_study", [py, CV_STUDY / "tests" / "test_cv_study.py"])],
+          note_fn=lambda: (lambda t: f"{t.count('PASS test_')} passed, {t.count('FAIL test_')} failed")(
+              (F.logs / f"{len(F.steps) + 1:02d}_study_tests.log").read_text()))
+    figs_nov = F.d("figures_november")
+    only = ["--only", "fig09,fig10,fig11,fig13"] if F.args.skip_models else []
+    F.run("figures_november", S, "November figures fig09-fig13",
+          [("figures", [py, REPORTING / "make_figures_november.py", "--out", figs_nov, *only])],
+          note_fn=lambda: f"{len(list(figs_nov.glob('fig*.png')))} figures")
     report = F.d("report")
     numbers = report / "october_2026_numbers.json"
     checks = ver / "october_2026_checks.csv"
@@ -836,6 +876,18 @@ def stage_checks(F: Flight, snapshot: dict) -> None:
                          "note": note or "no new candidates"})
     if (F.exec_dir / "figures").exists():
         rows += compare_tree("Figures", F.exec_dir / "figures", FIGS)
+    if (rep / SPS.name / "03_segments").exists():
+        rows += compare_tree("SPS crime per segment", rep / SPS.name / "03_segments", SPS / "03_segments")
+    if (rep / STUDY_IMAGES.name).exists():
+        not_rebuilt = ("images/pano_raw", "points.csv", "image_manifest.csv", "run_meta.json", "README.md",
+                       "validation/README.md")
+        if F.args.skip_models:
+            not_rebuilt += ("segmentation_shares.csv", "object_counts.csv", "clip_scores.csv", "segment_indicators.csv",
+                            "models_meta.json")
+        rows += compare_tree("Study images and models", rep / STUDY_IMAGES.name, STUDY_IMAGES, exclude=not_rebuilt)
+    if (F.exec_dir / "figures_november").exists():
+        rows += compare_tree("Figures (November)", F.exec_dir / "figures_november", FIGS_NOV,
+                             exclude=("fig12_segmentation_examples.png",) if F.args.skip_models else ())
     num = F.exec_dir / "report" / "october_2026_numbers.json"
     if num.exists():
         st, note = compare_file(num, VERIF / "october_2026_numbers.json")
@@ -1068,6 +1120,8 @@ def main(argv=None) -> int:
     ap.add_argument("--skip-reddit-collection", action="store_true", help="skip the Reddit API collection (~10 min)")
     ap.add_argument("--skip-coverage", action="store_true", help="skip the Mapillary coverage audit (slowest API step)")
     ap.add_argument("--skip-report", action="store_true", help="skip building the .docx")
+    ap.add_argument("--skip-models", action="store_true",
+                    help="skip re-running segmentation/detection/CLIP on the study side views (~11 min)")
     ap.add_argument("--results-root", type=Path, default=REPO / "RESULTS_FINAL",
                     help="where EXECUTION-<n>/ folders go (default: RESULTS_FINAL/ at the repository root)")
     a = ap.parse_args(argv)

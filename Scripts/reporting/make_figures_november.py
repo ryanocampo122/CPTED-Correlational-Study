@@ -175,14 +175,14 @@ def fig_image_set(out: Path) -> None:
     ax.set_title(f"Image set: {int(pts.capture_year.notna().sum())} of {len(pts)} points", loc="left", fontsize=8.5,
                  weight="bold")
     ax.legend(handles=hands, loc="upper left", bbox_to_anchor=(0, -0.01), frameon=False, fontsize=6.6, ncol=2)
-    fig.text(0.995, 0.005, "Map data © OpenStreetMap contributors (ODbL); images: Mapillary (CC BY-SA 4.0)",
+    fig.text(0.995, -0.06, "Map data © OpenStreetMap contributors (ODbL); images: Mapillary (CC BY-SA 4.0)",
              ha="right", fontsize=5.8, color=F.INK_2)
     save(fig, "fig11_image_set.png", out)
 
 
 def fig_segmentation_examples(out: Path) -> None:
     """fig12: four side views next to what the segmentation model labelled in them."""
-    from models import PanopticModel, pick_device
+    from models import CAMERA_VEHICLE_CLASSES, PanopticModel, pick_device
     # Four views spread through the sample: the 1st, 4th, 7th and 10th point in the manifest's spread
     man = pd.read_csv(STUDY / "image_manifest.csv")
     picks = man.iloc[np.linspace(0, len(man) - 1, 4).round().astype(int)]
@@ -190,7 +190,10 @@ def fig_segmentation_examples(out: Path) -> None:
     # A fixed colour per class, so the same class looks the same in every panel
     rng = np.random.default_rng(7)
     palette = rng.integers(40, 230, size=(len(model.labels) + 1, 3))
-    fig, axes = plt.subplots(4, 2, figsize=(6.7, 8.2))
+    # Capture dates in Saskatoon local time, the way the docs give them
+    local = pd.to_datetime(picks.captured_at, utc=True, format="ISO8601").dt.tz_convert("America/Regina").dt.date
+    picks = picks.assign(local_date=local.astype(str))
+    fig, axes = plt.subplots(4, 2, figsize=(6.7, 10.3))
     # Each picked view: the photo on the left, the labelled classes on the right
     for row, r in zip(axes, picks.itertuples()):
         im = Image.open(STUDY / r.view_right).convert("RGB")
@@ -201,16 +204,17 @@ def fig_segmentation_examples(out: Path) -> None:
         overlay = (0.45 * np.asarray(im) + 0.55 * palette[label_map]).astype(np.uint8)
         row[0].imshow(im)
         row[1].imshow(overlay)
-        # Name the three biggest classes in the panel title
+        # Name the three biggest classes in the panel title, leaving out the camera's own car
         ids, n = np.unique(label_map[label_map < len(model.labels)], return_counts=True)
-        top = ", ".join(model.labels[i] for i in ids[np.argsort(-n)][:3])
-        row[0].set_title(f"{r.point_id}, {r.road_name}, {r.captured_at[:10]}", loc="left", fontsize=7)
+        named = [model.labels[i] for i in ids[np.argsort(-n)] if model.labels[i] not in CAMERA_VEHICLE_CLASSES]
+        top = ", ".join(named[:3])
+        row[0].set_title(f"{r.point_id}, {r.road_name}, {r.local_date}", loc="left", fontsize=7)
         row[1].set_title(f"model: mostly {top}", loc="left", fontsize=7)
         for a in row:
             a.set_xticks([]), a.set_yticks([]), a.grid(False)
-    fig.text(0.995, 0.003, "Images: Mapillary contributors (CC BY-SA 4.0). Segmentation: Mask2Former (Mapillary Vistas)",
+    fig.text(0.995, 0.06, "Images: Mapillary contributors (CC BY-SA 4.0). Segmentation: Mask2Former (Mapillary Vistas)",
              ha="right", fontsize=5.8, color=F.INK_2)
-    fig.subplots_adjust(hspace=0.18, wspace=0.03)
+    fig.subplots_adjust(left=0.01, right=0.99, top=0.97, bottom=0.07, hspace=0.12, wspace=0.03)
     save(fig, "fig12_segmentation_examples.png", out)
 
 
@@ -219,8 +223,8 @@ def fig_indicator_maps(out: Path) -> None:
     # Indicators per segment and the segment lines
     ind = pd.read_csv(STUDY / "segment_indicators.csv").set_index("segment_id")
     geo = segment_lonlat()
-    panels = [("share_building", "a. Building share of the view", F.SEQ),
-              ("share_vegetation", "b. Vegetation share of the view", F.SEQ),
+    panels = [("share_building", "a. Building share", F.SEQ),
+              ("share_vegetation", "b. Vegetation share", F.SEQ),
               ("count_street_light", "c. Street lights per point", F.SEQ)]
     fig, axes = plt.subplots(1, 3, figsize=(6.7, 2.6))
     # One map per indicator, coloured by quartile of its value
@@ -231,16 +235,16 @@ def fig_indicator_maps(out: Path) -> None:
         for seg_id, (xs, ys) in geo.items():
             # Segments with no image stay grey
             if seg_id not in vals.index:
-                ax.plot(xs, ys, color=F.GREY_L, lw=1.2, zorder=4)
+                ax.plot(xs, ys, color=F.GREY, lw=1.4, zorder=4)
                 continue
             q = int(np.searchsorted(cuts, vals[seg_id], side="right"))
             ax.plot(xs, ys, color=colours[q], lw=1.8, solid_capstyle="round", zorder=5)
         ax.set_title(title, loc="left", fontsize=7.6, weight="bold")
     hands = [Line2D([], [], color=c, lw=2.2, label=lab) for c, lab in zip(F.SEQ, ["lowest quarter", "2nd", "3rd", "highest quarter"])]
-    hands.append(Line2D([], [], color=F.GREY_L, lw=2.2, label="no image"))
+    hands.append(Line2D([], [], color=F.GREY, lw=2.2, label="no image"))
     axes[0].legend(handles=hands, loc="upper left", bbox_to_anchor=(0, -0.01), frameon=False, fontsize=6.4, ncol=5,
                    handlelength=1.4)
-    fig.text(0.995, 0.005, "Not yet validated against hand labels. Images: Mapillary (CC BY-SA 4.0); map: OpenStreetMap",
+    fig.text(0.995, -0.04, "Not yet validated against hand labels. Images: Mapillary (CC BY-SA 4.0); map: OpenStreetMap",
              ha="right", fontsize=5.8, color=F.INK_2)
     fig.subplots_adjust(wspace=0.04)
     save(fig, "fig13_indicator_maps.png", out)
