@@ -1,0 +1,56 @@
+{
+  "rule": "Draws 150 side views for blind hand labelling and writes the sheets. Fixed before anyone labels:\n         * strata are land-use type (CLIP's top label) x image year, each getting a share of the 150 in\n           proportion to its size (at least 2 where it has 2 views);\n         * inside a stratum, points are taken in the deterministic farthest-point spread order, one side per\n           point first, so the sample covers the whole CBD;\n         * 30 of the 150, spread the same way, also go to a second coder for the agreement check.\n         The sheets show no model output.",
+  "views_in_population": 492,
+  "strata": {
+    "commercial_street | 2020": {
+      "population": 8,
+      "sampled": 2
+    },
+    "institutional | 2020": {
+      "population": 42,
+      "sampled": 13
+    },
+    "park_open_space | 2020": {
+      "population": 62,
+      "sampled": 19
+    },
+    "residential | 2020": {
+      "population": 18,
+      "sampled": 5
+    },
+    "riverfront_walkway | 2020": {
+      "population": 13,
+      "sampled": 4
+    },
+    "riverfront_walkway | 2023": {
+      "population": 1,
+      "sampled": 1
+    },
+    "road_corridor | 2020": {
+      "population": 34,
+      "sampled": 10
+    },
+    "road_corridor | 2023": {
+      "population": 14,
+      "sampled": 4
+    },
+    "surface_parking | 2020": {
+      "population": 206,
+      "sampled": 63
+    },
+    "surface_parking | 2023": {
+      "population": 24,
+      "sampled": 7
+    },
+    "transit_node | 2020": {
+      "population": 67,
+      "sampled": 20
+    },
+    "transit_node | 2023": {
+      "population": 3,
+      "sampled": 2
+    }
+  },
+  "n_sample": 150,
+  "n_second_coder": 30
+}
