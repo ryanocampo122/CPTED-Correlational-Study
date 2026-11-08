@@ -1,0 +1,47 @@
+{
+  "segmentation_model": "facebook/mask2former-swin-large-mapillary-vistas-panoptic",
+  "segmentation_revision": "b9a3e9eb06a6477a741c98cf91cfca11e620e59d",
+  "input_size": "native 1024 x 768 (no resize)",
+  "panoptic_settings": {
+    "threshold": 0.5,
+    "mask_threshold": 0.5,
+    "overlap_mask_area_threshold": 0.8
+  },
+  "shares_exclude_camera_vehicle": [
+    "Ego Vehicle",
+    "Car Mount"
+  ],
+  "object_classes": [
+    "Street Light",
+    "Pole",
+    "Utility Pole",
+    "Traffic Light",
+    "CCTV Camera",
+    "Bench",
+    "Trash Can",
+    "Bike Rack",
+    "Fire Hydrant",
+    "Mailbox",
+    "Phone Booth",
+    "Billboard",
+    "Person",
+    "Bicyclist",
+    "Car"
+  ],
+  "transient_classes_flagged_in_2020": [
+    "Person",
+    "Bicyclist",
+    "Car"
+  ],
+  "clip_model": "openai/clip-vit-base-patch32",
+  "clip_revision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+  "clip_prompts": "Scripts/cv_pilot/clip_prompts.json",
+  "device": "mps",
+  "views": 492,
+  "points": 246,
+  "segments": 121,
+  "seconds": 664,
+  "caveat": "not validated; no indicator is used until it passes the hand-label check",
+  "git_commit": "34fd17d",
+  "created_utc": "2026-11-08T00:08:25+00:00"
+}
