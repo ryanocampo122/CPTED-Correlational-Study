@@ -801,8 +801,8 @@ def stage_results(F: Flight) -> None:
           note_fn=lambda: (lambda t: f"{t.count('PASS test_')} passed, {t.count('FAIL test_')} failed")(
               (F.logs / f"{len(F.steps) + 1:02d}_study_tests.log").read_text()))
     figs_nov = F.d("figures_november")
-    only = ["--only", "fig09,fig10,fig11,fig13"] if F.args.skip_models else []
-    F.run("figures_november", S, "November figures fig09-fig13",
+    only = ["--only", "fig09,fig10,fig11,fig13,fig14"] if F.args.skip_models else []
+    F.run("figures_november", S, "November figures fig09-fig14",
           [("figures", [py, REPORTING / "make_figures_november.py", "--out", figs_nov, *only])],
           note_fn=lambda: f"{len(list(figs_nov.glob('fig*.png')))} figures")
     report = F.d("report")

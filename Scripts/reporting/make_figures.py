@@ -115,7 +115,14 @@ def box(ax, x, y, w, h, status, text, fs=7.0):
     ax.text(x + 5.2, y + h / 2, text, ha="left", va="center", fontsize=fs, color=INK, linespacing=1.3)
 
 
-def fig_workflow():
+def draw_workflow(workflow: list, decide_note: str | None = None, partial_label: str = "Started (pilot)"):
+    """Draw the workflow figure: one row per data source and one column per stage, then the compare and share rows.
+
+    :param workflow: status and text of every box, laid out like WORKFLOW
+    :param decide_note: a "to decide" line for the compare row, or None for no such line
+    :param partial_label: the legend word for the half-done status
+    :return: the figure
+    """
     fig, ax = plt.subplots(figsize=(6.6, 4.6))
     fig.subplots_adjust(left=0.005, right=0.995, top=0.995, bottom=0.08)
     ax.set_xlim(0, 100), ax.set_ylim(0, 76), ax.axis("off")
@@ -129,17 +136,19 @@ def fig_workflow():
         y = ytop - (i + 1) * rh - i * rgap
         ax.text(0.3, y + rh / 2 + 1.5, name, ha="left", va="center", fontsize=7.6, weight="bold")
         ax.text(0.3, y + rh / 2 - 1.9, sub, ha="left", va="center", fontsize=6.7, color=INK_2)
-        for j, (st, txt) in enumerate(WORKFLOW[i]):
+        for j, (st, txt) in enumerate(workflow[i]):
             box(ax, x0 + j * (cw + gap), y, cw, rh, st, txt)
     ygrid = ytop - 4 * rh - 3 * rgap
     ax.annotate("", xy=(x0 + (100 - x0) / 2, ygrid - 3.2), xytext=(x0 + (100 - x0) / 2, ygrid - 0.3),
                 arrowprops=dict(arrowstyle="-|>", color=INK_2, lw=0.9, mutation_scale=8))
     # integration row
     yi, hi = ygrid - 14.6, 11.2
-    box(ax, x0, yi, 100 - x0, hi, "planned",
-        "Put all the data on the same streets and test three questions:  (1) do street features match where\n"
-        "crime happens?  (2) do they match how safe people feel?  (3) does how safe people feel match crime?\n"
-        "\u2715 To decide: Reddit can only be placed by neighbourhood, not street by street.", fs=6.9)
+    # Compare row text, with the "to decide" line only when one is given
+    compare = ("Put all the data on the same streets and test three questions:  (1) do street features match where\n"
+               "crime happens?  (2) do they match how safe people feel?  (3) does how safe people feel match crime?")
+    if decide_note:
+        compare += "\n\u2715 " + decide_note
+    box(ax, x0, yi, 100 - x0, hi, "planned", compare, fs=6.9)
     ax.text(0.3, yi + hi / 2 + 1.5, "4. Compare", ha="left", va="center", fontsize=7.6, weight="bold")
     ax.text(0.3, yi + hi / 2 - 1.9, "Feb \u2013 Mar 2027", ha="left", va="center", fontsize=6.7, color=INK_2)
     yo, ho = yi - 8.4, 6.6
@@ -147,11 +156,20 @@ def fig_workflow():
         "Summary for the City's CPTED team  \u00b7  research paper  \u00b7  code and data handed over", fs=6.9)
     ax.text(0.3, yo + ho / 2 + 1.5, "5. Share", ha="left", va="center", fontsize=7.6, weight="bold")
     ax.text(0.3, yo + ho / 2 - 1.9, "Apr \u2013 May 2027", ha="left", va="center", fontsize=6.7, color=INK_2)
-    used = {st for row in WORKFLOW for st, _ in row} | {"planned", "blocked"}   # compare/share rows; the "to decide" mark
-    handles = [Patch(fc=tint(c), ec=c, label=f"{i}  {lab}") for k, (c, i, lab) in STATUS.items() if k in used]
+    # Legend: the statuses in the boxes, "planned" for the compare and share rows, and "decision needed" only with
+    # a "to decide" line; the half-done status can carry its own word
+    used = {st for row in workflow for st, _ in row} | {"planned"} | ({"blocked"} if decide_note else set())
+    words = {**{k: lab for k, (_, _, lab) in STATUS.items()}, "partial": partial_label}
+    handles = [Patch(fc=tint(c), ec=c, label=f"{i}  {words[k]}") for k, (c, i, _) in STATUS.items() if k in used]
     ax.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.0, 0.0), ncol=4, frameon=False,
               fontsize=6.6, handlelength=1.2, columnspacing=0.9)
-    save(fig, "fig01_workflow_status.png")
+    return fig
+
+
+def fig_workflow():
+    """fig01: the October workflow figure, with the open Reddit decision as it was sent."""
+    save(draw_workflow(WORKFLOW, "To decide: Reddit can only be placed by neighbourhood, not street by street."),
+         "fig01_workflow_status.png")
 
 
 # --------------------------------------------------------------------------- #

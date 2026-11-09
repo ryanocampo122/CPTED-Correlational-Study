@@ -62,6 +62,6 @@ stigmatization: Wacquant 2007; Meade 2021; Schwarze 2023, in `Reference/Literatu
   secret (reddit.com/prefs/apps) and a new Mapillary token (mapillary.com/dashboard/developers), pasted into the
   private file by the key owner. The hash salt is kept: changing it changes every `author_hash`, so new collections
   could no longer be compared with June–August 2026, and its protection is limited anyway because the repository
-  holds verbatim Reddit text. Any change to the salt is a decision for the co-leads.
+  holds verbatim Reddit text.
 - `Scripts/make_handoff.sh` builds a shareable zip without `.env`, `.git`, `.venv` and the private audit folders,
   and refuses to finish if any credential value appears inside the zip (or if it cannot find the keys to check).

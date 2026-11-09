@@ -12,6 +12,7 @@ October figures (make_figures.py).
   fig11_image_set.png            which points have a 2020 or 2023 image, which are excluded, which have none
   fig12_segmentation_examples.png four side views with what the segmentation model found
   fig13_indicator_maps.png       building share, vegetation share and street lights per segment (not validated)
+  fig14_workflow_status.png      the October workflow figure brought up to the November status (main README)
 
 USAGE (repository root):  .venv/bin/python Scripts/reporting/make_figures_november.py [--out <folder>] [--only fig09,...]
 """
@@ -250,9 +251,32 @@ def fig_indicator_maps(out: Path) -> None:
     save(fig, "fig13_indicator_maps.png", out)
 
 
+def fig_workflow(out: Path) -> None:
+    """fig14: the October workflow figure with the street-image and crime rows moved on to November.
+
+    :param out: folder
+    """
+    # What the image, model, labelling and crime scripts recorded about their runs
+    meta = json.loads((STUDY / "run_meta.json").read_text())
+    models = json.loads((STUDY / "models_meta.json").read_text())
+    strata = json.loads((STUDY / "validation" / "sample_strata.json").read_text())
+    crime = json.loads((CRIME / "hotspot_summary.json").read_text())
+    n_segments = pd.read_csv(STUDY / "points.csv").segment_id.nunique()
+    # The October boxes, with the street-image row and the crime row's middle box updated
+    rows = [list(r) for r in F.WORKFLOW]
+    rows[1] = [("done", f"{meta['points_with_image']} of {meta['points']} points imaged\n"
+                        f"on {meta['segments_with_image']} of {n_segments} segments;\nnewest 2020/2023 image"),
+               ("done", f"Segmentation, objects and\nCLIP run on all {models['views']}\nside views"),
+               ("partial", f"{strata['n_sample']} views drawn for hand\nlabels, {strata['n_second_coder']} for a second\n"
+                           f"coder; labelling next")]
+    rows[2][1] = ("done", f"{crime['placed']} of {crime['records']} records placed\non streets; half of them on\n"
+                          f"{crime['hotspot_segments']['all_study_crime']} segments")
+    save(F.draw_workflow(rows, partial_label="Started"), "fig14_workflow_status.png", out)
+
+
 # Figure names and the functions that draw them
 FIGURES = {"fig09": fig_hotspots, "fig10": fig_categories, "fig11": fig_image_set,
-           "fig12": fig_segmentation_examples, "fig13": fig_indicator_maps}
+           "fig12": fig_segmentation_examples, "fig13": fig_indicator_maps, "fig14": fig_workflow}
 
 
 def main() -> int:

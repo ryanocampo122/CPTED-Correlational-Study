@@ -3,7 +3,7 @@
 ```bash
 ./flight --execute_flight             # from the repository root
 ./flight --help                       # options
-./flight --execute_flight --offline --skip-models   # quick: everything but re-running the image models (~11 min)
+./flight --execute_flight --offline --skip-models   # quick (about 2–3 min): everything but re-running the image models (~11 min)
 ```
 
 | File | Does |

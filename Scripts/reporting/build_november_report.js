@@ -6,7 +6,8 @@
  * Inputs : Docs/verification/november_2026_numbers.json   (Scripts/reporting/november_numbers.py)
  *          Docs/figures/mid_point_november/*.png           (Scripts/reporting/make_figures_november.py)
  * Output : Deliverables/2026-11_midpoint/ComputerVision_Sentinel_November2026_Midpoint_Update.docx
- *          Deliverables/2026-11_midpoint/README.md (same text, for reading on GitHub)
+ *          Deliverables/2026-11_midpoint/README.md (same text as Markdown)
+ *          Both are kept local (git-ignored) until the update is sent; ./flight rebuilds them in RESULTS_FINAL.
  * Each can be redirected (./flight does): --numbers <json> --figures <folder> --out <docx> --md <md>
  *
  * Both files are written from one list of blocks, so the Word report and the Markdown page always say the same.
@@ -209,22 +210,14 @@ p(`**Overlap with the street images:** the ${J.segments_with_image} segments wit
   `which limits the comparison of street design with crime.`);
 
 // ---- 6. Next steps ----
-h1("6. Next steps and decisions");
-p(`**Next steps (November to January):**`);
+h1("6. Next steps");
+p(`**November to January:**`);
 bullets([
   `Hand-label the ${V.n_sample} views and have the second coder label ${V.n_second_coder}; score every cue and drop ` +
   `those that fail.`,
   `Test the image-date assumption on the 2014 and 2020 images at the points that have both.`,
   `Combine the validated measures into CPTED indicators per street segment and join them with the crime counts.`,
   `Code the Reddit posts by location, crime type and environmental cue (work plan, December to January).`,
-]);
-p(`**Decisions for the co-leads:**`);
-numbered([
-  `**Image coverage.** Requiring images to face along the street removed ${I.lost_to_heading_rule} points, mostly on ` +
-  `east–west streets that hold several crime hot spots. Keep the rule (cleaner images, ${I.segments_with_image} ` +
-  `segments), or allow those cross-street images with a note, or ask the City for its own street imagery?`,
-  `**Crime hot spots.** Is "the segments holding half the records" a suitable hot-spot definition for the midpoint, ` +
-  `with a formal hot-spot statistic later?`,
 ]);
 
 // ---- How the results can be checked (end of section 6) ----

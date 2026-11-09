@@ -45,3 +45,7 @@ Notebooks/_out/
 
 # Project virtual environment
 .venv/
+
+# November midpoint update (.docx and its Markdown copy): kept local until it is sent;
+# ./flight rebuilds both into RESULTS_FINAL/EXECUTION-<n>/report/
+Deliverables/2026-11_midpoint/

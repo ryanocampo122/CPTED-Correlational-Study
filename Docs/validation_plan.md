@@ -23,7 +23,7 @@ them concrete and adds the checks the October work showed are needed.
 | Recorded crime (Y1) | Locations precise enough for the unit | compare location generalization with segment length; test sensitivity to a coarser unit | — | data added and cleaned (`Data/sps_crime_2026-06-01_2026-08-31/`): locations are hundred-blocks or intersections, 9,650 records on 2,625 points; sensitivity test not started |
 | Pipeline | Same inputs give the same outputs | automated checks; byte-for-byte reproduction | all pass | done: 30 checks; 22/22 and 23/23 tables |
 
-Targets are proposals for the co-leads to confirm. Report every result, including cues that fail and are dropped.
+Targets are proposals and may change. Report every result, including cues that fail and are dropped.
 
 ## Order of work
 

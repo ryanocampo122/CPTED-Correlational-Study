@@ -5,9 +5,9 @@
 | `make_figures.py` | `Data/`, `Docs/verification/` | `Docs/figures/mid_point_october/fig01`–`fig08` (PNG, 220 dpi); `--out` for another folder |
 | `report_numbers.py` | `Data/`, `Docs/verification/october_2026_checks.csv` | `Docs/verification/october_2026_numbers.json`: every number the report quotes |
 | `build_october_report.js` | the JSON above and `Docs/figures/mid_point_october/` (`--numbers`, `--figures`, `--out` redirect each) | `Deliverables/2026-10_october_update/ComputerVision_Sentinel_October2026_Progress_Report.docx` |
-| `make_figures_november.py` | `Data/sps_crime_2026-06-01_2026-08-31/03_segments/`, `Data/cv_study_2026-11/` (fig12 re-runs the segmentation model on four views) | `Docs/figures/mid_point_november/fig09`–`fig13`; `--only fig09,...` for a subset |
+| `make_figures_november.py` | `Data/sps_crime_2026-06-01_2026-08-31/03_segments/`, `Data/cv_study_2026-11/` (fig12 re-runs the segmentation model on four views) | `Docs/figures/mid_point_november/fig09`–`fig14` (fig14: the workflow figure in the main README); `--only fig09,...` for a subset |
 | `november_numbers.py` | `Data/cv_study_2026-11/`, `Data/sps_crime_2026-06-01_2026-08-31/03_segments/` | `Docs/verification/november_2026_numbers.json`: every number the November update quotes |
-| `build_november_report.js` | the November JSON and `Docs/figures/mid_point_november/` (`--numbers`, `--figures`, `--out`, `--md`) | `Deliverables/2026-11_midpoint/ComputerVision_Sentinel_November2026_Midpoint_Update.docx` and the same text as `Deliverables/2026-11_midpoint/README.md` |
+| `build_november_report.js` | the November JSON and `Docs/figures/mid_point_november/` (`--numbers`, `--figures`, `--out`, `--md`) | `Deliverables/2026-11_midpoint/ComputerVision_Sentinel_November2026_Midpoint_Update.docx` and the same text as `Deliverables/2026-11_midpoint/README.md`; both kept local (git-ignored) until the update is sent |
 
 ```bash
 .venv/bin/python Scripts/verification/verify_october_2026.py
