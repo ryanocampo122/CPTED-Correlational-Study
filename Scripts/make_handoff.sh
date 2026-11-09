@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# make_handoff.sh: build a shareable copy of the research folder for supervisors.
+# make_handoff.sh: build a shareable copy of the research folder (no credentials, no private text).
 #
 #   bash Scripts/make_handoff.sh            -> ~/Desktop/ComputerVision_Sentinel_research_<date>.zip
 #

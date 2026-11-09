@@ -1,6 +1,6 @@
 # ComputerVision_Sentinel — August 2026 Package
 
-Reddit safety-perception analysis for the August supervisor meeting.
+Reddit safety-perception analysis prepared for the August 2026 project meeting.
 Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
 
 ---
@@ -27,7 +27,7 @@ Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
 
 - **`Master_Report.docx`** — the main deliverable. Verified analysis, six
   figures, site deep dives on Downtown/CBD and Riverbank/Meewasin, direct
-  answers to Dr. Jayasooriya's questions, limitations, and recommendations.
+  answers to the questions raised in July, limitations, and recommendations.
 - **`ComputerVision_Sentinel_Meewasin_DataQuality_Memo.docx`** — an earlier, narrower memo
   covering only the Riverbank/Meewasin location verification. Superseded in
   scope by the main report; kept because the report's appendix references it.

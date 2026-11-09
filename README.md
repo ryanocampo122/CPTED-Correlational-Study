@@ -1,50 +1,74 @@
 # CPTED Computer Vision and Correlational Sentiment analysis of Public Safety - A Study on Crime Patterns - Saskatoon
 
-USask AIRI 2026 project on CPTED, crime and perceived safety in Saskatoon.
-Co-leads Dr. Varuni Jayasooriya (SENS) and Dr. Timothy Kang (Sociology); collaborators Dr. Khan Wahid (ECE) and
-Elisabeth Miller (City of Saskatoon, Neighbourhood Safety and CPTED); RA Ryan Ocampo.
+**ComputerVision_Sentinel**, a University of Saskatchewan (AIRI 2026) research project.
 
-The study follows the **revised work plan** (`Plan/workplan_revised_2026-10.pdf`): a cross-sectional, correlational
-study on open secondary data for **1 June – 31 August 2026**. CPTED features measured from street-level imagery (X) are
-correlated with recorded crime (Y1, Saskatoon Police Service) and with perceived safety on Reddit (Y2), on street
-segments in Downtown/CBD.
+## The project in plain words
 
-## Start here
+Some street designs are thought to make crime less likely: buildings with windows facing the street, good lighting,
+well-kept spaces, clear sight lines. The idea is called **CPTED** (Crime Prevention Through Environmental Design).
+This project tests it in **Downtown Saskatoon** for **1 June – 31 August 2026**, using only data that are already
+public:
 
-| You want | Open |
-|---|---|
-| The latest update for supervisors | `Deliverables/2026-10_october_update/` (October). The November midpoint update is kept local until it is sent; `./flight` rebuilds it into `RESULTS_FINAL/EXECUTION-<n>/report/` |
-| The literature review (CPTED evidence, crime and perception, pilot sites) | [`Docs/literature review/Master_lit_review.docx`](Docs/literature%20review/Master_lit_review.docx) |
-| How the whole study fits together, and how to run it | `Docs/workflow.md` |
-| The results, step by step, in notebooks | `Notebooks/` (start with `00_replicate_system.ipynb`) |
-| What has been checked, and how | `Docs/verification/october_2026_checks.md` |
-| Decisions and known problems | Decision D1 (image source: newest image at each point, decided November 2026) in `Docs/cv_pipeline.md`; Decision D2 (Reddit spatial unit) and the Reddit limitations in `Docs/reddit_pipeline.md`; gaps in the crime data in `Docs/crime_data.md` |
-| Any other documentation | `Docs/README.md` |
+| What is measured | Where it comes from | How |
+|---|---|---|
+| What the streets look like | street photos on Mapillary (a crowd-sourced site like Street View) | image models measure buildings, trees, sky, street lights, people and signs of disorder in each photo |
+| Where crime is recorded | Saskatoon Police Service (SPS) records | each record is placed on the street it names |
+| How safe people feel | posts and comments on Reddit's r/saskatoon | posts are tagged by place and scored for tone (negative, neutral, positive) |
 
-## Status
+Downtown is split into **218 short street segments**, with **423 sample points** about 50 m apart. Each segment gets
+street measures from the photos and a crime count; Reddit can only be placed by neighbourhood, not street by street.
+The last step compares them: do street features line up with where crime happens, and with how safe people feel?
+The plan is in `Plan/workplan_revised_2026-10.pdf`.
 
-| November task (work plan p. 5) | Status (8 Nov 2026) |
-|---|---|
-| Run segmentation, detection and CLIP | **Done, not yet validated**: 492 side views from 246 points on 121 of the 218 segments (newest 2020/2023 image per point, Decision D1); Mask2Former (Mapillary Vistas) for segmentation and objects, CLIP for cues (`Docs/cv_pipeline.md`) |
-| Check accuracy against hand-labelled images | **Sheet ready**: 150 side views drawn blind, 30 for a second coder; labelling next (`Docs/validation_plan.md`) |
-| Map crime hot spots by category | **Done**: 255 of 257 CBD study-category records placed on street segments; half of all study crime on 11 of 218 segments (`Docs/crime_data.md`) |
-
-| October task (work plan p. 5) | Status |
-|---|---|
-| Finalize crime categories | **Done**: 5 included, assault conditional, 4 excluded; SPS June–August 2026 extract added and cleaned: 9,650 records, 2,982 in the study categories (`Docs/crime_data.md`) |
-| Extend Reddit to June–August 2026 | **Done, verified**: 195 posts, 6,452 comments; every table reproduces byte-for-byte; 30 checks pass |
-| Generate sample points | **Done**: 423 points on 218 street segments; refined in November (11 bridge/freeway points flagged; images must face along the point's road) |
-| Collect street-level images | **Done: method validated**: 10 Mapillary images sourced and read by CLIP ViT-B/32 in the pipeline; no June–August 2026 imagery exists yet (newest 2020/2023), so the full set is sourced next |
+## Where it stands (8 November 2026)
 
 ![Workflow status, November 2026](Docs/figures/mid_point_november/fig14_workflow_status.png)
 
-November results in pictures (`Docs/figures/mid_point_november/`):
+| Step | Status | In numbers |
+|---|---|---|
+| Crime categories | Done (October) | 5 kinds of crime included, assault conditional, 4 excluded; 9,650 police records for June–August 2026, 2,982 in the study categories |
+| Reddit data | Done (October) | 195 posts and 6,452 comments; every table reproduces exactly; 30 automatic checks pass |
+| Sample points | Done (October, refined in November) | 423 points on 218 segments; 11 points on bridges or freeways get no photo |
+| Street photos | Done (November) | no photos from summer 2026 exist, so each point uses its newest photo from 2020 on that faces along its street: 246 points on 121 of the 218 segments (225 photos from 2020, 21 from 2023) |
+| Image models | Done, accuracy not yet checked (November) | segmentation, object counts and CLIP scores for all 492 side views (two per point) |
+| Accuracy check | Waiting for hand labels | 150 side views drawn for labelling, 30 of them for a second person; none labelled yet |
+| Crime hot spots | Done (November) | 255 of the 257 Downtown study-category records placed on segments; half of them lie on 11 segments |
+| Compare streets, crime and Reddit | Next (February–March 2027) | |
 
-| Crime per street segment, with hot spots | Points with a usable street image |
+Known gaps: the photos are 3–6 years older than the crime and Reddit data, and 97 segments (mostly east–west
+streets) have no usable photo, including 5 of the 11 crime hot spots. Details in `Docs/cv_pipeline.md` and
+`Docs/crime_data.md`.
+
+| Where crime clusters (heat map; hot-spot streets dashed) | Points with a usable street photo |
 |---|---|
 | ![Crime hot spots](Docs/figures/mid_point_november/fig09_crime_hotspots.png) | ![Image set](Docs/figures/mid_point_november/fig11_image_set.png) |
 
-The October figures, as sent, are in `Docs/figures/mid_point_october/`.
+All November figures are in `Docs/figures/mid_point_november/`; the October figures, as sent, in
+`Docs/figures/mid_point_october/`.
+
+## Words used here
+
+| Word | Meaning |
+|---|---|
+| Segment | a piece of street between two intersections; the unit the study compares |
+| Sample point | a spot on a segment, about every 50 m, where a photo is looked for |
+| Side view | a picture cut from a 360° photo that looks at one side of the street (the building fronts) |
+| Segmentation | an image model (Mask2Former) that labels every pixel as building, tree, sky, road and so on, giving the share of each |
+| CLIP | an image model that scores a photo against a written description, such as "graffiti on a wall" |
+| Hot spot | one of the segments that, together, hold half of the recorded crime |
+| Flight | the one command (`./flight`) that re-runs the whole project and checks every result against the saved copy |
+
+## Start here
+
+| To find | Open |
+|---|---|
+| The latest progress update | `Deliverables/2026-10_october_update/` (October). The November midpoint update is kept local until it is sent; `./flight` rebuilds it into `RESULTS_FINAL/EXECUTION-<n>/report/` |
+| The literature review (CPTED evidence, crime and perception, pilot sites) | [`Docs/literature review/Master_lit_review.docx`](Docs/literature%20review/Master_lit_review.docx) |
+| How the whole study fits together, and how to run it | `Docs/workflow.md` |
+| The results, step by step, in notebooks | `Notebooks/` (start with `00_replicate_system.ipynb`) |
+| What has been checked, and how | `Docs/verification/october_2026_checks.md`; every number in the updates: `Docs/verification/` |
+| Decisions and known problems | image source (Decision D1) in `Docs/cv_pipeline.md`; Reddit's place problem (Decision D2) and limits in `Docs/reddit_pipeline.md`; gaps in the crime data in `Docs/crime_data.md` |
+| Any other documentation | `Docs/README.md` |
 
 ## Folder map
 
@@ -83,8 +107,8 @@ RESULTS_FINAL/   one EXECUTION-<n>/ folder per flight run, plus executions.csv (
 **One command runs the whole pipeline** (repository root):
 
 ```bash
-./flight --execute_flight             # install -> collect (Reddit, Mapillary APIs) -> load CLIP + VADER -> results
-./flight --execute_flight --offline   # the same without API calls
+./flight --execute_flight             # everything, with fresh Reddit and Mapillary downloads (needs the keys)
+./flight --execute_flight --offline   # everything from the saved data, no downloads (about 13 min)
 ./flight --execute_flight --offline --skip-models   # quick check (about 2–3 min): all but re-running the image models
 ```
 
@@ -117,3 +141,8 @@ never write there, the flight runs 01–03 on every run, and a git filter keeps 
 - Numbers in deliverables come from scripts (`Scripts/reporting/report_numbers.py`, `november_numbers.py`).
 - Reddit text is not quoted outside the team; images credit Mapillary (CC BY-SA 4.0); maps credit OpenStreetMap.
   See `Docs/data_ethics.md`.
+
+## Team
+
+Co-leads Dr. Varuni Jayasooriya (SENS) and Dr. Timothy Kang (Sociology); collaborators Dr. Khan Wahid (ECE) and
+Elisabeth Miller (City of Saskatoon, Neighbourhood Safety and CPTED); research assistant Ryan Ocampo.

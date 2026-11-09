@@ -7,7 +7,7 @@ ComputerVision_Sentinel | Figures for the November 2026 midpoint update
 Every number is read from Data/; nothing is typed in by hand. Same palette, fonts and base map as the
 October figures (make_figures.py).
 
-  fig09_crime_hotspots.png       recorded crime per street segment, property and street-based personal; hot spots
+  fig09_crime_hotspots.png       heat map ("lava") of property and street-based personal crime; hot-spot segments dashed
   fig10_crime_by_category.png    the same, one small map per study category
   fig11_image_set.png            which points have a 2020 or 2023 image, which are excluded, which have none
   fig12_segmentation_examples.png four side views with what the segmentation model found
@@ -29,6 +29,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 from matplotlib import patheffects  # noqa: E402
+from matplotlib.colors import LinearSegmentedColormap, PowerNorm  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
 from PIL import Image  # noqa: E402
 
@@ -51,6 +52,18 @@ EXTENT = (-106.6725, 52.1210, -106.6480, 52.1352)
 BINS = [(0, 0, F.GREY, "none"), (0.01, 1, F.SEQ[0], "up to 1"), (1.01, 3, F.SEQ[1], "1–3"),
         (3.01, 6, F.SEQ[2], "3–6"), (6.01, 1e9, F.SEQ[3], "over 6")]
 HOT_OUTLINE = [patheffects.withStroke(linewidth=4.6, foreground=F.INK)]
+
+# Heat map ("lava") settings: how far each crime's glow spreads on the ground (metres), how many grid cells across
+# the map, metres per degree of longitude and latitude at Saskatoon, and the colour ramp from see-through through
+# yellow, orange and red to a pink-white core where crime is densest
+KERNEL_M = 40
+GRID_W = 480
+DASH_HALO = [patheffects.withStroke(linewidth=2.4, foreground="white")]
+M_PER_DEG_LON = 111_320 * np.cos(np.radians(52.13))
+M_PER_DEG_LAT = 110_540
+LAVA = LinearSegmentedColormap.from_list("lava", [
+    (0.00, (1.00, 0.97, 0.70, 0.00)), (0.12, (1.00, 0.92, 0.40, 0.45)), (0.32, (1.00, 0.60, 0.10, 0.82)),
+    (0.55, (0.90, 0.10, 0.12, 0.92)), (0.80, (0.82, 0.04, 0.38, 0.96)), (1.00, (1.00, 0.82, 0.93, 1.00))])
 CREDIT = "Map data © OpenStreetMap contributors (ODbL); crime: Saskatoon Police Service extract, Jun–Aug 2026"
 
 
@@ -115,23 +128,79 @@ def legend_handles(with_hot: bool) -> list:
     return hands
 
 
+def crime_records() -> pd.DataFrame:
+    """The CBD records in the study categories that hotspots.py placed on a street segment.
+
+    :return: one row per record, with longitude, latitude and crime_group
+    """
+    # Cleaned SPS records inside the CBD whose category is included or conditional
+    crime = pd.read_csv(H.CLEAN, low_memory=False)
+    crime = crime[crime.in_cbd & crime.category_decision.isin(["included", "conditional"])]
+    # Keep the records that were placed on a segment, so the maps hold the same records as the counts
+    links = pd.read_csv(CRIME / "record_links.csv")
+    return crime[crime.record_id.isin(links[links.segment_id.notna()].record_id)]
+
+
+def density(lons: pd.Series, lats: pd.Series, grid: tuple) -> np.ndarray:
+    """Smoothed crime per hectare on the map grid: each record becomes a bell-shaped bump about KERNEL_M wide.
+
+    :param lons: record longitudes
+    :param lats: record latitudes
+    :param grid: (grid longitudes, grid latitudes) from np.meshgrid
+    :return: records per hectare at every grid cell
+    """
+    # Start from zero everywhere, then add one bump per record (each bump holds exactly one record)
+    gx, gy = grid
+    dens = np.zeros_like(gx)
+    for lon, lat in zip(lons, lats):
+        d2 = ((gx - lon) * M_PER_DEG_LON) ** 2 + ((gy - lat) * M_PER_DEG_LAT) ** 2
+        dens += np.exp(-d2 / (2 * KERNEL_M ** 2))
+    # Bump height per square metre, turned into records per hectare (10,000 square metres)
+    return dens / (2 * np.pi * KERNEL_M ** 2) * 10_000
+
+
 def fig_hotspots(out: Path) -> None:
-    """fig09: property and street-based personal crime per segment, with hot spots."""
-    # Counts per segment and the summary of the placement
+    """fig09: heat maps of property and street-based personal crime, with the hot-spot segments outlined.
+
+    :param out: folder
+    """
+    # Hot-spot flags per segment, the placement summary, the segment lines and the records with their positions
     seg = pd.read_csv(CRIME / "segment_crime_counts.csv").set_index("segment_id")
     summ = json.loads((CRIME / "hotspot_summary.json").read_text())
     geo = segment_lonlat()
-    fig, axes = plt.subplots(1, 2, figsize=(6.7, 3.4))
-    # One panel per crime group
-    for ax, group, label in zip(axes, ["property", "street_personal"], ["a. Property crime", "b. Street-based personal crime"]):
+    rec = crime_records()
+    # A grid over the map with square cells on the ground
+    lon0, lat0, lon1, lat1 = EXTENT
+    grid_h = round(GRID_W * (lat1 - lat0) * M_PER_DEG_LAT / ((lon1 - lon0) * M_PER_DEG_LON))
+    grid = np.meshgrid(np.linspace(lon0, lon1, GRID_W), np.linspace(lat0, lat1, grid_h))
+    # One heat surface per crime group, on one shared colour scale so the two maps can be compared
+    heat = {g: density(rec[rec.crime_group == g].longitude, rec[rec.crime_group == g].latitude, grid) for g in H.GROUPS}
+    norm = PowerNorm(gamma=0.5, vmin=0, vmax=max(h.max() for h in heat.values()))
+    fig, axes = plt.subplots(1, 2, figsize=(6.7, 3.9))
+    # One map per crime group: base map, the heat on top, then the hot-spot segments as dashed black lines
+    for ax, group, label in zip(axes, H.GROUPS, ["a. Property crime", "b. Street-based personal crime"]):
+        F._draw_base(ax, *F._geo(), EXTENT)
+        img = ax.imshow(heat[group], extent=(lon0, lon1, lat0, lat1), origin="lower", cmap=LAVA, norm=norm,
+                        interpolation="bilinear", aspect="auto", zorder=3)
+        ax.set_aspect(1 / np.cos(np.radians(52.13)))
+        for seg_id, (xs, ys) in geo.items():
+            # Only the segments that, together, hold half of this group's records
+            if bool(seg.loc[seg_id, f"hotspot_{group}"]):
+                ax.plot(xs, ys, color=F.INK, lw=0.9, ls=(0, (2.2, 1.2)), zorder=6, path_effects=DASH_HALO)
         n = summ["records_by_group"][group]
         k = summ["hotspot_segments"][group]
-        draw_counts(ax, geo, seg[group], seg[f"hotspot_{group}"],
-                    f"{label} ({n:.0f} records)\nhalf of them on {k} of {summ['segments']} segments")
-    axes[0].legend(handles=legend_handles(True), title="records per segment", title_fontsize=6.6, loc="upper left",
-                   bbox_to_anchor=(0, -0.01), frameon=False, fontsize=6.6, ncol=3, handlelength=1.6)
-    fig.text(0.995, -0.035, CREDIT, ha="right", fontsize=5.8, color=F.INK_2)
-    fig.subplots_adjust(wspace=0.04)
+        ax.set_title(f"{label} ({n:.0f} records)\nhalf of them on {k} of {summ['segments']} segments",
+                     loc="left", fontsize=8.5, weight="bold")
+    # Room under the maps for the colour scale (left) and the hot-spot key (right)
+    fig.subplots_adjust(left=0.02, right=0.98, top=0.86, bottom=0.2, wspace=0.06)
+    bar = fig.colorbar(img, cax=fig.add_axes([0.05, 0.11, 0.4, 0.028]), orientation="horizontal",
+                       ticks=[t for t in (0, 1, 2.5, 5, 10, 20, 40) if t <= norm.vmax])
+    bar.set_label(f"recorded crimes per hectare, each spread over about {KERNEL_M} m", fontsize=6.6)
+    bar.ax.tick_params(labelsize=6.2)
+    fig.legend(handles=[Line2D([], [], color=F.INK, lw=0.9, ls=(0, (2.2, 1.2)), path_effects=DASH_HALO,
+                               label="hot-spot segment: together they\nhold half of the group's records")],
+               loc="upper left", bbox_to_anchor=(0.53, 0.155), frameon=False, fontsize=6.6)
+    fig.text(0.98, 0.0, CREDIT, ha="right", fontsize=5.8, color=F.INK_2)
     save(fig, "fig09_crime_hotspots.png", out)
 
 

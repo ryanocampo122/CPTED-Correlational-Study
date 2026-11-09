@@ -32,15 +32,15 @@ places; it does not predict crime or label communities.
 | R1 | Collect Reddit for the study window | `Scripts/reddit_collection/reddit_scraper.py` | `Data/reddit_2026-06-01_2026-08-31/01_raw_collection/` | done, verified |
 | R2 | Clean, tag places and cues, score sentiment, audit | `Scripts/reddit_analysis/run_all.sh` | same dataset folder, `02`–`05`, `charts/` | done, reproduces exactly |
 | R3 | Code Reddit by place, crime type and cues (Dec–Jan) | to write | — | planned |
-| C1 | Sample points every ~50 m on OSM streets, clipped to the study area | `Scripts/cv_pilot/pilot.py points` | `Data/cv_pilot_2026-10/cbd/sample_points.*` | generated and checked; being refined (about two more weeks) |
-| C2 | Image collection (Mapillary) | `pilot.py coverage`, `pilot.py images` | `cbd/coverage_*.csv`, `cbd_latest_imagery/images/` | method validated on 10 images (Oct goal); full study set next |
-| C3 | Semantic segmentation (Mapillary Vistas model) | to write (Nov) | — | planned |
-| C4 | Object detection (streetlights, people, cars, benches, transit stops) | to write (Nov) | — | planned |
-| C5 | CLIP zero-shot cue scoring | `pilot.py score`, `clip_prompts.json` | `cbd_latest_imagery/clip_scores.csv` | runs in the pipeline on 10 images; accuracy check (C7) to come |
-| C6 | CPTED indicators per segment | to write | — | planned |
-| C7 | Validation against ~150 hand-labelled images | `validation_template_blind.csv` | — | started (10) |
+| C1 | Sample points every ~50 m on OSM streets, clipped to the study area | `Scripts/cv_pilot/pilot.py points` | `Data/cv_pilot_2026-10/cbd/sample_points.*` | done: 423 points on 218 segments; 11 bridge/freeway points flagged (Nov) |
+| C2 | Image collection (Mapillary) | `pilot.py coverage`; `Scripts/cv_study/images.py` | `cbd/coverage_*.csv`; `Data/cv_study_2026-11/images/` | done (Nov): 246 points on 121 of 218 segments, 492 side views |
+| C3 | Semantic segmentation (Mapillary Vistas model) | `Scripts/cv_study/models.py` | `Data/cv_study_2026-11/segmentation_shares.csv` | done (Nov); accuracy not yet checked |
+| C4 | Object detection (streetlights, people, cars, benches, transit stops) | `Scripts/cv_study/models.py` (same model) | `Data/cv_study_2026-11/object_counts.csv` | done (Nov); accuracy not yet checked |
+| C5 | CLIP zero-shot cue scoring | `Scripts/cv_study/models.py`, `clip_prompts.json` | `Data/cv_study_2026-11/clip_scores.csv` | done on all 492 views (Nov); the land-use label looks unreliable; accuracy check (C7) to come |
+| C6 | CPTED indicators per segment | `Scripts/cv_study/models.py` | `Data/cv_study_2026-11/segment_indicators.csv` | first version (Nov): averages per segment; combined indicators after C7 |
+| C7 | Validation against ~150 hand-labelled images | `Scripts/cv_study/validation.py` | `Data/cv_study_2026-11/validation/` | sheet ready: 150 views, 30 for a second coder; none labelled yet |
 | K1 | Crime categories | work plan p. 4; `Docs/crime_data.md` | — | done |
-| K2 | SPS data: clean, then counts per segment, hot spots (Nov) | `Scripts/crime_data/clean_sps_crime.py`; counts to write | `Data/sps_crime_2026-06-01_2026-08-31/02_cleaned/` | cleaned (9,650 records, 2,982 in the study categories); counts per segment next |
+| K2 | SPS data: clean, then counts per segment, hot spots (Nov) | `Scripts/crime_data/clean_sps_crime.py`; `Scripts/crime_data/hotspots.py` | `Data/sps_crime_2026-06-01_2026-08-31/02_cleaned/`, `03_segments/` | done: 9,650 records, 2,982 in the study categories; 255 of 257 CBD records placed; half on 11 segments |
 | L1 | Lighting and noise layers (Dec–Jan) | to write | — | planned |
 | I1 | Integration: join on segments/zones; Spearman, bivariate Moran's I, LISA, perception–crime gap (Feb–Mar) | to write | — | planned |
 | V | Verification of everything above | `Scripts/verification/verify_october_2026.py` | `Docs/verification/` | done for October |
@@ -63,8 +63,10 @@ Read `FLIGHT_SUMMARY.md` first: every step with its status (PASS, WARN = works w
 SKIP), time, result and log. `flight_status.json` holds the same for scripts, `logs/` each step's full output, and
 `RESULTS_FINAL/executions.csv` one row per run. Options (`./flight --help`): `--offline` (no API calls),
 `--skip-install`, `--skip-reddit-collection` (about 10 minutes), `--skip-coverage` (the slowest Mapillary step),
-`--skip-report`. A full run takes about 20 minutes once `.venv` and the CLIP model are installed (the Reddit
-collection is about 10 of them); a first run on a new machine also downloads the packages and the ~600 MB model.
+`--skip-report`, `--skip-models` (leaves out re-running the image models). An offline run takes about 13 minutes,
+11 of them for the image models (about 2–3 minutes with `--skip-models`); an online run adds the Reddit collection
+(about 10 minutes) and the Mapillary checks. A first run on a new machine also downloads the packages and the models
+(CLIP about 600 MB, Mask2Former about 830 MB).
 
 Two things the reproduction cannot match exactly, by design: the Excel workbook stores its creation time and
 `pilot_report.md` and `run_meta.json` store the run's time and git commit. The comparison reports these as

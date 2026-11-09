@@ -104,6 +104,10 @@ segments the sample points sit on) and writes `Data/sps_crime_2026-06-01_2026-08
 
 ![Crime hot spots](figures/mid_point_november/fig09_crime_hotspots.png)
 
+The map is a heat map: each placed record is spread over about 40 m around the location the police data give
+(a block or an intersection), so brighter colours mean more crime close together. It shows where crime clusters;
+the hot-spot segments (dashed) stay the unit for analysis. Made by `Scripts/reporting/make_figures_november.py`.
+
 ## Validation for crime data
 
 - Locations are generalized to the hundred-block or intersection: 9,650 records sit on 2,625 points, and 199

@@ -1,4 +1,4 @@
-# October 2026 update (for Dr. Jayasooriya and Dr. Kang)
+# October 2026 progress update
 
 | File | What it is |
 |---|---|
@@ -29,3 +29,14 @@ The detailed documentation behind the report is in `Docs/` (start at `Docs/READM
 other-city review behind the location tags) was an automated first pass; it has not yet been checked by hand. The
 regenerated Figure 1 in `Docs/figures/mid_point_october/` shows it as started, and the check by hand is scheduled
 for November (`Scripts/reddit_analysis/scripts/blind_review.py`). The report files above are left exactly as sent.
+
+**Found in the November check (8 Nov 2026), not applied to the files as sent.**
+- Every number in the report was recomputed from `Data/` and matches.
+- Section 3.2 (Reddit) and Figures 3–5 are not in the report as sent, although the summary and section 3.1 refer
+  to section 3.2. The Reddit results are in `Data/reddit_2026-06-01_2026-08-31/` and `Docs/reddit_pipeline.md`.
+- Three numbers in section 3.3 came from one-off checks that were not saved in the repository: 491 June–August
+  2026 images over downtown Regina, 29,589 CBD images in Mapillary's map data, and 5 May 2024 as the newest
+  Saskatoon image. They cannot be re-checked from these files. The other numbers in that passage (19,139 images
+  found, newest CBD image 14 May 2023) are in `Data/cv_pilot_2026-10/cbd/`.
+- Table 4 lists `Data/reddit_2009_2025/` and `Data/crime/` (removed after sending, with the earlier prairie-cities
+  study; still in git history) and a July deliverable that is not in this repository.

@@ -1,7 +1,7 @@
 # ComputerVision_Sentinel documentation
 
 The detailed record of how the study works, what has been checked and what is still open.
-The short version for supervisors is the October report in `Deliverables/2026-10_october_update/`.
+For a short summary of progress, read the October update in `Deliverables/2026-10_october_update/`.
 
 | Page | Read it for |
 |---|---|

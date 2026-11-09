@@ -1,7 +1,7 @@
 /*
  * build_october_report.js
  * =======================
- * ComputerVision_Sentinel | October 2026 progress report (.docx) for the co-leads.
+ * ComputerVision_Sentinel | October 2026 progress report (.docx); its text is kept exactly as the report was sent.
  *
  * Inputs : Docs/verification/october_2026_numbers.json  (Scripts/reporting/report_numbers.py)
  *          Docs/figures/mid_point_october/*.png          (Scripts/reporting/make_figures.py)

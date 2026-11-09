@@ -1,7 +1,7 @@
 /*
  * build_november_report.js
  * ========================
- * ComputerVision_Sentinel | November 2026 midpoint update for the co-leads, as a Word report and a Markdown page.
+ * ComputerVision_Sentinel | November 2026 midpoint progress update, as a Word report and a Markdown page.
  *
  * Inputs : Docs/verification/november_2026_numbers.json   (Scripts/reporting/november_numbers.py)
  *          Docs/figures/mid_point_november/*.png           (Scripts/reporting/make_figures_november.py)
@@ -74,7 +74,7 @@ const cat = C.records_by_category;
 // ---- Title and 1. Summary ----
 blocks.push({ t: "title", text: "ComputerVision_Sentinel" });
 blocks.push({ t: "subtitle", text: "November 2026 midpoint update: street images, image models and crime hot spots" });
-blocks.push({ t: "byline", text: "Prepared by Ryan Ocampo for Dr. Varuni Jayasooriya and Dr. Timothy Kang" });
+blocks.push({ t: "byline", text: "Prepared by Ryan Ocampo" });
 blocks.push({ t: "rule", text: "November 2026  ·  revised work plan (October 2026)  ·  study period 1 June – 31 August 2026" });
 h1("1. Summary", false);
 p(`The November tasks in the revised work plan are to run the segmentation, detection and CLIP steps, to check their ` +
@@ -196,8 +196,9 @@ p(`**Hot spots:** crime is concentrated. Half of all study-category crime lies o
   `${C.hotspot_segments.all_study_crime} of the ${C.segments} segments (${pct(C.hotspot_segments.all_study_crime, C.segments)}%): ` +
   `half of property crime on ${C.hotspot_segments.property} segments and half of street-based personal crime on ` +
   `${C.hotspot_segments.street_personal}.`);
-figure("fig09_crime_hotspots.png", 6.3, `Recorded crime per street segment, June–August 2026. Outlined segments are the ` +
-  `hot spots: together they hold half of each group's records.`);
+figure("fig09_crime_hotspots.png", 6.3, `Where recorded crime clusters, June–August 2026 (heat map). Each record is spread ` +
+  `over about 40 m around the location the police data give (a block or an intersection), so brighter colours mean ` +
+  `more crime close together. Dashed segments are the hot spots: together they hold half of each group's records.`);
 figure("fig10_crime_by_category.png", 6.3, `Recorded crime per street segment for each study category.`);
 const top = C.top_segments;
 table("The five street segments with the most recorded crime", ["Street", "Length (m)", "Property", "Street-based personal", "All"],
