@@ -24,7 +24,7 @@ Downtown is split into **218 short street segments**, with **423 sample points**
 street measures from the photos and a crime count; Reddit can only be placed by neighbourhood, not street by street.
 The plan is in `Plan/workplan_revised_2026-10.pdf`.
 
-## Where it stands (8 November 2026)
+## Where it stands
 
 ![Workflow status, November 2026](Docs/figures/mid_point_november/fig14_workflow_status.png)
 
