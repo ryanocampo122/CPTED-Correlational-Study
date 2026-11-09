@@ -17,7 +17,8 @@ Stages: **1 install** (packages and the pinned CLIP model) → **2 collect** (Re
 (reproduction from the committed raw data, and the same analysis on the fresh collection; since November also crime
 per street segment, the 492 study side views re-cut from the committed panoramas, segmentation/detection/CLIP on
 every side view, the blind labelling sheet and the November figures) → **5 checks**
-(file-by-file comparison with the published outputs, repository unchanged, no credential in the output).
+(file-by-file comparison with the published outputs, a list of any repository file changed during the run, no
+credential in the output).
 `Docs/workflow.md` ("One command") describes each stage and what it writes.
 
 Each run creates `RESULTS_FINAL/EXECUTION-<n>/` (next free number) and appends a row to
@@ -25,8 +26,8 @@ Each run creates `RESULTS_FINAL/EXECUTION-<n>/` (next free number) and appends a
 
 What the flight never does:
 
-- write into `Data/`, `Docs/` or `Deliverables/` (every script gets an `--out`/environment override; step 5 checks
-  the repository's files are unchanged);
+- write into `Data/`, `Docs/` or `Deliverables/` (every script gets an `--out`/environment override; step 5 lists
+  any repository file that changed during the run, for example a hand edit, without failing the run);
 - regenerate the sample points (`pilot.py points` is never called; the 423 points are copied and read);
 - change `Scripts/reddit_analysis/manual_review/` (each analysis runs on a copy, so new other-city candidates stop at
   `pending` in the execution folder);

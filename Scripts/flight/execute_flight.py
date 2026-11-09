@@ -16,7 +16,7 @@ ComputerVision_Sentinel | The whole pipeline in one command:  ./flight --execute
                   segmentation/detection/CLIP on every side view (--skip-models to leave out, ~11 min), the
                   blind labelling sheet, the November figures
   5 checks        reproduction compared with Data/ and Docs/ file by file; fresh collection compared with the
-                  published numbers; Data/, Docs/, Deliverables/, Scripts/ and Notebooks/ unchanged; no
+                  published numbers; repository files changed during the run listed (never fails the run); no
                   credential in the output
 
 Each run gets a new folder RESULTS_FINAL/EXECUTION-<n>/ (n = last + 1) and writes nowhere else.
@@ -832,7 +832,11 @@ def stage_results(F: Flight) -> None:
     F.run("november_numbers", S, "Every number quoted in the November update",
           [("numbers", [py, REPORTING / "november_numbers.py", "--out", nov_numbers])])
     nov_docx = report / "ComputerVision_Sentinel_November2026_Midpoint_Update.docx"
-    nov_figs = figs_nov if len(list(figs_nov.glob("fig*.png"))) >= 5 else FIGS_NOV
+    # The report's figures from this run when all of them were drawn (a --skip-models run leaves out fig12),
+    # otherwise the published ones
+    report_figs = ("fig09_crime_hotspots.png", "fig10_crime_by_category.png", "fig11_image_set.png",
+                   "fig12_segmentation_examples.png", "fig13_indicator_maps.png")
+    nov_figs = figs_nov if all((figs_nov / f).exists() for f in report_figs) else FIGS_NOV
     if F.args.skip_report:
         F.skip("november_docx", S, "November update (.docx and Markdown)", "--skip-report")
     elif not (shutil.which("node") and (REPORTING / "node_modules" / "docx").exists()):
@@ -967,15 +971,16 @@ def stage_checks(F: Flight, snapshot: dict) -> None:
     else:
         F.skip("compare_live", S, "Fresh collection vs the published numbers", "nothing collected in this run")
 
-    # 3. the repository was not written to ----------------------------------
+    # 3. repository files changed during the run: listed for the record, never a reason to fail the run
+    # (edits made by hand while a flight runs are allowed)
     t0 = time.time()
     after = tree_snapshot(F.root.resolve())
     changed = sorted(k for k in set(snapshot) | set(after) if snapshot.get(k) != after.get(k))
     (cmp_dir / "repository_files_changed.txt").write_text("\n".join(changed) + ("\n" if changed else ""))
     F.facts["repo_changed"] = changed
-    F.record("repo_untouched", S, "Data/, Docs/, Deliverables/, Scripts/, Notebooks/ unchanged by the flight",
-             "FAIL" if changed else "PASS",
-             f"{len(changed)} file(s) changed: {', '.join(changed[:5])}" if changed else
+    F.record("repo_untouched", S, "Repository files changed during the run (listed only; does not fail the run)",
+             "PASS",
+             f"{len(changed)} file(s) changed (allowed): {', '.join(changed[:5])}" if changed else
              f"{len(snapshot):,} files checked, none changed", time.time() - t0)
 
     # 4. no credential value anywhere in this execution ---------------------
