@@ -340,8 +340,9 @@ def fig_workflow(out: Path) -> None:
     rows[1] = [("done", f"{meta['points_with_image']} of {meta['points']} points imaged\n"
                         f"on {meta['segments_with_image']} of {n_segments} segments;\nnewest 2020/2023 image"),
                ("done", f"Segmentation, objects and\nCLIP run on all {models['views']}\nside views"),
-               ("partial", f"{n_labelled} of {strata['n_sample']} views labelled;\n{strata['n_second_coder']} for a second coder\n"
-                           f"and the scoring next")]
+               ("done" if n_labelled == strata["n_sample"] else "partial",
+                f"{n_labelled} of {strata['n_sample']} views labelled\n(blind sample, {len(strata['strata'])} groups);\n"
+                f"ready to score")]
     rows[2][1] = ("done", f"{crime['placed']} of {crime['records']} records placed\non streets; half of them on\n"
                           f"{crime['hotspot_segments']['all_study_crime']} segments")
     save(F.draw_workflow(rows, partial_label="Started"), "fig14_workflow_status.png", out)
