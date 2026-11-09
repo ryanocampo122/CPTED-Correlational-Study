@@ -20,7 +20,7 @@ import ast
 import re
 from pathlib import Path
 
-PACKAGE = Path(__file__).resolve().parents[2]          # Deliverables/2026-08_august_report/
+PACKAGE = Path(__file__).resolve().parents[2]          # Archive/august_2026_package/
 RAW_DIR = PACKAGE / "data_pkg_august" / "01_raw_collection"
 SCRAPER = RAW_DIR / "initial_sraper.py"
 POSTS_PATH = RAW_DIR / "saskatoon_safety_posts_20260611.csv"

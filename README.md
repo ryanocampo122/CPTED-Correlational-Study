@@ -100,7 +100,8 @@ Scripts/
 Notebooks/       notebooks on top of the scripts: replicate the system, Reddit, crime, street images (outputs never committed)
 Deliverables/    dated copies of what was sent (2026-08, 2026-10; 2026-11 is kept local until sent); later edits noted in each README
 Reference/       literature (incl. computer-vision papers), presentations, maps
-Archive/         surveys dropped in the revised plan (the August CV prototype is in git history)
+Archive/         the August 2026 analysis package (code, data, charts, slides) and surveys dropped in the revised
+                 plan (the August CV prototype is in git history)
 RESULTS_FINAL/   one EXECUTION-<n>/ folder per flight run, plus executions.csv (git-ignored)
 ```
 

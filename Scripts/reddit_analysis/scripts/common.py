@@ -83,7 +83,7 @@ MANUAL_REVIEW_DIR = Path(os.getenv("COMPUTERVISION_SENTINEL_REVIEW_DIR", ANALYSI
 DEFAULT_DATASET = "reddit_2025-06-11_2026-06-11"
 # The June 2026 collection's August-2026 tables, kept as sent, used by
 # 08_verify_outputs.py to show the shared matcher reproduces them.
-AUGUST_TABLES_DIR = (REPO_DIR / "Deliverables" / "2026-08_august_report" / "data_pkg_august"
+AUGUST_TABLES_DIR = (REPO_DIR / "Archive" / "august_2026_package" / "data_pkg_august"
                      / "02_derived_analysis")
 
 
