@@ -314,7 +314,7 @@ def fig_indicator_maps(out: Path) -> None:
     hands.append(Line2D([], [], color=F.GREY, lw=2.2, label="no image"))
     axes[0].legend(handles=hands, loc="upper left", bbox_to_anchor=(0, -0.01), frameon=False, fontsize=6.4, ncol=5,
                    handlelength=1.4)
-    fig.text(0.995, -0.04, "Not yet checked against the labels. Images: Mapillary (CC BY-SA 4.0); map: OpenStreetMap",
+    fig.text(0.995, -0.04, "Street lights pass the label check; building and vegetation shares are not covered by it. Images: Mapillary (CC BY-SA 4.0); map: OpenStreetMap",
              ha="right", fontsize=5.8, color=F.INK_2)
     fig.subplots_adjust(wspace=0.04)
     save(fig, "fig13_indicator_maps.png", out)
@@ -333,6 +333,10 @@ def fig_workflow(out: Path) -> None:
     sheet = pd.read_csv(STUDY / "validation" / "validation_blind.csv", dtype=str)
     n_labelled = int(sheet[[c for c in sheet.columns if c.startswith("human_") and c != "human_notes"]].notna()
                      .any(axis=1).sum())
+    # The label check's result, once scored: which cues pass, in plain words
+    scores = json.loads((STUDY / "validation" / "validation_results.json").read_text())
+    plain = {"streetlight_visible": "street lights", "seating": "seating", "people_present": "people"}
+    passing = sorted((plain.get(c, c.replace("_", " ")) for c in scores.get("cues_passing_f1", [])), reverse=True)
     crime = json.loads((CRIME / "hotspot_summary.json").read_text())
     n_segments = pd.read_csv(STUDY / "points.csv").segment_id.nunique()
     # The October boxes, with the street-image row and the crime row's middle box updated
@@ -340,6 +344,10 @@ def fig_workflow(out: Path) -> None:
     rows[1] = [("done", f"{meta['points_with_image']} of {meta['points']} points imaged\n"
                         f"on {meta['segments_with_image']} of {n_segments} segments;\nnewest 2020/2023 image"),
                ("done", f"Segmentation, objects and\nCLIP run on all {models['views']}\nside views"),
+               ("done", f"{n_labelled} views labelled and\nscored: " + ("\n".join([f"{passing[0]} and", f"{passing[1]} pass; CLIP fails"])
+                                                                 if len(passing) == 2 else
+                                                                 f"{len(passing)} checks\npass; CLIP fails"))
+               if scores["status"] == "scored" else
                ("done" if n_labelled == strata["n_sample"] else "partial",
                 f"{n_labelled} of {strata['n_sample']} views labelled\n(blind sample, {len(strata['strata'])} groups);\n"
                 f"ready to score")]

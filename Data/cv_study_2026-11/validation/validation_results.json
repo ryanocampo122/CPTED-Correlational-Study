@@ -1,5 +1,9 @@
 {
-  "status": "pending",
-  "labelled_views": 0,
-  "note": "fill in validation_blind.csv, then run score"
+  "status": "scored",
+  "labelled_views": 150,
+  "typology_accuracy": 0.389,
+  "cues_passing_f1": [
+    "seating",
+    "streetlight_visible"
+  ]
 }

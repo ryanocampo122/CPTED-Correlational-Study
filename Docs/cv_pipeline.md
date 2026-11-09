@@ -131,8 +131,9 @@ What the pilot showed:
 ## Steps 3–8 (November)
 
 All model outputs are in `Data/cv_study_2026-11/` (made by `Scripts/cv_study/models.py`, about 11 minutes on the
-Mac's GPU; a repeat run writes identical files). **None is validated yet**: nothing is used until it passes the
-label check.
+Mac's GPU; a repeat run writes identical files). **Label check (150 views, `validation/validation_results.csv`):**
+street lights (F1 0.92) and seating from bench counts (0.72) pass; people from person counts do not (0.46); no CLIP
+cue passes, and CLIP's land-use label matches the labels for 39% of views. Nothing else is used yet.
 
 - **3 Segmentation (done, not validated):** one panoptic model, Mask2Former (Swin-L) trained on Mapillary Vistas,
   pinned to revision `b9a3e9e`, run at the side views' full 1024 × 768 size. It gives the share of each view's street

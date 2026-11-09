@@ -120,7 +120,131 @@
     "n_labelled": 150,
     "strata": 12,
     "population_views": 492,
-    "status": "pending"
+    "status": "scored",
+    "typology_accuracy": 0.389,
+    "checks": [
+      {
+        "cue": "graffiti",
+        "model": "clip",
+        "n": 150,
+        "present": 4,
+        "precision": null,
+        "recall": 0.0,
+        "f1": null,
+        "passes": false
+      },
+      {
+        "cue": "litter",
+        "model": "clip",
+        "n": 150,
+        "present": 4,
+        "precision": 0.04,
+        "recall": 0.5,
+        "f1": 0.07,
+        "passes": false
+      },
+      {
+        "cue": "boarded_windows",
+        "model": "clip",
+        "n": 150,
+        "present": 1,
+        "precision": 0.01,
+        "recall": 1.0,
+        "f1": 0.02,
+        "passes": false
+      },
+      {
+        "cue": "vacant_lot",
+        "model": "clip",
+        "n": 150,
+        "present": 11,
+        "precision": 0.1,
+        "recall": 1.0,
+        "f1": 0.18,
+        "passes": false
+      },
+      {
+        "cue": "active_storefront",
+        "model": "clip",
+        "n": 150,
+        "present": 44,
+        "precision": 0.33,
+        "recall": 0.02,
+        "f1": 0.04,
+        "passes": false
+      },
+      {
+        "cue": "windows_overlook",
+        "model": "clip",
+        "n": 150,
+        "present": 95,
+        "precision": 1.0,
+        "recall": 0.1,
+        "f1": 0.19,
+        "passes": false
+      },
+      {
+        "cue": "people_present",
+        "model": "clip",
+        "n": 150,
+        "present": 9,
+        "precision": 0.09,
+        "recall": 0.22,
+        "f1": 0.12,
+        "passes": false
+      },
+      {
+        "cue": "people_present",
+        "model": "object",
+        "n": 150,
+        "present": 9,
+        "precision": 0.35,
+        "recall": 0.67,
+        "f1": 0.46,
+        "passes": false
+      },
+      {
+        "cue": "fences",
+        "model": "clip",
+        "n": 150,
+        "present": 31,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": null,
+        "passes": false
+      },
+      {
+        "cue": "seating",
+        "model": "clip",
+        "n": 150,
+        "present": 26,
+        "precision": 0.24,
+        "recall": 0.81,
+        "f1": 0.36,
+        "passes": false
+      },
+      {
+        "cue": "seating",
+        "model": "object",
+        "n": 150,
+        "present": 26,
+        "precision": 0.63,
+        "recall": 0.85,
+        "f1": 0.72,
+        "passes": true
+      },
+      {
+        "cue": "streetlight_visible",
+        "model": "object",
+        "n": 149,
+        "present": 73,
+        "precision": 0.91,
+        "recall": 0.93,
+        "f1": 0.92,
+        "passes": true
+      }
+    ],
+    "checks_passing": 2
   },
   "crime": {
     "records": 257,

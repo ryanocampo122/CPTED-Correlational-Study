@@ -91,9 +91,20 @@ def validation_numbers() -> dict:
     # Views with at least one label filled in on the first sheet
     sheet = pd.read_csv(STUDY / "validation" / "validation_blind.csv", dtype=str)
     labels = [c for c in sheet.columns if c.startswith("human_") and c != "human_notes"]
+    # Each model check against the labels, once scored (cue, model, precision, recall, F1, whether it passes)
+    res_csv = STUDY / "validation" / "validation_results.csv"
+    checks = []
+    if res["status"] != "pending" and res_csv.exists():
+        for r in pd.read_csv(res_csv).itertuples():
+            checks.append({"cue": r.cue, "model": r.model, "n": int(r.n), "present": int(r.present_in_labels),
+                           "precision": None if pd.isna(r.precision) else round(float(r.precision), 2),
+                           "recall": None if pd.isna(r.recall) else round(float(r.recall), 2),
+                           "f1": None if pd.isna(r.f1) else round(float(r.f1), 2), "passes": bool(r.passes_f1_0_7)})
     return {"n_sample": strata["n_sample"], "n_second_coder": strata["n_second_coder"],
             "n_labelled": int(sheet[labels].notna().any(axis=1).sum()),
-            "strata": len(strata["strata"]), "population_views": strata["views_in_population"], "status": res["status"]}
+            "strata": len(strata["strata"]), "population_views": strata["views_in_population"], "status": res["status"],
+            "typology_accuracy": res.get("typology_accuracy"), "checks": checks,
+            "checks_passing": sum(c["passes"] for c in checks)}
 
 
 def crime_numbers() -> dict:

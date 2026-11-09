@@ -85,19 +85,20 @@ bullets([
   `**Street images:** ${I.points_with_image} of the ${I.points} sample points have a usable image, on ` +
   `${I.segments_with_image} of the ${I.segments} street segments (${pct(I.segments_with_image, I.segments)}%). ` +
   `Images now have to face along the point's own street, which fixes the cross-street matches seen in the October pilot.`,
-  `**Image models (not yet validated):** one segmentation model measured what share of each of the ${M.views} side views ` +
+  `**Image models:** one segmentation model measured what share of each of the ${M.views} side views ` +
   `is building, vegetation, sidewalk and so on, and counted street lights, benches and other street furniture; CLIP ` +
   `scored land-use type and nine CPTED cues.`,
-  `**Label check:** ${V.n_labelled} of the ${V.n_sample} side views drawn blind are labelled; ${V.n_second_coder} of them ` +
-  `also go to a second coder. No model output is used until it passes this check.`,
+  `**Label check:** all ${V.n_labelled} side views drawn blind are labelled and scored. ${V.checks_passing} of the ` +
+  `${V.checks.length} checks pass: street lights and seating, both from the object counts. No CLIP cue passes, and ` +
+  `CLIP's land-use label matches the labels for ${Math.round(100 * V.typology_accuracy)}% of views.`,
   `**Crime hot spots:** ${C.placed} of the ${C.records} study-category crimes recorded in the CBD were placed on the ` +
   `street segments; half of them lie on just ${C.hotspot_segments.all_study_crime} of the ${C.segments} segments.`,
 ]);
 table("November tasks in the revised work plan (p. 5)", ["November task", "Status", "Evidence"], [
-  ["Run segmentation, detection and CLIP", "Done, not yet validated",
+  ["Run segmentation, detection and CLIP", "Done",
     `${M.views} side views from ${M.points} points on ${M.segments} segments (Section 3)`],
-  ["Check accuracy against labelled images", "Labelled, not yet scored",
-    `${V.n_labelled} of ${V.n_sample} views labelled; ${V.n_second_coder} for a second coder and the scoring next (Section 4)`],
+  ["Check accuracy against labelled images", "Done",
+    `${V.n_labelled} views labelled and scored; ${V.checks_passing} of ${V.checks.length} checks pass (Section 4)`],
   ["Map crime hot spots by category", "Done",
     `${C.placed} of ${C.records} CBD records on segments; maps by group and category (Section 5)`],
 ], [3000, 1900, 4460]);
@@ -132,7 +133,7 @@ bullets([
 ]);
 
 // ---- 3. Image models ----
-h1("3. What the image models found (not yet validated)");
+h1("3. What the image models found");
 p(`Like Hipp et al. (2022), Zhou et al. (2021), Yue et al. (2022) and Su, Li and Qiu (2023), the study measures each ` +
   `image by the share of the picture taken up by each kind of thing, using a semantic segmentation model; Yue et al. ` +
   `(2022) also detect people. Those studies used PSPNet or DeepLab trained on the Cityscapes images; none used the ` +
@@ -153,13 +154,13 @@ table("What the models found across all side views", ["Measure", "Result"], [
 p(`The 2023 images were taken from a car roof, which covers about ${one(M.camera_car_pct_2023_views)}% of each of ` +
   `their side views; the camera car is left out of every share, so those streets are not made to look emptier.`);
 figure("fig12_segmentation_examples.png", 4.0, `Four side views and what the segmentation model labelled in them.`);
-figure("fig13_indicator_maps.png", 6.3, `Three image measures per street segment, by quarter of their values. Not yet ` +
-  `checked against the labels.`);
+figure("fig13_indicator_maps.png", 6.3, `Three image measures per street segment, by quarter of their values. Street lights pass the label check; the ` +
+  `building and vegetation shares are not covered by it.`);
 const typ = M.typology_counts;
 p(`**A warning from the first results:** CLIP's land-use label looks unreliable. It calls ${fmt(typ.surface_parking)} ` +
   `of the ${fmt(M.views)} views a surface parking lot and only ${fmt(typ.commercial_street || 0)} a commercial ` +
   `street, which does not match Downtown, and ${fmt(M.typology_low_confidence)} labels are low-confidence. The ` +
-  `labels will show how far the label and each cue can be used.`);
+  `label check in Section 4 confirms it.`);
 
 // ---- 4. Label check ----
 h1("4. The label check");
@@ -171,9 +172,19 @@ bullets([
   `Each view is labelled for land-use type and ten cues (graffiti, litter, boarded windows, vacant lot, active ` +
   `storefront, windows overlooking the street, people, fences, seating, a visible street light).`,
   `${V.n_second_coder} of the views also go to a second coder, who labels them without seeing the first coder's sheet.`,
-  `When the sheets are filled in, a script reports precision, recall and F1 for each cue and the agreement between the ` +
-  `two coders. Proposed targets: F1 of at least 0.7 and kappa of at least 0.6; cues that fail are reported and dropped.`,
+  `A script reports precision, recall and F1 for each cue and the agreement between the two coders. Proposed ` +
+  `targets: F1 of at least 0.7 and kappa of at least 0.6; cues that fail are reported and dropped. The sheet records ` +
+  `who labelled each view (column labelled_by).`,
 ]);
+const f2 = (x) => (x === null || x === undefined ? "–" : x.toFixed(2));
+table(`Each model check against the ${V.n_labelled} labelled views`, ["Cue", "Model", "In labels", "Precision", "Recall", "F1", "Passes"],
+  V.checks.map((c) => [c.cue.replace(/_/g, " "), c.model === "object" ? "object count" : "CLIP", `${c.present}`,
+    f2(c.precision), f2(c.recall), f2(c.f1), c.passes ? "Yes" : "No"]), [2000, 1500, 1100, 1100, 1000, 900, 1000]);
+p(`**Result:** ${V.checks_passing} of the ${V.checks.length} checks pass, both from the segmentation model's object ` +
+  `counts: street lights and seating (benches). No CLIP cue passes, and CLIP's land-use label matches the labels for ` +
+  `${Math.round(100 * V.typology_accuracy)}% of views, so CLIP is not used for land use or cues. Graffiti, litter and ` +
+  `boarded windows appear in only a few labelled views, so their scores rest on very few cases. The ` +
+  `${V.n_second_coder} second-coder views are not labelled yet, so agreement between coders is not yet measured.`);
 
 // ---- 5. Crime ----
 h1("5. Recorded crime per street segment");
@@ -214,8 +225,8 @@ p(`**Overlap with the street images:** the ${J.segments_with_image} segments wit
 h1("6. Next steps");
 p(`**November to January:**`);
 bullets([
-  `Have the second coder label ${V.n_second_coder} of the ${V.n_sample} labelled views; score every cue and drop ` +
-  `those that fail.`,
+  `Have the second coder label ${V.n_second_coder} of the ${V.n_sample} labelled views and measure their agreement; ` +
+  `drop the cues that fail, and find a better measure for the CLIP cues or leave them out.`,
   `Test the image-date assumption on the 2014 and 2020 images at the points that have both.`,
   `Combine the validated measures into CPTED indicators per street segment and join them with the crime counts.`,
   `Code the Reddit posts by location, crime type and environmental cue (work plan, December to January).`,

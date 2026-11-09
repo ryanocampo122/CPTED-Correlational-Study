@@ -34,11 +34,11 @@ places; it does not predict crime or label communities.
 | R3 | Code Reddit by place, crime type and cues (Dec–Jan) | to write | — | planned |
 | C1 | Sample points every ~50 m on OSM streets, clipped to the study area | `Scripts/cv_pilot/pilot.py points` | `Data/cv_pilot_2026-10/cbd/sample_points.*` | done: 423 points on 218 segments; 11 bridge/freeway points flagged (Nov) |
 | C2 | Image collection (Mapillary) | `pilot.py coverage`; `Scripts/cv_study/images.py` | `cbd/coverage_*.csv`; `Data/cv_study_2026-11/images/` | done (Nov): 246 points on 121 of 218 segments, 492 side views |
-| C3 | Semantic segmentation (Mapillary Vistas model) | `Scripts/cv_study/models.py` | `Data/cv_study_2026-11/segmentation_shares.csv` | done (Nov); accuracy not yet checked |
-| C4 | Object detection (streetlights, people, cars, benches, transit stops) | `Scripts/cv_study/models.py` (same model) | `Data/cv_study_2026-11/object_counts.csv` | done (Nov); accuracy not yet checked |
+| C3 | Semantic segmentation (Mapillary Vistas model) | `Scripts/cv_study/models.py` | `Data/cv_study_2026-11/segmentation_shares.csv` | done (Nov); the shares are not covered by the label check |
+| C4 | Object detection (streetlights, people, cars, benches, transit stops) | `Scripts/cv_study/models.py` (same model) | `Data/cv_study_2026-11/object_counts.csv` | done (Nov); street lights (F1 0.92) and benches (0.72) pass the label check; people do not (0.46) |
 | C5 | CLIP zero-shot cue scoring | `Scripts/cv_study/models.py`, `clip_prompts.json` | `Data/cv_study_2026-11/clip_scores.csv` | done on all 492 views (Nov); the land-use label looks unreliable; accuracy check (C7) to come |
 | C6 | CPTED indicators per segment | `Scripts/cv_study/models.py` | `Data/cv_study_2026-11/segment_indicators.csv` | first version (Nov): averages per segment; combined indicators after C7 |
-| C7 | Validation against ~150 labelled images | `Scripts/cv_study/validation.py` | `Data/cv_study_2026-11/validation/` | 150 views labelled; the 30 second-coder views and the scoring next |
+| C7 | Validation against ~150 labelled images | `Scripts/cv_study/validation.py` | `Data/cv_study_2026-11/validation/` | done: 150 views labelled and scored, 2 of 12 checks pass; the 30 second-coder views next |
 | K1 | Crime categories | work plan p. 4; `Docs/crime_data.md` | — | done |
 | K2 | SPS data: clean, then counts per segment, hot spots (Nov) | `Scripts/crime_data/clean_sps_crime.py`; `Scripts/crime_data/hotspots.py` | `Data/sps_crime_2026-06-01_2026-08-31/02_cleaned/`, `03_segments/` | done: 9,650 records, 2,982 in the study categories; 255 of 257 CBD records placed; half on 11 segments |
 | L1 | Lighting and noise layers (Dec–Jan) | to write | — | planned |

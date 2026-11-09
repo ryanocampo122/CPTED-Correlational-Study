@@ -6,7 +6,8 @@ output. The views were drawn by `Scripts/cv_study/validation.py sample` before a
 advance (`sample_strata.json`): land-use type × image year strata, proportional, in the deterministic spread order.
 
 **Status (8 Nov 2026):** all 150 views in `validation_blind.csv` are labelled; the `labelled_by` column records who
-labelled each row. The 30 views in `validation_blind_coder2.csv` are not labelled yet, and nothing has been scored.
+labelled each row. The 30 views in `validation_blind_coder2.csv` are not labelled yet. Scored on 8 Nov 2026
+(`validation_results.csv`): street lights and seating pass from the object counts; no CLIP cue passes.
 
 ## How to label
 

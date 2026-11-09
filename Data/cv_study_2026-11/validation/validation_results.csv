@@ -1,0 +1,13 @@
+cue,model,prediction,n,present_in_labels,tp,fp,fn,precision,recall,f1,passes_f1_0_7,kappa_coders,passes_kappa_0_6
+graffiti,clip,cue_graffiti_mean,150,4,0,0,4,,0.0,,False,,False
+litter,clip,cue_litter_mean,150,4,2,49,2,0.039,0.5,0.073,False,,False
+boarded_windows,clip,cue_boarded_windows_mean,150,1,1,122,0,0.008,1.0,0.016,False,,False
+vacant_lot,clip,cue_vacant_lot_mean,150,11,11,102,0,0.097,1.0,0.177,False,,False
+active_storefront,clip,cue_active_storefront_mean,150,44,1,2,43,0.333,0.023,0.043,False,,False
+windows_overlook,clip,cue_windows_overlook_street_mean,150,95,10,0,85,1.0,0.105,0.19,False,,False
+people_present,clip,cue_people_present_mean,150,9,2,21,7,0.087,0.222,0.125,False,,False
+people_present,object,count_person,150,9,6,11,3,0.353,0.667,0.462,False,,False
+fences,clip,cue_fences_barriers_mean,150,31,0,1,31,0.0,0.0,,False,,False
+seating,clip,cue_seating_mean,150,26,21,68,5,0.236,0.808,0.365,False,,False
+seating,object,count_bench,150,26,22,13,4,0.629,0.846,0.721,True,,False
+streetlight_visible,object,count_street_light,149,73,68,7,5,0.907,0.932,0.919,True,,False
