@@ -2,12 +2,17 @@
 
 **ComputerVision_Sentinel**, a University of Saskatchewan (AIRI 2026) research project.
 
-## The project in plain words
+## The project
 
-Some street designs are thought to make crime less likely: buildings with windows facing the street, good lighting,
-well-kept spaces, clear sight lines. The idea is called **CPTED** (Crime Prevention Through Environmental Design).
-This project tests it in **Downtown Saskatoon** for **1 June – 31 August 2026**, using only data that are already
-public:
+**Is the way Downtown Saskatoon's streets are built linked to where crime happens, and to how safe people feel
+there?**
+
+The project tests Crime Prevention Through Environmental Design (**CPTED**), the idea that storefronts, windows
+overlooking the street, lighting and upkeep discourage crime. Instead of walking the streets with a checklist, it
+measures these features from street photos with computer vision, then compares them street by street with police
+records and Reddit discussion from summer 2026 (1 June – 31 August).
+
+Three public data sources:
 
 | What is measured | Where it comes from | How |
 |---|---|---|
@@ -17,7 +22,6 @@ public:
 
 Downtown is split into **218 short street segments**, with **423 sample points** about 50 m apart. Each segment gets
 street measures from the photos and a crime count; Reddit can only be placed by neighbourhood, not street by street.
-The last step compares them: do street features line up with where crime happens, and with how safe people feel?
 The plan is in `Plan/workplan_revised_2026-10.pdf`.
 
 ## Where it stands (8 November 2026)
@@ -46,9 +50,7 @@ streets) have no usable photo, including 5 of the 11 crime hot spots. Details in
 All November figures are in `Docs/figures/mid_point_november/`; the October figures, as sent, in
 `Docs/figures/mid_point_october/`.
 
-## Words used here
 
-| Word | Meaning |
 |---|---|
 | Segment | a piece of street between two intersections; the unit the study compares |
 | Sample point | a spot on a segment, about every 50 m, where a photo is looked for |
