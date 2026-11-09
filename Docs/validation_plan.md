@@ -1,12 +1,5 @@
 # Validation plan
 
-**Why this matters.** The AIRI seed grant promised a proof-of-concept framework and pilot data for larger
-applications (NSERC Alliance, NFRF Exploration/Transformation, SSHRC–NSERC programs; grant application p. 3).
-Reviewers of those programs will ask one question first: does each automated measure agree with careful human
-judgement? No correlation (RQ1–RQ3) should be reported for a measure that has not passed its check. The work plan
-names two checks (p. 3): about 150 hand-labelled images, and a consistency check of Reddit coding. This page makes
-them concrete and adds the checks the October work showed are needed.
-
 ## Component checks
 
 | Component | What has to be shown | Method | Proposed target | Status (7 Nov 2026) |
