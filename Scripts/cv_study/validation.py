@@ -2,9 +2,9 @@
 """
 validation.py
 =============
-ComputerVision_Sentinel | November 2026: the hand-label check of the image models (Docs/validation_plan.md)
+ComputerVision_Sentinel | November 2026: the label check of the image models (Docs/validation_plan.md)
 
-sample   Draws 150 side views for blind hand labelling and writes the sheets. Fixed before anyone labels:
+sample   Draws 150 side views for blind labelling and writes the sheets. Fixed before anyone labels:
          * strata are land-use type (CLIP's top label) x image year, each getting a share of the 150 in
            proportion to its size (at least 2 where it has 2 views);
          * inside a stratum, points are taken in the deterministic farthest-point spread order, one side per
@@ -20,7 +20,7 @@ Files in Data/cv_study_2026-11/validation/:
   validation_blind_coder2.csv   the 30 shared views for the second coder (filled in separately)
   validation_results.csv/.json  written by `score`
 
-Model predictions compared with the hand labels (thresholds fixed in advance, provisional):
+Model predictions compared with the labels (thresholds fixed in advance, provisional):
   a CLIP cue counts as present at a mean probability of 0.5 or more; a detected object counts as present
   at one or more in the view; the land-use type is CLIP's top label.
 
@@ -57,7 +57,7 @@ MIN_PER_STRATUM = 2
 CLIP_PRESENT = 0.5
 OBJECT_PRESENT = 1
 
-# Hand-label columns (same as the October pilot sheet) and the model prediction(s) each is checked against
+# Label columns (same as the October pilot sheet) and the model prediction(s) each is checked against
 HUMAN_COLUMNS = ["human_typology", "human_graffiti_0_1", "human_litter_0_1", "human_boarded_windows_0_1",
                  "human_vacant_lot_0_1", "human_active_storefront_0_1", "human_windows_overlook_0_1",
                  "human_people_present_0_1", "human_fences_0_1", "human_seating_0_1",
@@ -131,7 +131,7 @@ def draw_sample(study: Path, out: Path) -> None:
 
 
 def as_flag(s: pd.Series) -> pd.Series:
-    """Hand labels as 0/1 numbers, blanks as missing.
+    """Labels as 0/1 numbers, blanks as missing.
 
     :param s: a human_*_0_1 column
     :return: 1.0, 0.0 or NaN
@@ -158,7 +158,7 @@ def kappa(a: pd.Series, b: pd.Series) -> float:
 
 
 def score(study: Path, out: Path) -> None:
-    """Compare the models with the hand labels, and the two coders with each other.
+    """Compare the models with the labels, and the two coders with each other.
 
     :param study: folder holding the model outputs
     :param out: folder holding the filled sheets, where the results are written
@@ -174,11 +174,11 @@ def score(study: Path, out: Path) -> None:
     if labelled.empty:
         status = {"status": "pending", "labelled_views": 0, "note": "fill in validation_blind.csv, then run score"}
         (out / "validation_results.json").write_text(json.dumps(status, indent=2))
-        print("[validation] pending: no hand labels yet")
+        print("[validation] pending: no labels yet")
         return
     data = labelled.merge(models, on=keys)
     rows = []
-    # Each hand-labelled cue against each model prediction for it
+    # Each labelled cue against each model prediction for it
     for human, preds in CHECKS.items():
         truth = as_flag(data[human])
         for kind, col in preds:
@@ -195,7 +195,7 @@ def score(study: Path, out: Path) -> None:
             shared = second.merge(first, on=keys, suffixes=("_2", "_1"))
             k = kappa(as_flag(shared[f"{human}_1"]), as_flag(shared[f"{human}_2"]))
             rows.append({"cue": human.replace("human_", "").replace("_0_1", ""), "model": kind, "prediction": col,
-                         "n": int(ok.sum()), "present_by_hand": int((truth == 1).sum()), "tp": tp, "fp": fp, "fn": fn,
+                         "n": int(ok.sum()), "present_in_labels": int((truth == 1).sum()), "tp": tp, "fp": fp, "fn": fn,
                          "precision": round(precision, 3), "recall": round(recall, 3), "f1": round(f1, 3),
                          "passes_f1_0_7": bool(f1 >= 0.7), "kappa_coders": round(k, 3),
                          "passes_kappa_0_6": bool(k >= 0.6)})

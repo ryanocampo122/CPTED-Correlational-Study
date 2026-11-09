@@ -41,7 +41,7 @@
   "points": 246,
   "segments": 121,
   "seconds": 664,
-  "caveat": "not validated; no indicator is used until it passes the hand-label check",
+  "caveat": "not validated; no indicator is used until it passes the label check",
   "git_commit": "34fd17d",
   "created_utc": "2026-11-08T00:08:25+00:00"
 }

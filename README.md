@@ -35,7 +35,7 @@ The plan is in `Plan/workplan_revised_2026-10.pdf`.
 | Sample points | Done (October, refined in November) | 423 points on 218 segments; 11 points on bridges or freeways get no photo |
 | Street photos | Done (November) | no photos from summer 2026 exist, so each point uses its newest photo from 2020 on that faces along its street: 246 points on 121 of the 218 segments (225 photos from 2020, 21 from 2023) |
 | Image models | Done, accuracy not yet checked (November) | segmentation, object counts and CLIP scores for all 492 side views (two per point) |
-| Accuracy check | Waiting for hand labels | 150 side views drawn for labelling, 30 of them for a second person; none labelled yet |
+| Accuracy check | Labelled, not yet scored | all 150 side views labelled; 30 of them still to be labelled by a second person; scoring next |
 | Crime hot spots | Done (November) | 255 of the 257 Downtown study-category records placed on segments; half of them lie on 11 segments |
 | Compare streets, crime and Reddit | Next (February–March 2027) | |
 

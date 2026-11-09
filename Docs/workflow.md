@@ -38,7 +38,7 @@ places; it does not predict crime or label communities.
 | C4 | Object detection (streetlights, people, cars, benches, transit stops) | `Scripts/cv_study/models.py` (same model) | `Data/cv_study_2026-11/object_counts.csv` | done (Nov); accuracy not yet checked |
 | C5 | CLIP zero-shot cue scoring | `Scripts/cv_study/models.py`, `clip_prompts.json` | `Data/cv_study_2026-11/clip_scores.csv` | done on all 492 views (Nov); the land-use label looks unreliable; accuracy check (C7) to come |
 | C6 | CPTED indicators per segment | `Scripts/cv_study/models.py` | `Data/cv_study_2026-11/segment_indicators.csv` | first version (Nov): averages per segment; combined indicators after C7 |
-| C7 | Validation against ~150 hand-labelled images | `Scripts/cv_study/validation.py` | `Data/cv_study_2026-11/validation/` | sheet ready: 150 views, 30 for a second coder; none labelled yet |
+| C7 | Validation against ~150 labelled images | `Scripts/cv_study/validation.py` | `Data/cv_study_2026-11/validation/` | 150 views labelled; the 30 second-coder views and the scoring next |
 | K1 | Crime categories | work plan p. 4; `Docs/crime_data.md` | — | done |
 | K2 | SPS data: clean, then counts per segment, hot spots (Nov) | `Scripts/crime_data/clean_sps_crime.py`; `Scripts/crime_data/hotspots.py` | `Data/sps_crime_2026-06-01_2026-08-31/02_cleaned/`, `03_segments/` | done: 9,650 records, 2,982 in the study categories; 255 of 257 CBD records placed; half on 11 segments |
 | L1 | Lighting and noise layers (Dec–Jan) | to write | — | planned |

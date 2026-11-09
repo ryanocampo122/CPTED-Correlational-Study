@@ -314,7 +314,7 @@ def fig_indicator_maps(out: Path) -> None:
     hands.append(Line2D([], [], color=F.GREY, lw=2.2, label="no image"))
     axes[0].legend(handles=hands, loc="upper left", bbox_to_anchor=(0, -0.01), frameon=False, fontsize=6.4, ncol=5,
                    handlelength=1.4)
-    fig.text(0.995, -0.04, "Not yet validated against hand labels. Images: Mapillary (CC BY-SA 4.0); map: OpenStreetMap",
+    fig.text(0.995, -0.04, "Not yet checked against the labels. Images: Mapillary (CC BY-SA 4.0); map: OpenStreetMap",
              ha="right", fontsize=5.8, color=F.INK_2)
     fig.subplots_adjust(wspace=0.04)
     save(fig, "fig13_indicator_maps.png", out)
@@ -329,6 +329,10 @@ def fig_workflow(out: Path) -> None:
     meta = json.loads((STUDY / "run_meta.json").read_text())
     models = json.loads((STUDY / "models_meta.json").read_text())
     strata = json.loads((STUDY / "validation" / "sample_strata.json").read_text())
+    # Views on the first labelling sheet with at least one label filled in
+    sheet = pd.read_csv(STUDY / "validation" / "validation_blind.csv", dtype=str)
+    n_labelled = int(sheet[[c for c in sheet.columns if c.startswith("human_") and c != "human_notes"]].notna()
+                     .any(axis=1).sum())
     crime = json.loads((CRIME / "hotspot_summary.json").read_text())
     n_segments = pd.read_csv(STUDY / "points.csv").segment_id.nunique()
     # The October boxes, with the street-image row and the crime row's middle box updated
@@ -336,8 +340,8 @@ def fig_workflow(out: Path) -> None:
     rows[1] = [("done", f"{meta['points_with_image']} of {meta['points']} points imaged\n"
                         f"on {meta['segments_with_image']} of {n_segments} segments;\nnewest 2020/2023 image"),
                ("done", f"Segmentation, objects and\nCLIP run on all {models['views']}\nside views"),
-               ("partial", f"{strata['n_sample']} views drawn for hand\nlabels, {strata['n_second_coder']} for a second\n"
-                           f"coder; labelling next")]
+               ("partial", f"{n_labelled} of {strata['n_sample']} views labelled;\n{strata['n_second_coder']} for a second coder\n"
+                           f"and the scoring next")]
     rows[2][1] = ("done", f"{crime['placed']} of {crime['records']} records placed\non streets; half of them on\n"
                           f"{crime['hotspot_segments']['all_study_crime']} segments")
     save(F.draw_workflow(rows, partial_label="Started"), "fig14_workflow_status.png", out)

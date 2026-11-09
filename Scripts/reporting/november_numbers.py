@@ -88,7 +88,11 @@ def validation_numbers() -> dict:
     strata = read_json(STUDY / "validation" / "sample_strata.json")
     res_file = STUDY / "validation" / "validation_results.json"
     res = read_json(res_file) if res_file.exists() else {"status": "pending"}
+    # Views with at least one label filled in on the first sheet
+    sheet = pd.read_csv(STUDY / "validation" / "validation_blind.csv", dtype=str)
+    labels = [c for c in sheet.columns if c.startswith("human_") and c != "human_notes"]
     return {"n_sample": strata["n_sample"], "n_second_coder": strata["n_second_coder"],
+            "n_labelled": int(sheet[labels].notna().any(axis=1).sum()),
             "strata": len(strata["strata"]), "population_views": strata["views_in_population"], "status": res["status"]}
 
 

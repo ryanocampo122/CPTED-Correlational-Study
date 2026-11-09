@@ -23,12 +23,12 @@ freeway-type roads are excluded. Made by `Scripts/cv_study/images.py`; the model
 | `clip_scores.csv` | one row per side view: CLIP land-use type (top two, probabilities, low-confidence flag) and the nine cue probabilities |
 | `segment_indicators.csv` | one row per street segment with an image (121): shares and cue probabilities averaged over both sides and then the points, objects per point, image years, a COVID-2020 flag for people and cars, the most common land-use type |
 | `models_meta.json` | models and pinned revisions, settings, device and run time |
-| `validation/` | the blind hand-labelling sheets (150 views; 30 for a second coder) and, once filled in, the accuracy results |
+| `validation/` | the blind labelling sheets (150 views, all labelled; 30 for a second coder, not yet labelled) and, once scored, the accuracy results |
 
 The model outputs come from `Scripts/cv_study/models.py`: Mask2Former (Swin-L, Mapillary Vistas, panoptic) at
 revision `b9a3e9e` for segmentation and detection, and CLIP ViT-B/32 at revision `3d74acf` for the cues. A repeat run
 on the same machine writes identical files. **None of it is validated yet**: no indicator is used until it passes the
-hand-label check (`Docs/validation_plan.md`).
+label check (`Docs/validation_plan.md`).
 
 The 2023 panoramas were taken from a car-roof camera, so the car's roof shows at the bottom of their side views. The
 side views are cut again, byte for byte, from the committed panoramas with

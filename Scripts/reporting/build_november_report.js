@@ -78,8 +78,8 @@ blocks.push({ t: "byline", text: "Prepared by Ryan Ocampo" });
 blocks.push({ t: "rule", text: "November 2026  ·  revised work plan (October 2026)  ·  study period 1 June – 31 August 2026" });
 h1("1. Summary", false);
 p(`The November tasks in the revised work plan are to run the segmentation, detection and CLIP steps, to check their ` +
-  `accuracy against hand-labelled images, and to map crime hot spots by category. Two are done and the third is ready ` +
-  `for the hand labels. The street images follow the image decision taken in November: the newest Mapillary image at ` +
+  `accuracy against labelled images, and to map crime hot spots by category. Two are done; for the third, the images ` +
+  `are labelled and the scoring is next. The street images follow the image decision taken in November: the newest Mapillary image at ` +
   `each sample point (2020 or 2023), used with the 2026 crime and Reddit data, with the date gap stated as a limitation.`);
 bullets([
   `**Street images:** ${I.points_with_image} of the ${I.points} sample points have a usable image, on ` +
@@ -88,16 +88,16 @@ bullets([
   `**Image models (not yet validated):** one segmentation model measured what share of each of the ${M.views} side views ` +
   `is building, vegetation, sidewalk and so on, and counted street lights, benches and other street furniture; CLIP ` +
   `scored land-use type and nine CPTED cues.`,
-  `**Hand-label check:** ${V.n_sample} side views were drawn blind for hand labelling, ${V.n_second_coder} of them for a ` +
-  `second coder. No model output is used until it passes this check.`,
+  `**Label check:** ${V.n_labelled} of the ${V.n_sample} side views drawn blind are labelled; ${V.n_second_coder} of them ` +
+  `also go to a second coder. No model output is used until it passes this check.`,
   `**Crime hot spots:** ${C.placed} of the ${C.records} study-category crimes recorded in the CBD were placed on the ` +
   `street segments; half of them lie on just ${C.hotspot_segments.all_study_crime} of the ${C.segments} segments.`,
 ]);
 table("November tasks in the revised work plan (p. 5)", ["November task", "Status", "Evidence"], [
   ["Run segmentation, detection and CLIP", "Done, not yet validated",
     `${M.views} side views from ${M.points} points on ${M.segments} segments (Section 3)`],
-  ["Check accuracy against hand-labelled images", "Sheet ready",
-    `${V.n_sample} views drawn blind, ${V.n_second_coder} for a second coder; labelling next (Section 4)`],
+  ["Check accuracy against labelled images", "Labelled, not yet scored",
+    `${V.n_labelled} of ${V.n_sample} views labelled; ${V.n_second_coder} for a second coder and the scoring next (Section 4)`],
   ["Map crime hot spots by category", "Done",
     `${C.placed} of ${C.records} CBD records on segments; maps by group and category (Section 5)`],
 ], [3000, 1900, 4460]);
@@ -154,17 +154,17 @@ p(`The 2023 images were taken from a car roof, which covers about ${one(M.camera
   `their side views; the camera car is left out of every share, so those streets are not made to look emptier.`);
 figure("fig12_segmentation_examples.png", 4.0, `Four side views and what the segmentation model labelled in them.`);
 figure("fig13_indicator_maps.png", 6.3, `Three image measures per street segment, by quarter of their values. Not yet ` +
-  `validated against hand labels.`);
+  `checked against the labels.`);
 const typ = M.typology_counts;
 p(`**A warning from the first results:** CLIP's land-use label looks unreliable. It calls ${fmt(typ.surface_parking)} ` +
   `of the ${fmt(M.views)} views a surface parking lot and only ${fmt(typ.commercial_street || 0)} a commercial ` +
-  `street, which does not match Downtown, and ${fmt(M.typology_low_confidence)} labels are low-confidence. The hand ` +
+  `street, which does not match Downtown, and ${fmt(M.typology_low_confidence)} labels are low-confidence. The ` +
   `labels will show how far the label and each cue can be used.`);
 
-// ---- 4. Hand-label check ----
-h1("4. The hand-label check");
-p(`No image measure is used until it agrees with careful human judgement. ${V.n_sample} of the ${V.population_views} ` +
-  `side views were drawn for hand labelling by a rule fixed before anyone labelled: ${V.strata} groups by land-use ` +
+// ---- 4. Label check ----
+h1("4. The label check");
+p(`No image measure is used until it agrees with the labels. ${V.n_sample} of the ${V.population_views} ` +
+  `side views were drawn for labelling by a rule fixed before anyone labelled: ${V.strata} groups by land-use ` +
   `type and image year, each sampled in proportion to its size, spread across the whole CBD. The labelling sheet shows ` +
   `no model output.`);
 bullets([
@@ -214,7 +214,7 @@ p(`**Overlap with the street images:** the ${J.segments_with_image} segments wit
 h1("6. Next steps");
 p(`**November to January:**`);
 bullets([
-  `Hand-label the ${V.n_sample} views and have the second coder label ${V.n_second_coder}; score every cue and drop ` +
+  `Have the second coder label ${V.n_second_coder} of the ${V.n_sample} labelled views; score every cue and drop ` +
   `those that fail.`,
   `Test the image-date assumption on the 2014 and 2020 images at the points that have both.`,
   `Combine the validated measures into CPTED indicators per street segment and join them with the crime counts.`,

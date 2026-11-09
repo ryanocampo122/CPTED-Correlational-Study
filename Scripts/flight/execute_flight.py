@@ -403,6 +403,35 @@ def compare_file(new: Path, pub: Path, tolerate_ties: bool = False) -> tuple[str
     return "differs", f"{len(a):,} vs {len(b):,} bytes (published second)"
 
 
+def compare_drawn_sheets(new_dir: Path, pub_dir: Path) -> list[dict]:
+    """The labelling sheets drawn again against the published ones, on the columns the draw writes (the views, their
+    sides and image files, and the second-coder mark); the label columns are filled in after the draw.
+
+    :param new_dir: folder with the sheets this run drew
+    :param pub_dir: folder with the published, labelled sheets
+    :return: one comparison row per sheet
+    """
+    # The columns `validation.py sample` writes, then each sheet compared on them
+    drawn = ["image_id", "point_id", "side", "image_file", "second_coder"]
+    rows = []
+    for name in ("validation_blind.csv", "validation_blind_coder2.csv"):
+        new, pub = new_dir / name, pub_dir / name
+        # A sheet one side lacks is reported as missing
+        if not (new.exists() and pub.exists()):
+            rows.append({"area": "Study images and models", "file": f"validation/{name}", "status": "missing",
+                         "note": "this run or the published folder lacks the sheet"})
+            continue
+        # Both sheets cut down to the drawn columns, row by row
+        a = [{c: r.get(c) for c in drawn} for r in csv_rows(new)]
+        b = [{c: r.get(c) for c in drawn} for r in csv_rows(pub)]
+        same = a == b
+        rows.append({"area": "Study images and models", "file": f"validation/{name}",
+                     "status": "identical" if same else "differs",
+                     "note": "same views, sides and second-coder marks (labels are added after the draw)" if same
+                     else "the drawn views differ"})
+    return rows
+
+
 def compare_tree(area: str, new_root: Path, pub_root: Path, exclude: tuple[str, ...] = ()) -> list[dict]:
     """Every file the run produced under new_root against pub_root, plus published files the run did not produce."""
     def files(root: Path) -> set[str]:
@@ -766,10 +795,14 @@ def stage_results(F: Flight) -> None:
               [("models", [py, CV_STUDY / "models.py", "--study", STUDY_IMAGES, "--out", study_rep])],
               note_fn=lambda: (lambda m: f"{m['views']} side views, {m['segments']} segments, {m['seconds'] // 60} min "
                                          f"on {m['device']}")(json.loads((study_rep / "models_meta.json").read_text())))
-    F.run("study_validation_sheet", S, "Blind labelling sample (150 views) and its score",
-          [(step, [py, CV_STUDY / "validation.py", step, "--study", STUDY_IMAGES, "--out", study_rep / "validation"])
-           for step in ("sample", "score")],
-          note_fn=lambda: "score: " + json.loads((study_rep / "validation" / "validation_results.json").read_text())["status"])
+    # The blind sample is drawn again into this run; the labels are scored from a copy of the published,
+    # labelled sheets (labels are added after the draw, so a fresh draw has none)
+    val_scored = rep / "validation_scored"
+    shutil.copytree(STUDY_IMAGES / "validation", val_scored, dirs_exist_ok=True)
+    F.run("study_validation_sheet", S, "Blind labelling sample (150 views) drawn again; the labels scored",
+          [("sample", [py, CV_STUDY / "validation.py", "sample", "--study", STUDY_IMAGES, "--out", study_rep / "validation"]),
+           ("score", [py, CV_STUDY / "validation.py", "score", "--study", STUDY_IMAGES, "--out", val_scored])],
+          note_fn=lambda: "score: " + json.loads((val_scored / "validation_results.json").read_text())["status"])
 
     # Tests, verification, figures, numbers, report -----------------------
     F.run("cv_tests", S, "CV pilot tests (offline)",
@@ -901,12 +934,22 @@ def stage_checks(F: Flight, snapshot: dict) -> None:
     if (rep / SPS.name / "03_segments").exists():
         rows += compare_tree("SPS crime per segment", rep / SPS.name / "03_segments", SPS / "03_segments")
     if (rep / STUDY_IMAGES.name).exists():
+        # Files the run does not make again, and the labelling sheets and their scores, which are checked below
         not_rebuilt = ("images/pano_raw", "points.csv", "image_manifest.csv", "run_meta.json", "README.md",
-                       "validation/README.md")
+                       "validation/README.md", "validation/validation_blind.csv", "validation/validation_blind_coder2.csv",
+                       "validation/validation_results.json", "validation/validation_results.csv")
         if F.args.skip_models:
             not_rebuilt += ("segmentation_shares.csv", "object_counts.csv", "clip_scores.csv", "segment_indicators.csv",
                             "models_meta.json")
         rows += compare_tree("Study images and models", rep / STUDY_IMAGES.name, STUDY_IMAGES, exclude=not_rebuilt)
+        rows += compare_drawn_sheets(rep / STUDY_IMAGES.name / "validation", STUDY_IMAGES / "validation")
+    # The label scores are compared once published scores exist (until then the published file says "pending")
+    pub_scores = STUDY_IMAGES / "validation" / "validation_results.json"
+    if (rep / "validation_scored").exists() and pub_scores.exists() and \
+            json.loads(pub_scores.read_text()).get("status") != "pending":
+        rows += compare_tree("Label scores", rep / "validation_scored", STUDY_IMAGES / "validation",
+                             exclude=("README.md", "sample_strata.json", "validation_blind.csv",
+                                      "validation_blind_coder2.csv"))
     if (F.exec_dir / "figures_november").exists():
         rows += compare_tree("Figures (November)", F.exec_dir / "figures_november", FIGS_NOV,
                              exclude=("fig12_segmentation_examples.png",) if F.args.skip_models else ())

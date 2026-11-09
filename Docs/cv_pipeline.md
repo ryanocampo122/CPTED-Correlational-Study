@@ -111,7 +111,7 @@ treated with caution. A 2020-against-2023 comparison is not possible: only 3 poi
 each: 10 of 10 found (2014: 1, 2019: 1, 2020: 6, 2023: 2); 8 were 360° images cut into two side-facing views.
 CLIP (`openai/clip-vit-base-patch32`, 3 square views per image) scored 8 land-use types and 9 CPTED cues from
 `clip_prompts.json`. The Reddit link reproduces the Downtown summary (238 records). `validation_template_blind.csv`
-is the blank hand-labelling sheet (no model scores shown).
+is the blank labelling sheet (no model scores shown).
 
 ![Pilot images](figures/mid_point_october/fig07_pilot_images.png)
 
@@ -124,7 +124,7 @@ What the pilot showed:
 - Points on bridges (University Bridge) and freeways (Idylwyld) have no frontage. **Fixed (November):**
   `bridge_or_freeway()` flags the 11 points (9 bridge, 2 freeway); they stay in the point list and get no image.
 - Some CLIP land-use labels are visibly wrong (a building frontage labelled `transit_node`); 1 of 10 is
-  low-confidence. Nothing from CLIP is used until it is checked against hand labels.
+  low-confidence. Nothing from CLIP is used until it is checked against the labels.
 - The 2014 frames carry a road-survey overlay (distance-measuring instrument, street names), so they came from a
   survey vehicle: worth asking the City whether newer survey imagery exists.
 
@@ -132,7 +132,7 @@ What the pilot showed:
 
 All model outputs are in `Data/cv_study_2026-11/` (made by `Scripts/cv_study/models.py`, about 11 minutes on the
 Mac's GPU; a repeat run writes identical files). **None is validated yet**: nothing is used until it passes the
-hand-label check.
+label check.
 
 - **3 Segmentation (done, not validated):** one panoptic model, Mask2Former (Swin-L) trained on Mapillary Vistas,
   pinned to revision `b9a3e9e`, run at the side views' full 1024 × 768 size. It gives the share of each view's street
@@ -143,7 +143,7 @@ hand-label check.
   scored by CLIP (thin objects are a CLIP weakness). People and cars in 2020 images are flagged (COVID-19 day).
 - **5 CLIP (done, not validated):** land-use type and the nine cues on every side view. The land-use label looks
   unreliable: it calls 230 of 492 views `surface_parking` and only 8 `commercial_street`, and 109 are low-confidence.
-  The hand labels will show how far it can be used.
+  The labels will show how far it can be used.
 - **6 Indicators (first pass):** `segment_indicators.csv` averages the two sides of each point, then the points of
   each segment (121 segments). Combining them per CPTED principle waits for the validation results.
 - **7 Validation (sheet ready, labelling next):** 150 side views drawn blind by a fixed rule, 30 shared with a second

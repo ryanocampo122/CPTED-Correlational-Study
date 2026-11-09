@@ -117,6 +117,7 @@
   "validation": {
     "n_sample": 150,
     "n_second_coder": 30,
+    "n_labelled": 150,
     "strata": 12,
     "population_views": 492,
     "status": "pending"

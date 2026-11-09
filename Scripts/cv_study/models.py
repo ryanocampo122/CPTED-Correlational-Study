@@ -21,7 +21,7 @@ Reads Data/cv_study_2026-11/image_manifest.csv and images/. Writes there:
   segment_indicators.csv    one row per street segment: the side views averaged per point, then per segment
   models_meta.json          models, revisions, settings, device and counts
 
-Nothing here is a measurement until it passes the hand-label check (Docs/validation_plan.md). In 2020
+Nothing here is a measurement until it passes the label check (Docs/validation_plan.md). In 2020
 images, people and cars describe one day during COVID-19 restrictions (Decision D1): they are flagged.
 
 USAGE (repository root)
@@ -210,7 +210,7 @@ def run_models(study: Path, out: Path, limit: int | None) -> None:
             "clip_model": L.CLIP_MODEL, "clip_revision": L.CLIP_REVISION, "clip_prompts": "Scripts/cv_pilot/clip_prompts.json",
             "device": device, "views": len(views), "points": int(man.point_id.nunique()),
             "segments": int(man.segment_id.nunique()), "seconds": round(time.time() - start),
-            "caveat": "not validated; no indicator is used until it passes the hand-label check",
+            "caveat": "not validated; no indicator is used until it passes the label check",
             "git_commit": L.git_commit(), "created_utc": L.now_iso()}
     (out / "models_meta.json").write_text(json.dumps(meta, indent=2))
     print(f"[models] {len(views)} side views from {meta['points']} points on {meta['segments']} segments "

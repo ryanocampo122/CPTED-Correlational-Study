@@ -1,9 +1,12 @@
-# Hand-label check of the image models (blind)
+# Label check of the image models (blind)
 
 `validation_blind.csv` lists 150 side views for the first coder; `validation_blind_coder2.csv` lists 30 of the same
 views for a second coder, who labels them **without seeing the first coder's sheet**. Neither sheet shows any model
 output. The views were drawn by `Scripts/cv_study/validation.py sample` before anyone labelled, by a rule fixed in
 advance (`sample_strata.json`): land-use type × image year strata, proportional, in the deterministic spread order.
+
+**Status (8 Nov 2026):** all 150 views in `validation_blind.csv` are labelled; the `labelled_by` column records who
+labelled each row. The 30 views in `validation_blind_coder2.csv` are not labelled yet, and nothing has been scored.
 
 ## How to label
 
