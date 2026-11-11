@@ -2,7 +2,8 @@
 
 Everything sent with the August 2026 report except the report itself, which is in
 `Deliverables/2026-08_august_report/` (`Master_Report.docx` and a PDF). Moved here from that folder on
-8 November 2026; nothing inside the package was changed. `./flight` rebuilds it from `data_pkg_august/` and
+8 November 2026; nothing inside the package was changed, except that the meeting slides were removed on
+11 November 2026 (they are in git history). `./flight` rebuilds it from `data_pkg_august/` and
 compares every table and chart with these copies.
 
 Reddit safety-perception analysis prepared for the August 2026 project meeting.
@@ -16,7 +17,6 @@ Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
 |---|---|
 | Read the findings | `Deliverables/2026-08_august_report/Master_Report.docx` (or the PDF beside it) |
 | Read the literature review | `Docs/literature review/Master_lit_review.docx` (moved there; see below) |
-| See the slides from the meeting | `Presentation_Slides.pdf` |
 | Look up a specific number | `data_pkg_august/02_derived_analysis/` |
 | See the evidence behind the data cleaning | `data_pkg_august/04_cleaned_datasets/cleaning_changelog.csv` |
 | Find a quote to cite or read aloud | `data_pkg_august/03_extracted_comment_samples/` |
@@ -42,7 +42,6 @@ Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
   CPTED Decision Support Using Environmental Sensing and Community Narratives: Site Identification for
   Saskatoon Pilot Deployment* (about 5,700 words): CPTED theory and evidence, crime and perception, and the
   candidate pilot sites.
-- **`Presentation_Slides.pdf`** — the nine slides for the August meeting, including why the numbers changed.
 - **`august_2026_folder_structure.docx`** — a one-page map of this package with
   a navigation table; useful for orienting anyone new to the folder.
 

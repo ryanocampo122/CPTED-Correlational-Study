@@ -4,6 +4,12 @@
 *~
 ~$*
 
+# Slide decks are not kept in the repository
+*.key
+*.ppt
+*.pptx
+Reference/Presentations/
+
 # Python / Node build artefacts
 __pycache__/
 *.pyc
