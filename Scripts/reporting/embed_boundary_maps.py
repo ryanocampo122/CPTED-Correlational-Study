@@ -94,8 +94,8 @@ def block(name: str, caption: str, picture: str | None) -> str:
     # The picture goes under the map, with a line saying why it is there
     if picture:
         # A short line and the picture itself
-        md += (f"\nThe same river in red, with the Downtown roads and the CBD outline "
-               f"(GitHub's maps can't be coloured):\n\n![{caption} in red]({picture})\n")
+        md += (f"\nThe same river in red, with the Downtown roads and the CBD outline:\n\n"
+               f"![{caption} in red]({picture})\n")
     return md
 
 
