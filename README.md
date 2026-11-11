@@ -79,7 +79,9 @@ streets) have no usable photo, including 5 of the 11 crime hot spots. Details in
 All November figures are in `Docs/figures/mid_point_november/`; the October figures, as sent, in
 `Docs/figures/mid_point_october/`.
 
+## Words used here
 
+| Word | Meaning |
 |---|---|
 | Segment | a piece of street between two intersections; the unit the study compares |
 | Sample point | a spot on a segment, about every 50 m, where a photo is looked for |
