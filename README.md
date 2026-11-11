@@ -24,6 +24,14 @@ Downtown is split into **218 short street segments**, with **423 sample points**
 street measures from the photos and a crime count; Reddit can only be placed by neighbourhood, not street by street.
 The plan is in `Plan/workplan_revised_2026-10.pdf`.
 
+![Study area: the Central Business District, Downtown roads and the South Saskatchewan River](Docs/figures/study_area_map.png)
+
+The map draws the three files in `Data/boundaries/`: the study-area polygon
+([`central_business_district_osm.geojson`](Data/boundaries/central_business_district_osm.geojson)), the road
+centrelines ([`osm_roads_downtown_context.geojson`](Data/boundaries/osm_roads_downtown_context.geojson)) and the
+river ([`osm_water_downtown_context.geojson`](Data/boundaries/osm_water_downtown_context.geojson)). GitHub opens
+each file as an interactive map. `Scripts/reporting/make_study_area_map.py` redraws the image.
+
 ## Where it stands
 
 ![Workflow status, November 2026](Docs/figures/mid_point_november/fig14_workflow_status.png)
