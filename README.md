@@ -4,12 +4,17 @@
 
 ## The project
 
-> **Research question**
+> **Research aim**
 >
-> Is the way Downtown Saskatoon's streets are built linked to:
+> To examine the correlations between built-environment features of public space in Saskatoon, measured from street-level imagery using computer vision, and (a) crime hotspots and (b) public perceptions of safety expressed on Reddit, using only openly available secondary data. The study is correlational: it identifies associations and spatial patterns rather than testing cause and effect.
 >
-> 1. where crime happens, and
-> 2. how safe people feel there?
+> **Research questions**
+>
+> - **RQ1:** To what extent are CPTED features measured from street-level imagery correlated with the locations of selected crime types?
+> - **RQ2:** To what extent are the same CPTED features correlated with perceptions of safety expressed on Reddit?
+> - **RQ3:** How strongly are perceived danger on Reddit and recorded crime correlated across space, and where do they diverge?
+>
+> From the [revised work plan](Plan/workplan_revised_2026-10.pdf) (October 2026).
 
 The project tests Crime Prevention Through Environmental Design (**CPTED**), the idea that storefronts, windows
 overlooking the street, lighting and upkeep discourage crime. Instead of walking the streets with a checklist, it
