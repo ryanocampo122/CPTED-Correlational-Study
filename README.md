@@ -25,13 +25,6 @@ Three public data sources:
 | Where crime is recorded | Saskatoon Police Service (SPS) records | each record is placed on the street it names |
 | How safe people feel | posts and comments on Reddit's r/saskatoon | posts are tagged by place and scored for tone (negative, neutral, positive) |
 
-Downtown is split into **218 short street segments**, with **423 sample points** about 50 m apart. Each segment gets
-street measures from the photos and a crime count; Reddit can only be placed by neighbourhood, not street by street.
-The plan is in `Plan/workplan_revised_2026-10.pdf`.
-
-The three files in `Data/boundaries/` as interactive maps: drag to pan, scroll to zoom, click a feature for its
-details. `Scripts/reporting/embed_boundary_maps.py` copies them in from the files.
-
 <!-- boundary maps: start (written by Scripts/reporting/embed_boundary_maps.py) -->
 
 **Study area: the Central Business District** ([`central_business_district_osm.geojson`](Data/boundaries/central_business_district_osm.geojson))
@@ -57,6 +50,34 @@ The same river in red, with the Downtown roads and the CBD outline:
 ![South Saskatchewan River in red](Docs/figures/downtown_river_red.png)
 
 <!-- boundary maps: end -->
+
+### What the map files are for
+
+The three files mark out where the study looks. They hold no photo or crime results.
+
+| File | Role |
+|---|---|
+| `central_business_district_osm.geojson` | The study area. `Scripts/cv_pilot/pilot.py` (its `points` step) places a sample point about every 50 m along Downtown's roads and keeps only the points inside this outline: 423 points on 218 street segments. Every photo and image measure belongs to one of these points. |
+| `osm_roads_downtown_context.geojson` | The sample points sit on these OpenStreetMap roads, and each road's direction is used to pick photos that face along the street. `Scripts/crime_data/hotspots.py` rebuilds the same 218 segments from this file, so each crime count lands on the segment the photos describe. |
+| `osm_water_downtown_context.geojson` | The river, for the maps only. It plays no part in the analysis. |
+
+### How the sample points were made
+
+Nobody went out and collected them. `Scripts/cv_pilot/pilot.py` worked them out from map data:
+
+1. **It downloaded the roads.** It drew a box around the CBD outline and downloaded every road inside it from OpenStreetMap. It kept regular streets, from freeways down to residential and pedestrian streets. It left out alleys, driveways and parking-lot lanes. That gave 254 roads.
+2. **It cut the roads into segments.** Each road was cut wherever it meets another road, so a segment is one stretch of street between two intersections. That made 354 segments.
+3. **It spaced points about 50 m apart.** It divided each segment's length by 50 m, rounded to get the number of points, and put each point in the middle of its share, so no point lands right on an intersection. A segment shorter than about 75 m gets one point in its middle.
+4. **It kept only the points inside the CBD outline.** It also dropped any point within 10 m of one it had already kept, which mostly happens where streets meet.
+5. **That left 423 points on 218 of the 354 segments.** The other segments are outside the outline. Each point records its street name, road type, segment, where it sits along the segment, and which way the road runs there.
+
+On the 218 segments, 107 have 1 point and the most any segment has is 6.
+
+#### What happened next
+
+`Scripts/cv_study/images.py` looked for one Mapillary photo for each point. It took the newest photo from 2020 on that was within 30 m of the point and whose camera pointed within 30° of the road's direction. That direction from step 5 is what the road file is used for.
+
+It skipped the 11 points on bridges or freeways, and 246 of the 423 points got a photo. From each photo it cut two side views, one facing each side of the street.
 
 ## Where it stands
 
