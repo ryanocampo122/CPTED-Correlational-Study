@@ -4,8 +4,12 @@
 
 ## The project
 
-**Is the way Downtown Saskatoon's streets are built linked to where crime happens, and to how safe people feel
-there?**
+> **Research question**
+>
+> Is the way Downtown Saskatoon's streets are built linked to:
+>
+> 1. where crime happens, and
+> 2. how safe people feel there?
 
 The project tests Crime Prevention Through Environmental Design (**CPTED**), the idea that storefronts, windows
 overlooking the street, lighting and upkeep discourage crime. Instead of walking the streets with a checklist, it
