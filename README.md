@@ -12,8 +12,6 @@
 - **RQ2:** To what extent are the same CPTED features correlated with perceptions of safety expressed on Reddit?
 - **RQ3:** How strongly are perceived danger on Reddit and recorded crime correlated across space, and where do they diverge?
 
-From the [revised work plan](Plan/workplan_revised_2026-10.pdf) (October 2026).
-
 The project tests Crime Prevention Through Environmental Design (**CPTED**), the idea that storefronts, windows
 overlooking the street, lighting and upkeep discourage crime. Instead of walking the streets with a checklist, it
 measures these features from street photos with computer vision, then compares them street by street with police
