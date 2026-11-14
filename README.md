@@ -51,33 +51,25 @@ The same river in red, with the Downtown roads and the CBD outline:
 
 <!-- boundary maps: end -->
 
-### What the map files are for
+### Spatial framework
 
-The three files mark out where the study looks. They hold no photo or crime results.
+The study correlates three sets of variables: CPTED features of the built environment measured from street photos (X), recorded crime (Y1) and perceived safety on Reddit (Y2). To be correlated, they must share a spatial unit. Following the work plan, this unit is the street segment, a block-length stretch of street between two intersections, and every variable is aggregated to it. The three files in `Data/boundaries/` define the study area and these segments; they hold no photo or crime results.
 
-| File | Role |
+| File | Role in the framework |
 |---|---|
-| `central_business_district_osm.geojson` | The study area. `Scripts/cv_pilot/pilot.py` (its `points` step) places a sample point about every 50 m along Downtown's roads and keeps only the points inside this outline: 423 points on 218 street segments. Every photo and image measure belongs to one of these points. |
-| `osm_roads_downtown_context.geojson` | The sample points sit on these OpenStreetMap roads, and each road's direction is used to pick photos that face along the street. `Scripts/crime_data/hotspots.py` rebuilds the same 218 segments from this file, so each crime count lands on the segment the photos describe. |
+| `central_business_district_osm.geojson` | The study area, Downtown's Central Business District (CBD). Only sample points inside this outline are kept, so it fixes which segments enter the analysis. |
+| `osm_roads_downtown_context.geojson` | The street segments. X is measured from photos at points on these roads, and `Scripts/crime_data/hotspots.py` rebuilds the same 218 segments from this file to place each crime record (Y1), so X and Y1 share one unit. |
 | `osm_water_downtown_context.geojson` | The river, for the maps only. It plays no part in the analysis. |
 
-### How the sample points were made
+Reddit posts rarely name a street, so Y2 is placed by neighbourhood rather than by segment (Decision D2 in `Docs/reddit_pipeline.md`).
 
-Nobody went out and collected them. `Scripts/cv_pilot/pilot.py` worked them out from map data:
+### Sampling design
 
-1. **It downloaded the roads.** It drew a box around the CBD outline and downloaded every road inside it from OpenStreetMap. It kept regular streets, from freeways down to residential and pedestrian streets. It left out alleys, driveways and parking-lot lanes. That gave 254 roads.
-2. **It cut the roads into segments.** Each road was cut wherever it meets another road, so a segment is one stretch of street between two intersections. That made 354 segments.
-3. **It spaced points about 50 m apart.** It divided each segment's length by 50 m, rounded to get the number of points, and put each point in the middle of its share, so no point lands right on an intersection. A segment shorter than about 75 m gets one point in its middle.
-4. **It kept only the points inside the CBD outline.** It also dropped any point within 10 m of one it had already kept, which mostly happens where streets meet.
-5. **That left 423 points on 218 of the 354 segments.** The other segments are outside the outline. Each point records its street name, road type, segment, where it sits along the segment, and which way the road runs there.
+The sample points are where X is observed. They were generated from map data rather than collected in the field. Roads inside the CBD were taken from OpenStreetMap; alleys, driveways and parking aisles were left out for now, although they matter for CPTED and can be added later. Each road was split wherever it met another road to form the segments. Points were spaced about every 50 m along each segment, as the work plan specifies, and placed in the middle of equal-length stretches so that they fall within blocks rather than on intersections. Points outside the CBD were removed, as were points closer than 10 m to one already kept, which would otherwise sample the same spot twice. This produced 423 points on 218 segments. Each point stores the direction of its road, which the image step uses.
 
-On the 218 segments, 107 have 1 point and the most any segment has is 6.
+### Image collection
 
-#### What happened next
-
-`Scripts/cv_study/images.py` looked for one Mapillary photo for each point. It took the newest photo from 2020 on that was within 30 m of the point and whose camera pointed within 30° of the road's direction. That direction from step 5 is what the road file is used for.
-
-It skipped the 11 points on bridges or freeways, and 246 of the 423 points got a photo. From each photo it cut two side views, one facing each side of the street.
+The CPTED principles in the work plan (natural surveillance, access control and territoriality, maintenance, activity support and lighting) are judged from the building fronts and the street edge, so each point needs a photo that shows them. No open source has street-level images of Downtown from summer 2026, so each point uses its most recent Mapillary photo from 2020 onward. This keeps the gap to the crime and Reddit data at three to six years, and it means the photos describe the typical built form of each street rather than its exact state in 2026. The photo had to be within 30 m of the point, so that it shows the point's own street, and its camera had to face within 30° of the road's direction, because a pilot found that photos taken from the cross street gave side views looking down the road instead of at the building fronts. The 11 points on bridges and freeways were excluded because they have no building frontage. Photos were found for 246 of the 423 points, on 121 of the 218 segments. Each is a 360° panorama, from which two side views were cut, one facing each side of the street. The image models score each side view, and the scores are averaged per point and then per segment to give the segment's CPTED indicators (X), which are correlated with its crime count (Y1).
 
 ## Where it stands
 
