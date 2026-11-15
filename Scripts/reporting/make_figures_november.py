@@ -2,7 +2,7 @@
 """
 make_figures_november.py
 ========================
-ComputerVision_Sentinel | Figures for the November 2026 midpoint update
+CPTED Vision | Figures for the November 2026 midpoint update
 
 Every number is read from Data/; nothing is typed in by hand. Same palette, fonts and base map as the
 October figures (make_figures.py).
@@ -251,6 +251,31 @@ def fig_image_set(out: Path) -> None:
     save(fig, "fig11_image_set.png", out)
 
 
+# Easy-to-tell-apart colours for the classes that fill most street views (the rest get muted colours)
+MAIN_COLOURS = {"Building": (230, 159, 0), "Vegetation": (0, 158, 115), "Sky": (86, 180, 233),
+                "Road": (110, 110, 110), "Sidewalk": (204, 121, 167), "Pedestrian Area": (240, 190, 215),
+                "Car": (213, 94, 0), "Pole": (0, 114, 178), "Street Light": (240, 228, 66),
+                "Terrain": (170, 205, 95), "Fence": (140, 90, 50), "Wall": (185, 160, 135),
+                "Ego Vehicle": (45, 45, 45), "Curb": (150, 150, 200), "Water": (40, 90, 200)}
+
+
+def class_palette(labels: list[str]) -> np.ndarray:
+    """A fixed colour per segmentation class, so the same class looks the same in every picture.
+
+    :param labels: the model's class names by id
+    :return: one RGB row per class, plus a last white row for pixels no class was given
+    """
+    # Muted colours for every class, then the fixed colours in their places, and white for no class
+    rng = np.random.default_rng(7)
+    palette = rng.integers(120, 200, size=(len(labels) + 1, 3))
+    for name, colour in MAIN_COLOURS.items():
+        # Only classes this model has
+        if name in labels:
+            palette[labels.index(name)] = colour
+    palette[len(labels)] = (255, 255, 255)
+    return palette
+
+
 def fig_segmentation_examples(out: Path) -> None:
     """fig12: four side views next to what the segmentation model labelled in them, after the tree-crown check,
     with a legend naming every colour."""
@@ -263,21 +288,8 @@ def fig_segmentation_examples(out: Path) -> None:
     # The camera car's typical roof on each side of the car-roof images, found the same way as for the shares
     roof_views = pd.concat([man.assign(side=s, view_file=man[f"view_{s}"]) for s in ("right", "left")])
     roofs, _ = typical_roofs(model, roof_views, STUDY)
-    # A fixed colour per class, so the same class looks the same in every panel: easy-to-tell-apart colours for the
-    # classes that fill most street views, muted colours for the rest, and white where no class was given
-    rng = np.random.default_rng(7)
-    palette = rng.integers(120, 200, size=(len(model.labels) + 1, 3))
-    main_colours = {"Building": (230, 159, 0), "Vegetation": (0, 158, 115), "Sky": (86, 180, 233),
-                    "Road": (110, 110, 110), "Sidewalk": (204, 121, 167), "Pedestrian Area": (240, 190, 215),
-                    "Car": (213, 94, 0), "Pole": (0, 114, 178), "Street Light": (240, 228, 66),
-                    "Terrain": (170, 205, 95), "Fence": (140, 90, 50), "Wall": (185, 160, 135),
-                    "Ego Vehicle": (45, 45, 45), "Curb": (150, 150, 200), "Water": (40, 90, 200)}
-    # Put the fixed colours in their places
-    for name, colour in main_colours.items():
-        # Only classes this model has
-        if name in model.labels:
-            palette[model.labels.index(name)] = colour
-    palette[len(model.labels)] = (255, 255, 255)
+    # A fixed colour per class
+    palette = class_palette(model.labels)
     # Capture dates in Saskatoon local time, the way the docs give them
     local = pd.to_datetime(picks.captured_at, utc=True, format="ISO8601").dt.tz_convert("America/Regina").dt.date
     picks = picks.assign(local_date=local.astype(str))
