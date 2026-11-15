@@ -81,6 +81,10 @@ The sample points are where X is observed. They were generated from map data rat
 
 The CPTED principles in the work plan (natural surveillance, access control and territoriality, maintenance, activity support and lighting) are judged from the building fronts and the street edge, so each point needs a photo that shows them. No open source has street-level images of Downtown from summer 2026, so each point uses its most recent Mapillary photo from 2020 onward. This keeps the gap to the crime and Reddit data at three to six years, and it means the photos describe the typical built form of each street rather than its exact state in 2026. The photo had to be within 30 m of the point, so that it shows the point's own street, and its camera had to face within 30° of the road's direction, because a pilot found that photos taken from the cross street gave side views looking down the road instead of at the building fronts. The 11 points on bridges and freeways were excluded because they have no building frontage. Photos were found for 246 of the 423 points, on 121 of the 218 segments. Each is a 360° panorama, from which two side views were cut, one facing each side of the street. The image models score each side view, and the scores are averaged per point and then per segment to give the segment's CPTED indicators (X), which are correlated with its crime count (Y1).
 
+The segmentation model labels every pixel of a side view with what it shows. The four examples below show the photo on the left and the model's labels on the right, with each colour named in the legend.
+
+![Four side views and what the segmentation model labelled in them](Docs/figures/mid_point_november/fig12_segmentation_examples.png)
+
 ## Where it stands
 
 ![Workflow status, November 2026](Docs/figures/mid_point_november/fig14_workflow_status.png)
