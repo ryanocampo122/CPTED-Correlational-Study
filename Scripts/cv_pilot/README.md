@@ -39,7 +39,7 @@ boundary; swap in the City's own file when it arrives) and the output folder is 
 `--boundary-geojson ""` falls back to the old placeholder box. Tests (offline, no token):
 `.venv/bin/python Scripts/cv_pilot/tests/test_pilot.py`. CLIP is `openai/clip-vit-base-patch32` at a pinned revision (`CLIP_REVISION` in `pilot_lib.py`, listed in
 `requirements.txt`); `./flight` fetches it, or the first CLIP run downloads it once (~600 MB).
-Credentials: `MAPILLARY_TOKEN=MLY|...` in `~/.config/computervision_sentinel/secrets.env`, outside the repository
+Credentials: `MAPILLARY_TOKEN=MLY|...` in `~/.config/cpted_vision/secrets.env`, outside the repository
 (`Docs/data_ethics.md`).
 
 ## Images and the study period

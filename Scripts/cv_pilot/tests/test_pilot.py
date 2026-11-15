@@ -314,23 +314,23 @@ def test_no_secret_in_error():
 
 
 def test_key_files_order_and_precedence():
-    """Keys come from the shell first, then $COMPUTERVISION_SENTINEL_ENV_FILE, then
-    ~/.config/computervision_sentinel/secrets.env, then the legacy repository .env. Uses a fake HOME and fake
+    """Keys come from the shell first, then $CPTED_VISION_ENV_FILE, then
+    ~/.config/cpted_vision/secrets.env, then the legacy repository .env. Uses a fake HOME and fake
     key names, so no real credential is read or changed."""
     import os
     tmp = Path(tempfile.mkdtemp())
-    saved = {k: os.environ.get(k) for k in ("HOME", "COMPUTERVISION_SENTINEL_ENV_FILE", "CVS_TEST_A", "CVS_TEST_B")}
+    saved = {k: os.environ.get(k) for k in ("HOME", "CPTED_VISION_ENV_FILE", "CVS_TEST_A", "CVS_TEST_B")}
     try:
         os.environ["HOME"] = str(tmp)
-        os.environ.pop("COMPUTERVISION_SENTINEL_ENV_FILE", None)
-        home_file = tmp / ".config" / "computervision_sentinel" / "secrets.env"
+        os.environ.pop("CPTED_VISION_ENV_FILE", None)
+        home_file = tmp / ".config" / "cpted_vision" / "secrets.env"
         assert L.key_files() == [home_file, L.REPO_ROOT / ".env"]
         assert all(L.REPO_ROOT not in p.parents for p in L.key_files()[:-1])     # only the legacy file is in the repo
         override = tmp / "other.env"
         override.write_text("CVS_TEST_A=from_override\n")
         home_file.parent.mkdir(parents=True)
         home_file.write_text("# comment\nCVS_TEST_A=from_home\nCVS_TEST_B='from_home'\n")
-        os.environ["COMPUTERVISION_SENTINEL_ENV_FILE"] = str(override)
+        os.environ["CPTED_VISION_ENV_FILE"] = str(override)
         assert L.key_files()[:2] == [override, home_file]
         os.environ.pop("CVS_TEST_A", None)
         os.environ["CVS_TEST_B"] = "from_shell"

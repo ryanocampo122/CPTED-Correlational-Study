@@ -1,7 +1,7 @@
 """
 blind_review.py
 ===============
-ComputerVision_Sentinel | Check both review files by hand, blind, then record who decided
+CPTED Vision | Check both review files by hand, blind, then record who decided
 
 PURPOSE
 -------

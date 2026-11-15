@@ -1,7 +1,7 @@
 """
 02b_sentiment_sensitivity.py
 ============================
-ComputerVision_Sentinel | How much do the conclusions depend on the sentiment scorer?
+CPTED Vision | How much do the conclusions depend on the sentiment scorer?
 
 PURPOSE
 -------

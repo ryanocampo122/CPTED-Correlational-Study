@@ -1,4 +1,4 @@
-# ComputerVision_Sentinel — Analysis Code (August 2026 deliverable)
+# CPTED Vision — Analysis Code (August 2026 deliverable)
 
 Code used to produce the August progress report, its companion data
 workbook, and the earlier Meewasin data-quality memo, from the raw
@@ -22,7 +22,7 @@ deliverables from the verified data.
 | 01 | `01_audit_location_tagging.py` | Python | Compares raw vs. word-boundary-corrected tagging for all 20 neighbourhood categories; confirms the issue is isolated to Riverbank/Meewasin |
 | 02 | `02_corrected_analysis.py` | Python | Re-tags posts/comments with the verified matcher; computes neighbourhood summary, environmental-cue rates, time-of-day sentiment, and seasonal trend |
 | 03 | `03_generate_charts.py` | Python | Renders the 6 report figures (PNG) from the outputs of 01 and 02 |
-| 04 | `04_build_excel_workbook.py` | Python | Assembles the verified data tables into a workbook (delivered as `ComputerVision_Sentinel_August_DataTables.numbers`) |
+| 04 | `04_build_excel_workbook.py` | Python | Assembles the verified data tables into a workbook (delivered as `CPTED_Vision_August_DataTables.numbers`) |
 | 05 | `05_extract_example_quotes.py` | Python | Pulls representative, anonymized example comments for the report's quote blocks |
 | 06 | `06_build_meewasin_memo_docx.js` | Node.js (docx) | Builds the earlier, narrower Meewasin-only memo |
 | 07 | `07_build_august_report_docx.js` | Node.js (docx) | Builds the full August report, with embedded charts and quotes |
@@ -60,7 +60,7 @@ The outputs of a verified run are already in the package:
 - Analysis tables → `../data_pkg_august/02_derived_analysis/`
 - Comment samples → `../data_pkg_august/03_extracted_comment_samples/`
 - Charts → `../charts/`
-- Reports → `../Master_Report.docx`, `../ComputerVision_Sentinel_Meewasin_DataQuality_Memo.docx`
+- Reports → `../Master_Report.docx`, `../CPTED_Vision_Meewasin_DataQuality_Memo.docx`
 
 Re-running `run_all.sh` regenerates all of these into a local `output/`
 directory rather than overwriting the delivered copies.

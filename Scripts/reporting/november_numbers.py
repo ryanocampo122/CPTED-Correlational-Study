@@ -2,7 +2,7 @@
 """
 november_numbers.py
 ===================
-ComputerVision_Sentinel | Every number quoted in the November 2026 midpoint update
+CPTED Vision | Every number quoted in the November 2026 midpoint update
 
 Reads Data/ and writes Docs/verification/november_2026_numbers.json, which the Markdown update and
 build_november_report.js read. Nothing in either is typed by hand.

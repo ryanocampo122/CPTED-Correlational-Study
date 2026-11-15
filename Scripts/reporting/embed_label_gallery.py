@@ -2,7 +2,7 @@
 """
 embed_label_gallery.py
 ======================
-ComputerVision_Sentinel | The 150 labelled side views as a gallery in Docs/cv_pipeline.md
+CPTED Vision | The 150 labelled side views as a gallery in Docs/cv_pipeline.md
 
 Reads the labelling sheet (Data/cv_study_2026-11/validation/validation_blind.csv), makes a small copy of each
 labelled side view in Docs/figures/label_check/, and writes a gallery into Docs/cv_pipeline.md: one table per

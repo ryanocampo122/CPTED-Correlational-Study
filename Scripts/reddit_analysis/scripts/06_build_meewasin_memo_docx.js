@@ -1,10 +1,10 @@
 /**
  * 06_build_meewasin_memo_docx.js
  * ================================
- * ComputerVision_Sentinel | Builds the short-form data quality memo
+ * CPTED Vision | Builds the short-form data quality memo
  *
  * ARCHIVAL (October 2026): rebuilds the memo as sent in July/August, except that the
- * project name now reads ComputerVision_Sentinel.
+ * project name now reads CPTED Vision.
  * Its hard-coded numbers predate the October corrections (environmental-cue
  * tagging, other-city exclusions, adjusted sentiment) and are not current.
  * It is not run by run_all.sh. See Scripts/reddit_analysis/README.md.
@@ -139,7 +139,7 @@ const doc = new Document({
     properties: { page: { size: { width: PAGE_W, height: PAGE_H }, margin: { top: 1080, bottom: 1080, left: 1260, right: 1260 } } },
     children: [
       new Paragraph({
-        children: [new TextRun({ text: "ComputerVision_Sentinel", bold: true, size: 40, color: "2F5496" })],
+        children: [new TextRun({ text: "CPTED Vision", bold: true, size: 40, color: "2F5496" })],
         spacing: { after: 40 },
       }),
       new Paragraph({

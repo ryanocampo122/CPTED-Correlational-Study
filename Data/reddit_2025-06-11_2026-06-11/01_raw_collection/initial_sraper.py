@@ -1,5 +1,5 @@
 """
-ComputerVision_Sentinel | Reddit Safety Perception Scraper
+CPTED Vision | Reddit Safety Perception Scraper
 ========================================================
 Saskatoon Safety Narrative Collection (June 2025 – June 2026)
 
@@ -56,7 +56,7 @@ OUTPUTS
 - saskatoon_safety_comments_<YYYYMMDD>.csv      Comment threads (post-linked)
 - saskatoon_safety_metadata_<YYYYMMDD>.json     Collection metadata
 - saskatoon_safety_gis_<YYYYMMDD>.csv           GIS-ready (neighbourhood-tagged)
-- computervision_sentinel_scraper.log                     Detailed log
+- cpted_vision_scraper.log                     Detailed log
 
 ETHICS
 ------
@@ -106,11 +106,11 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
     handlers=[
-        logging.FileHandler("computervision_sentinel_scraper.log"),
+        logging.FileHandler("cpted_vision_scraper.log"),
         logging.StreamHandler(),
     ],
 )
-logger = logging.getLogger("ComputerVision_Sentinel")
+logger = logging.getLogger("CPTED Vision")
 
 
 @dataclass
@@ -217,7 +217,7 @@ ENVIRONMENTAL_CUES: dict[str, list[str]] = {
 
 class SaskatoonSafetyCollector:
     """
-    Reddit collector for the ComputerVision_Sentinel narrative-criminology pillar.
+    Reddit collector for the CPTED Vision narrative-criminology pillar.
 
     Reuses architectural patterns from Ryan's prior pandemic-era scraper
     (multi-strategy retrieval, monthly dedup, VADER sentiment, PII scrub,
@@ -696,7 +696,7 @@ class SaskatoonSafetyCollector:
         path = self.config.output_dir / f"saskatoon_safety_summary_{stamp}.txt"
         with open(path, "w") as f:
             f.write("=" * 70 + "\n")
-            f.write("ComputerVision_Sentinel | Reddit Safety Perception Collection\n")
+            f.write("CPTED Vision | Reddit Safety Perception Collection\n")
             f.write(f"r/{self.config.subreddit} | "
                     f"{self.config.start_date.date()} – {self.config.end_date.date()}\n")
             f.write("=" * 70 + "\n\n")
@@ -760,14 +760,14 @@ def main() -> None:
     praw_credentials = {
         "client_id":     os.getenv("PRAW_CLIENT_ID",     "<REDACTED>"),
         "client_secret": os.getenv("PRAW_CLIENT_SECRET", "<REDACTED>"),
-        "user_agent":    os.getenv("PRAW_USER_AGENT",    "ComputerVision_Sentinel/1.0 by /u/ocamporyan"),
+        "user_agent":    os.getenv("PRAW_USER_AGENT",    "CPTED_Vision/1.0 by /u/ocamporyan"),
     }
 
     config = ScraperConfig()
     collector = SaskatoonSafetyCollector(praw_credentials, config)
 
     logger.info("=" * 70)
-    logger.info("ComputerVision_Sentinel | Reddit Safety Perception Collection")
+    logger.info("CPTED Vision | Reddit Safety Perception Collection")
     logger.info("Scope:  r/%s", config.subreddit)
     logger.info("Window: %s – %s",
                 config.start_date.date(), config.end_date.date())

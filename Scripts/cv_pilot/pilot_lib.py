@@ -2,7 +2,7 @@
 pilot_lib.py
 ============
 Shared helpers for the October 2026 computer-vision pilot
-(ComputerVision_Sentinel: street-level imagery -> CPTED cues -> Reddit).
+(CPTED Vision: street-level imagery -> CPTED cues -> Reddit).
 
 Design choices
 --------------
@@ -12,7 +12,7 @@ Design choices
 * Every network call goes through a small function so it can be mocked in
   tests/test_pilot.py (the test-suite never touches the internet).
 * Secrets are read from the shell, then from the key files in key_files()
-  (~/.config/computervision_sentinel/secrets.env; never the repository), and
+  (~/.config/cpted_vision/secrets.env; never the repository), and
   are never written to logs, CSVs or exception messages.
 """
 from __future__ import annotations
@@ -66,7 +66,7 @@ MAPILLARY_MAX_LIMIT = 2000                      # API maximum per request
 LOCAL_TZ = "America/Regina"
 
 SUMMER_MONTHS = (6, 7, 8)                       # study period is June-August
-USER_AGENT = "ComputerVision_Sentinel research pilot (University of Saskatchewan)"
+USER_AGENT = "CPTED Vision research pilot (University of Saskatchewan)"
 
 # The CLIP model is a pinned requirement (see requirements.txt): this exact revision of the Hugging Face
 # repository, never "latest", because a re-uploaded model would change every score. ./flight's install stage
@@ -80,11 +80,11 @@ CLIP_REVISION = "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268"
 # --------------------------------------------------------------------------- #
 def key_files() -> list[Path]:
     """Credential files, in the order they are read (same order as Scripts/flight/execute_flight.py):
-    1. $COMPUTERVISION_SENTINEL_ENV_FILE, 2. ~/.config/computervision_sentinel/secrets.env,
+    1. $CPTED_VISION_ENV_FILE, 2. ~/.config/cpted_vision/secrets.env,
     3. the repository's .env (legacy, git-ignored). Variables already in the shell win over every file."""
-    override = os.environ.get("COMPUTERVISION_SENTINEL_ENV_FILE", "").strip()
+    override = os.environ.get("CPTED_VISION_ENV_FILE", "").strip()
     files = [Path(override).expanduser()] if override else []
-    return files + [Path.home() / ".config" / "computervision_sentinel" / "secrets.env", REPO_ROOT / ".env"]
+    return files + [Path.home() / ".config" / "cpted_vision" / "secrets.env", REPO_ROOT / ".env"]
 
 
 def load_env(path: Path | None = None) -> None:
@@ -108,7 +108,7 @@ def get_mapillary_token() -> str:
     if not tok or tok.upper().startswith("PASTE"):
         raise SystemExit(
             "MAPILLARY_TOKEN is empty or still a placeholder.\n"
-            "  The keys live in ~/.config/computervision_sentinel/secrets.env (outside the repository;\n"
+            "  The keys live in ~/.config/cpted_vision/secrets.env (outside the repository;\n"
             "  see Docs/data_ethics.md). Set the line  MAPILLARY_TOKEN=MLY|...  there. To get a token:\n"
             "  1. Sign in at https://www.mapillary.com/dashboard/developers\n"
             "  2. Register an application and copy its Client Token (starts with 'MLY|')\n"
@@ -620,7 +620,7 @@ class MapillaryClient:
             if r.status_code == 400:                  # field rejected -> retry with the minimal set
                 r = self._get({**params, "fields": MAPILLARY_FIELDS_MINIMAL})
             if r.status_code in (401, 403):
-                raise SystemExit("Mapillary rejected the token (HTTP %d). Check MAPILLARY_TOKEN in ~/.config/computervision_sentinel/secrets.env." % r.status_code)
+                raise SystemExit("Mapillary rejected the token (HTTP %d). Check MAPILLARY_TOKEN in ~/.config/cpted_vision/secrets.env." % r.status_code)
             r.raise_for_status()
             time.sleep(self.pause_s)
             return r.json().get("data", [])

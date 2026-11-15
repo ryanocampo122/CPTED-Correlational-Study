@@ -2,7 +2,7 @@
 """
 models.py
 =========
-ComputerVision_Sentinel | November 2026: segmentation, detection and CLIP on every side view
+CPTED Vision | November 2026: segmentation, detection and CLIP on every side view
 (work plan steps 3-5, Docs/cv_pipeline.md)
 
 One panoptic model does both segmentation and detection: Mask2Former (Swin-L) trained on Mapillary

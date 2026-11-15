@@ -1,11 +1,11 @@
 /*
  * build_november_report.js
  * ========================
- * ComputerVision_Sentinel | November 2026 midpoint progress update, as a Word report and a Markdown page.
+ * CPTED Vision | November 2026 midpoint progress update, as a Word report and a Markdown page.
  *
  * Inputs : Docs/verification/november_2026_numbers.json   (Scripts/reporting/november_numbers.py)
  *          Docs/figures/mid_point_november/*.png           (Scripts/reporting/make_figures_november.py)
- * Output : Deliverables/2026-11_midpoint/ComputerVision_Sentinel_November2026_Midpoint_Update.docx
+ * Output : Deliverables/2026-11_midpoint/CPTED_Vision_November2026_Midpoint_Update.docx
  *          Deliverables/2026-11_midpoint/README.md (same text as Markdown)
  *          Both are kept local (git-ignored) until the update is sent; ./flight rebuilds them in RESULTS_FINAL.
  * Each can be redirected (./flight does): --numbers <json> --figures <folder> --out <docx> --md <md>
@@ -35,7 +35,7 @@ const arg = (name, dflt) => {
 const NUMBERS = arg("--numbers", path.join(REPO, "Docs/verification/november_2026_numbers.json"));
 const FIG_DIR = arg("--figures", path.join(REPO, "Docs/figures/mid_point_november"));
 const OUT = arg("--out", path.join(REPO, "Deliverables/2026-11_midpoint",
-  "ComputerVision_Sentinel_November2026_Midpoint_Update.docx"));
+  "CPTED_Vision_November2026_Midpoint_Update.docx"));
 const MD = arg("--md", path.join(path.dirname(OUT), "README.md"));
 const N = JSON.parse(fs.readFileSync(NUMBERS, "utf8"));
 const I = N.images, Y = N.image_years, M = N.models, V = N.validation, C = N.crime, J = N.join;
@@ -46,7 +46,7 @@ const FONT = "Times New Roman";
 const TEXT_W = 9360;
 const HEAD_FILL = "000000";
 const BORDER = { style: BorderStyle.SINGLE, size: 4, color: "8C8A84" };
-const HEADER_TEXT = "ComputerVision_Sentinel  ·  November 2026 midpoint update";
+const HEADER_TEXT = "CPTED Vision  ·  November 2026 midpoint update";
 
 // Number helpers: thousands separators, percent of a total, one decimal
 const fmt = (n) => Number(n).toLocaleString("en-CA");
@@ -73,7 +73,7 @@ const g = C.records_by_group;
 const cat = C.records_by_category;
 
 // ---- Title and 1. Summary ----
-blocks.push({ t: "title", text: "ComputerVision_Sentinel" });
+blocks.push({ t: "title", text: "CPTED Vision" });
 blocks.push({ t: "subtitle", text: "November 2026 midpoint update: street images, image models and crime hot spots" });
 blocks.push({ t: "byline", text: "Prepared by Ryan Ocampo" });
 blocks.push({ t: "rule", text: "November 2026  ·  revised work plan (October 2026)  ·  study period 1 June – 31 August 2026" });
@@ -366,7 +366,7 @@ for (const b of blocks) {
 // The document: fonts and heading style, list styles, page size and margins, header and footer, file properties
 const doc = new Document({
   creator: "Ryan Ocampo", lastModifiedBy: "Ryan Ocampo",
-  title: "ComputerVision_Sentinel: November 2026 midpoint update",
+  title: "CPTED Vision: November 2026 midpoint update",
   description: "Street images, image models and crime hot spots, November 2026",
   styles: {
     default: { document: { run: { font: FONT, size: SIZE.body } } },

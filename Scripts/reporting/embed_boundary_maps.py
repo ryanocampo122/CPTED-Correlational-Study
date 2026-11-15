@@ -2,7 +2,7 @@
 """
 embed_boundary_maps.py
 ======================
-ComputerVision_Sentinel | Interactive boundary maps in the main README
+CPTED Vision | Interactive boundary maps in the main README
 
 Copies the three files in Data/boundaries/ into README.md as ```geojson blocks. GitHub draws
 each block as the same interactive map it shows when the file itself is opened (drag to pan,

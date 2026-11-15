@@ -1,4 +1,4 @@
-# ComputerVision_Sentinel — Python environment (Python 3.14)
+# CPTED Vision — Python environment (Python 3.14)
 #   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 #   (./flight --execute_flight does this as its first stage, and fetches the CLIP model below)
 # Versions are pinned to the ones that produced the published outputs, so

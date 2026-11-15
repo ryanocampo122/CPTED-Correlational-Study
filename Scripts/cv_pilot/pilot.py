@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-pilot.py  -  ComputerVision_Sentinel | October 2026 computer-vision pilot
+pilot.py  -  CPTED Vision | October 2026 computer-vision pilot
 ======================================================================
 A deliberately small end-to-end run of the work-plan pipeline on <= 10 Downtown images:
 

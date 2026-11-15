@@ -1,4 +1,4 @@
-# ComputerVision_Sentinel documentation
+# CPTED Vision documentation
 
 The detailed record of how the study works, what has been checked and what is still open.
 For a short summary of progress, read the October update in `Deliverables/2026-10_october_update/`.

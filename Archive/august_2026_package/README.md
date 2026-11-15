@@ -1,4 +1,4 @@
-# ComputerVision_Sentinel — August 2026 package (archive)
+# CPTED Vision — August 2026 package (archive)
 
 Everything sent with the August 2026 report except the report itself, which is in
 `Deliverables/2026-08_august_report/` (`Master_Report.docx` and a PDF). Moved here from that folder on
@@ -33,7 +33,7 @@ Source: r/saskatoon, 11 Jun 2025 – 11 Jun 2026 (426 posts, 14,889 comments).
 - **`Master_Report.docx`** (in `Deliverables/2026-08_august_report/`) — the main deliverable. Verified analysis, six
   figures, site deep dives on Downtown/CBD and Riverbank/Meewasin, direct
   answers to the questions raised in July, limitations, and recommendations.
-- **`ComputerVision_Sentinel_Meewasin_DataQuality_Memo.docx`** — an earlier, narrower memo
+- **`CPTED_Vision_Meewasin_DataQuality_Memo.docx`** — an earlier, narrower memo
   covering only the Riverbank/Meewasin location verification. Superseded in
   scope by the main report; kept because the report's appendix references it.
 

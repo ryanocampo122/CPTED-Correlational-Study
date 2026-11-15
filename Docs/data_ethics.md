@@ -2,7 +2,7 @@
 
 ## Reddit
 
-- Authors are replaced by salted HMAC-SHA-256 hashes (`COMPUTERVISION_SENTINEL_HASH_SALT`, kept private and reused so hashes
+- Authors are replaced by salted HMAC-SHA-256 hashes (`CPTED_VISION_HASH_SALT`, kept private and reused so hashes
   stay comparable across collections). Deleted and removed content is excluded. Emails, phone numbers and street
   addresses are scrubbed from `cleaned_text`.
 - Raw text (`body`, `full_text`) is still verbatim and searchable, so a comment can be traced to its author.
@@ -41,17 +41,17 @@ stigmatization: Wacquant 2007; Meade 2021; Schwarze 2023, in `Reference/Literatu
 ## Credentials and sharing
 
 - **Since November 2026 credentials live outside the repository**, in
-  `~/.config/computervision_sentinel/secrets.env` (`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`,
-  `COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`; `KEY=VALUE` lines). The folder is `chmod 700` and the file
+  `~/.config/cpted_vision/secrets.env` (`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`,
+  `CPTED_VISION_HASH_SALT`, `MAPILLARY_TOKEN`; `KEY=VALUE` lines). The folder is `chmod 700` and the file
   `chmod 600`, so only your user account can read it. Every script reads, in order: variables already set in the shell,
-  the file named by `COMPUTERVISION_SENTINEL_ENV_FILE` (if set), that file, and, as a legacy fallback, a `.env`
+  the file named by `CPTED_VISION_ENV_FILE` (if set), that file, and, as a legacy fallback, a `.env`
   at the repository root (git-ignored; the flight marks it WARN). `.venv/keys.txt` is no longer read; delete it.
   `.env`, `*.env`, `secrets.*` and `keys.txt` are git-ignored. New team members get the keys through a password
   manager share, never by chat or email.
 - Setting up on a machine:
   ```bash
-  mkdir -p ~/.config/computervision_sentinel && chmod 700 ~/.config/computervision_sentinel
-  $EDITOR ~/.config/computervision_sentinel/secrets.env && chmod 600 ~/.config/computervision_sentinel/secrets.env
+  mkdir -p ~/.config/cpted_vision && chmod 700 ~/.config/cpted_vision
+  $EDITOR ~/.config/cpted_vision/secrets.env && chmod 600 ~/.config/cpted_vision/secrets.env
   ```
 - **History.** From October 2026 until the November move, `.env` was committed to the private GitHub repository.
   Removing it from the current files does not remove it from git history, so everyone with access to the repository

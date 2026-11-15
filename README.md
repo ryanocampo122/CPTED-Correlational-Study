@@ -1,6 +1,6 @@
-# CPTED Computer Vision and Correlational Sentiment analysis of Public Safety - A Study on Crime Patterns - Saskatoon
+# Street Design, Crime and Perceived Safety in Downtown Saskatoon: A Computer-Vision Study of CPTED Using Street-Level Imagery
 
-**ComputerVision_Sentinel**, a University of Saskatchewan (AIRI 2026) research project.
+**CPTED Vision**, a University of Saskatchewan (AIRI 2026) research project.
 
 ## The project
 
@@ -183,9 +183,9 @@ with the published outputs) into a new `RESULTS_FINAL/EXECUTION-<n>/` and nothin
 `FLIGHT_SUMMARY.md` first. Details and options: `Docs/workflow.md` ("One command") and `./flight --help`.
 
 Environment: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt` (Python 3.14; the flight does
-this itself). Credentials live outside the repository, in `~/.config/computervision_sentinel/secrets.env`
+this itself). Credentials live outside the repository, in `~/.config/cpted_vision/secrets.env`
 (setup in `Docs/data_ethics.md`): `PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`,
-`COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`. Single steps, to run one on its own, are listed in `Docs/workflow.md`; the most used:
+`CPTED_VISION_HASH_SALT`, `MAPILLARY_TOKEN`. Single steps, to run one on its own, are listed in `Docs/workflow.md`; the most used:
 
 ```bash
 bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31            # Reddit analysis (scratch)

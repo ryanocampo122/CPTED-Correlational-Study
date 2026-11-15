@@ -2,7 +2,7 @@
 """
 clean_sps_crime.py
 ==================
-ComputerVision_Sentinel | Clean the Saskatoon Police Service (SPS) criminal-offence extract (Y1)
+CPTED Vision | Clean the Saskatoon Police Service (SPS) criminal-offence extract (Y1)
 
 Reads the raw extract in Data/sps_crime_2026-06-01_2026-08-31/01_raw_collection/ (never edited; its SHA-256 is
 checked first) and writes 02_cleaned/:

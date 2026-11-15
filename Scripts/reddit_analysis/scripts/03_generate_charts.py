@@ -1,7 +1,7 @@
 """
 03_generate_charts.py
 ======================
-ComputerVision_Sentinel | Report charts from the corrected tables
+CPTED Vision | Report charts from the corrected tables
 
 PURPOSE
 -------

@@ -1,7 +1,7 @@
 """
 01b_other_city_review.py
 ========================
-ComputerVision_Sentinel | Keep the other-city location review in sync
+CPTED Vision | Keep the other-city location review in sync
 
 PURPOSE
 -------

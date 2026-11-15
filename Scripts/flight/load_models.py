@@ -2,7 +2,7 @@
 """
 load_models.py
 ==============
-ComputerVision_Sentinel | Stage 3 of ./flight: load the two models, smoke-test them, record what was loaded
+CPTED Vision | Stage 3 of ./flight: load the two models, smoke-test them, record what was loaded
 
   CLIP   openai/clip-vit-base-patch32 at the pinned revision (pilot_lib.CLIP_REVISION) through
          Scripts/cv_pilot/pilot_lib.ClipEncoder (the class pilot.py score

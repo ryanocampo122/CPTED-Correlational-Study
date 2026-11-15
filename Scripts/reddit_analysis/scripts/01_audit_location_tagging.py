@@ -1,7 +1,7 @@
 """
 01_audit_location_tagging.py
 =============================
-ComputerVision_Sentinel | Audit of the neighbourhood tagger
+CPTED Vision | Audit of the neighbourhood tagger
 
 PURPOSE
 -------

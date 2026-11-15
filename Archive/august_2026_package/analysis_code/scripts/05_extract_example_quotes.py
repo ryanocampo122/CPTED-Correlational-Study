@@ -1,7 +1,7 @@
 """
 05_extract_example_quotes.py
 ==============================
-ComputerVision_Sentinel | Pull representative example comments for the report
+CPTED Vision | Pull representative example comments for the report
 
 PURPOSE
 -------

@@ -1,7 +1,7 @@
 """
 common.py
 =========
-ComputerVision_Sentinel | Shared paths, vocabularies and matchers
+CPTED Vision | Shared paths, vocabularies and matchers
 
 Every analysis script (and, from October 2026, the collection scraper) imports
 its tagging vocabulary and matching logic from here, so there is exactly one
@@ -40,8 +40,8 @@ PATH RESOLUTION
 ---------------
 Each Reddit dataset is a folder Data/<dataset>/ whose 01_raw_collection/ holds
 one saskatoon_safety_posts_<stamp>.csv and one ..._comments_<stamp>.csv.
-Raw data: $COMPUTERVISION_SENTINEL_RAW_DIR, else Data/reddit_2025-06-11_2026-06-11/01_raw_collection.
-Outputs: $COMPUTERVISION_SENTINEL_OUT_DIR, else ../output. run_all.sh sets both.
+Raw data: $CPTED_VISION_RAW_DIR, else Data/reddit_2025-06-11_2026-06-11/01_raw_collection.
+Outputs: $CPTED_VISION_OUT_DIR, else ../output. run_all.sh sets both.
 """
 
 from __future__ import annotations
@@ -79,8 +79,8 @@ def _raw_files(d: Path, kind: str) -> list[Path]:
 
 def raw_dir() -> Path:
     """Folder holding one saskatoon_safety_posts_*.csv and one ..._comments_*.csv:
-    $COMPUTERVISION_SENTINEL_RAW_DIR, else the default dataset's 01_raw_collection."""
-    env = os.getenv("COMPUTERVISION_SENTINEL_RAW_DIR")
+    $CPTED_VISION_RAW_DIR, else the default dataset's 01_raw_collection."""
+    env = os.getenv("CPTED_VISION_RAW_DIR")
     candidates = [Path(env)] if env else []
     candidates += [DATA_DIR / DEFAULT_DATASET / "01_raw_collection"]
     for c in candidates:
@@ -88,7 +88,7 @@ def raw_dir() -> Path:
             return c.resolve()
     raise FileNotFoundError(
         "No raw collection found (need exactly one saskatoon_safety_posts_*.csv and one "
-        "..._comments_*.csv). Set COMPUTERVISION_SENTINEL_RAW_DIR. Looked in: "
+        "..._comments_*.csv). Set CPTED_VISION_RAW_DIR. Looked in: "
         + ", ".join(str(c) for c in candidates)
     )
 
@@ -127,7 +127,7 @@ def collection_version() -> str:
 
 def out_dir(*parts: str) -> Path:
     """Output folder (created on demand). out_dir("02_derived_analysis")."""
-    base = Path(os.getenv("COMPUTERVISION_SENTINEL_OUT_DIR", ANALYSIS_DIR / "output"))
+    base = Path(os.getenv("CPTED_VISION_OUT_DIR", ANALYSIS_DIR / "output"))
     p = base.joinpath(*parts)
     p.mkdir(parents=True, exist_ok=True)
     return p

@@ -2,7 +2,7 @@
 """
 verify_october_2026.py
 ======================
-ComputerVision_Sentinel | Independent checks on the October 2026 work-plan tasks
+CPTED Vision | Independent checks on the October 2026 work-plan tasks
 
 The October tasks (revised work plan, p. 5) are: finalize crime categories,
 extend the Reddit collection to 1 June - 31 August 2026, generate sample points
@@ -185,7 +185,7 @@ def reddit_checks(rerun: bool) -> None:
     if rerun:
         for ds in (REDDIT, REDDIT_JUNE):
             with tempfile.TemporaryDirectory() as tmp:
-                env = {**os.environ, "COMPUTERVISION_SENTINEL_OUT_DIR": tmp}
+                env = {**os.environ, "CPTED_VISION_OUT_DIR": tmp}
                 r = subprocess.run(["bash", str(REPO / "Scripts/reddit_analysis/run_all.sh"), ds.name], env=env, capture_output=True, text=True, check=False)
                 files = [p.relative_to(tmp) for p in Path(tmp).rglob("*.csv")]
                 same = [f for f in files if filecmp.cmp(Path(tmp) / f, ds / f, shallow=False)]

@@ -2,7 +2,7 @@
 """
 validation.py
 =============
-ComputerVision_Sentinel | November 2026: the label check of the image models (Docs/validation_plan.md)
+CPTED Vision | November 2026: the label check of the image models (Docs/validation_plan.md)
 
 sample   Draws 150 side views for blind labelling and writes the sheets. Fixed before anyone labels:
          * strata are land-use type (CLIP's top label) x image year, each getting a share of the 150 in

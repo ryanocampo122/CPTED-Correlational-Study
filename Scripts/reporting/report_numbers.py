@@ -2,7 +2,7 @@
 """
 report_numbers.py
 =================
-ComputerVision_Sentinel | Every number quoted in the October 2026 progress report
+CPTED Vision | Every number quoted in the October 2026 progress report
 
 Reads Data/ and writes Docs/verification/october_2026_numbers.json, which
 build_october_report.js reads. Nothing in the report text is typed by hand.

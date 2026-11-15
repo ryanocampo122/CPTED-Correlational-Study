@@ -1,7 +1,7 @@
 """
 05_extract_example_quotes.py
 ==============================
-ComputerVision_Sentinel | Candidate example comments for report quote blocks
+CPTED Vision | Candidate example comments for report quote blocks
 
 PURPOSE
 -------

@@ -1,7 +1,7 @@
 {
-  "name": "computervision-sentinel-report-builders",
+  "name": "cpted-vision-report-builders",
   "private": true,
-  "description": "docx report builders for the ComputerVision_Sentinel August deliverable",
+  "description": "docx report builders for the CPTED Vision August deliverable",
   "dependencies": {
     "docx": "^8.5.0"
   }

@@ -1,7 +1,7 @@
 """
 02_corrected_analysis.py
 =========================
-ComputerVision_Sentinel | Neighbourhood, cue, time-of-day and seasonal analysis
+CPTED Vision | Neighbourhood, cue, time-of-day and seasonal analysis
 
 PURPOSE
 -------

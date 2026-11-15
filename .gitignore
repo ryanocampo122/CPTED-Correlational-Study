@@ -21,7 +21,7 @@ package-lock.json
 .RData
 
 # Secrets never go in git. Keys live outside the repository, in
-# ~/.config/computervision_sentinel/secrets.env (Docs/data_ethics.md).
+# ~/.config/cpted_vision/secrets.env (Docs/data_ethics.md).
 .env
 *.env
 secrets.*

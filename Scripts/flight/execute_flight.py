@@ -2,7 +2,7 @@
 """
 execute_flight.py
 =================
-ComputerVision_Sentinel | The whole pipeline in one command:  ./flight --execute_flight
+CPTED Vision | The whole pipeline in one command:  ./flight --execute_flight
 
   1 install       .venv (created if missing), pip install -r requirements.txt, npm install for the report builder,
                   and the CLIP model at its pinned revision (downloaded once, ~600 MB)
@@ -79,14 +79,14 @@ LEGACY_KEY_FILE = REPO / ".env"        # before November 2026 the keys lived her
 def key_files() -> list[Path]:
     """Credential files, in the order they are read; the first file holding a key wins, and variables already
     set in the shell win over every file. The same order is used by pilot_lib.py, reddit_scraper.py and
-    make_handoff.sh: 1. $COMPUTERVISION_SENTINEL_ENV_FILE, 2. ~/.config/computervision_sentinel/secrets.env,
+    make_handoff.sh: 1. $CPTED_VISION_ENV_FILE, 2. ~/.config/cpted_vision/secrets.env,
     3. the repository's .env (legacy; git-ignored)."""
-    override = os.environ.get("COMPUTERVISION_SENTINEL_ENV_FILE", "").strip()
+    override = os.environ.get("CPTED_VISION_ENV_FILE", "").strip()
     files = [Path(override).expanduser()] if override else []
-    return files + [Path.home() / ".config" / "computervision_sentinel" / "secrets.env", LEGACY_KEY_FILE]
+    return files + [Path.home() / ".config" / "cpted_vision" / "secrets.env", LEGACY_KEY_FILE]
 
 
-NEEDS = {"reddit": ("PRAW_CLIENT_ID", "PRAW_CLIENT_SECRET", "COMPUTERVISION_SENTINEL_HASH_SALT"),
+NEEDS = {"reddit": ("PRAW_CLIENT_ID", "PRAW_CLIENT_SECRET", "CPTED_VISION_HASH_SALT"),
          "mapillary": ("MAPILLARY_TOKEN",)}
 SECRET_HINTS = ("SECRET", "TOKEN", "SALT", "CLIENT_ID", "PASSWORD", "KEY")
 # Never part of the repository snapshot: build artefacts, environments, OS clutter
@@ -624,7 +624,7 @@ def stage_keys(F: Flight) -> dict:
     if any(not os.environ.get(k) and source.get(k) == LEGACY_KEY_FILE for k in needed):
         status = "WARN"
         notes.append("keys read from the repository's .env; move them to "
-                     "~/.config/computervision_sentinel/secrets.env (Docs/data_ethics.md)")
+                     "~/.config/cpted_vision/secrets.env (Docs/data_ethics.md)")
     for p in {source[k] for k in needed if k in source and source[k] != LEGACY_KEY_FILE}:
         if p.stat().st_mode & 0o077:
             status = "WARN"
@@ -636,7 +636,7 @@ def stage_keys(F: Flight) -> dict:
         if not ready[use]:
             status = "FAIL"
             notes.append(f"{use} collection skipped, missing: {', '.join(k for k in keys if not have(k))}")
-    F.record("keys", S, "Credentials present (shell, then ~/.config/computervision_sentinel/secrets.env)", status,
+    F.record("keys", S, "Credentials present (shell, then ~/.config/cpted_vision/secrets.env)", status,
              "; ".join(notes) or f"all {len(needed)} needed keys present; read from "
                                  f"{', '.join(used) or 'the shell environment'}")
     F.secrets = secret_values()
@@ -712,8 +712,8 @@ def stage_models(F: Flight) -> None:
 def reddit_analysis(F: Flight, sid: str, title: str, raw: Path, out: Path, review: Path) -> None:
     """The run_all.sh steps on one collection, writing to out/ and using a copy of the review files."""
     shutil.copytree(REVIEW, review, dirs_exist_ok=True)
-    env = dict(F.env, COMPUTERVISION_SENTINEL_RAW_DIR=str(raw), COMPUTERVISION_SENTINEL_OUT_DIR=str(out),
-               COMPUTERVISION_SENTINEL_REVIEW_DIR=str(review))
+    env = dict(F.env, CPTED_VISION_RAW_DIR=str(raw), CPTED_VISION_OUT_DIR=str(out),
+               CPTED_VISION_REVIEW_DIR=str(review))
     cmds = [(s, [VPY, s]) for s in analysis_steps()]
     pending = {"01b_other_city_review.py": (
         1, "new other-city candidates are 'pending' hand review (treated as keep; decide them in the manual_review/ copy)")}
@@ -823,7 +823,7 @@ def stage_results(F: Flight) -> None:
         tot = {s: sum(r["status"] == s for r in rows) for s in ("PASS", "WARN", "FAIL", "INFO")}
         return ", ".join(f"{k} {v}" for k, v in tot.items()) + " (imagery/placeholder FAILs are findings, not code errors)"
     F.run("verification", S, "Verification checks on every October claim (+ Reddit re-run, byte compare)",
-          [("verify", cmd)], env=dict(F.env, COMPUTERVISION_SENTINEL_REVIEW_DIR=str(review)), note_fn=ver_note)
+          [("verify", cmd)], env=dict(F.env, CPTED_VISION_REVIEW_DIR=str(review)), note_fn=ver_note)
     figs = F.d("figures")
     F.run("figures", S, "Figures fig01-fig08",
           [("figures", [py, REPORTING / "make_figures.py", "--out", figs])],
@@ -846,7 +846,7 @@ def stage_results(F: Flight) -> None:
               [("numbers", [py, REPORTING / "report_numbers.py", "--checks", checks, "--out", numbers])])
     else:
         F.skip("report_numbers", S, "Every number quoted in the report", "no verification table")
-    docx = report / "ComputerVision_Sentinel_October2026_Progress_Report.docx"
+    docx = report / "CPTED_Vision_October2026_Progress_Report.docx"
     if F.args.skip_report:
         F.skip("report_docx", S, "October report (.docx)", "--skip-report")
     elif not (shutil.which("node") and (REPORTING / "node_modules" / "docx").exists()):
@@ -864,7 +864,7 @@ def stage_results(F: Flight) -> None:
     nov_numbers = report / "november_2026_numbers.json"
     F.run("november_numbers", S, "Every number quoted in the November update",
           [("numbers", [py, REPORTING / "november_numbers.py", "--out", nov_numbers])])
-    nov_docx = report / "ComputerVision_Sentinel_November2026_Midpoint_Update.docx"
+    nov_docx = report / "CPTED_Vision_November2026_Midpoint_Update.docx"
     # The report's figures from this run when all of them were drawn (a --skip-models run leaves out fig12),
     # otherwise the published ones
     report_figs = ("fig09_crime_hotspots.png", "fig10_crime_by_category.png", "fig11_image_set.png",
@@ -1201,7 +1201,7 @@ def main(argv=None) -> int:
         return 2
 
     F = Flight(a.results_root.resolve(), a)
-    F.say(f"ComputerVision_Sentinel flight {F.name} -> {F.exec_dir}")
+    F.say(f"CPTED Vision flight {F.name} -> {F.exec_dir}")
     snapshot = tree_snapshot(F.root)
     try:
         if guarded(F, "install", stage_install):

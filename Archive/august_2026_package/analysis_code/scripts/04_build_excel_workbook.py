@@ -1,13 +1,13 @@
 """
 04_build_excel_workbook.py
 ============================
-ComputerVision_Sentinel | Build the companion Excel workbook
+CPTED Vision | Build the companion Excel workbook
 
 PURPOSE
 -------
 Assembles the CSV outputs from 01_audit_location_tagging.py and
 02_corrected_analysis.py into a single formatted workbook for the
-supervisors to browse directly: ComputerVision_Sentinel_August_DataTables.xlsx
+supervisors to browse directly: CPTED_Vision_August_DataTables.xlsx
 
 Sheets:
   0. README                 - what's in this file, how it was produced
@@ -27,7 +27,7 @@ INPUT
 
 OUTPUT
 ------
-  output/ComputerVision_Sentinel_August_DataTables.xlsx
+  output/CPTED_Vision_August_DataTables.xlsx
 
 NOTE ON FORMULAS
 -----------------
@@ -97,7 +97,7 @@ def build_readme_sheet(wb) -> None:
     ws.title = "README"
     ws.column_dimensions["A"].width = 100
     lines = [
-        ("ComputerVision_Sentinel \u2014 Corrected Reddit Analysis (August 2026)", 14, True),
+        ("CPTED Vision \u2014 Corrected Reddit Analysis (August 2026)", 14, True),
         ("", 10, False),
         ("This workbook accompanies the August progress report. It contains the neighbourhood-level", 10, False),
         ("mention, sentiment, and environmental-cue data after refining the location-tagging in", 10, False),
@@ -113,7 +113,7 @@ def build_readme_sheet(wb) -> None:
         ("  5. Seasonal Trend \u2014 post volume and mean sentiment by season, citywide", 10, False),
         ("", 10, False),
         ("Source data: saskatoon_safety_posts/comments_20260611.csv (r/saskatoon, 2025-06-11 to 2026-06-11)", 10, False),
-        ("Prepared by: Ryan Ocampo, ComputerVision_Sentinel", 10, False),
+        ("Prepared by: Ryan Ocampo, CPTED Vision", 10, False),
     ]
     for i, (text, size, bold) in enumerate(lines, start=1):
         c = ws.cell(row=i, column=1, value=text)
@@ -186,7 +186,7 @@ def main() -> None:
     build_env_cues_sheet(wb)
     build_time_of_day_sheet(wb)
     build_seasonal_sheet(wb)
-    out_path = "output/ComputerVision_Sentinel_August_DataTables.xlsx"
+    out_path = "output/CPTED_Vision_August_DataTables.xlsx"
     wb.save(out_path)
     print(f"Wrote {out_path}")
     print("Remember to run scripts/office/soffice.py recalc.py if you add any formulas.")

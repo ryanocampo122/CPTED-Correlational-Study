@@ -1,4 +1,4 @@
-# ComputerVision_Sentinel: Reddit analysis pipeline
+# CPTED Vision: Reddit analysis pipeline
 
 Turns a raw r/saskatoon collection into cleaned row-level data, analysis tables,
 charts, audits and a verification report. It runs on either collection:
@@ -38,7 +38,7 @@ Both published output sets reproduce byte-for-byte from the raw files (checked
 | 02 | `02_corrected_analysis.py` | `02_derived_analysis/*.csv` (incl. `monthly_trend.csv`) |
 | 02b | `02b_sentiment_sensitivity.py` | `05_audits/sentiment_sensitivity*.csv` |
 | 03 | `03_generate_charts.py` | `charts/chart1…7.png` |
-| 04 | `04_build_excel_workbook.py` | `ComputerVision_Sentinel_DataTables_corrected.xlsx` |
+| 04 | `04_build_excel_workbook.py` | `CPTED_Vision_DataTables_corrected.xlsx` |
 | 05 | `05_extract_example_quotes.py` | `03_extracted_comment_samples/*.csv` |
 | 08 | `08_verify_outputs.py` | `05_audits/verification_report.txt`, `august_document_claims_check.csv`; exits 1 on any failed check |
 | 06, 07 | `*.js` | **archival**: rebuild the August memo/report exactly as sent (old numbers). Not run. |

@@ -5,7 +5,7 @@ The full-scale computer-vision steps, built on the pilot's tools (`Scripts/cv_pi
 
 | Script | Does | Needs |
 |---|---|---|
-| `images.py` | Decision D1 at every CBD sample point: the newest Mapillary image from 2020 on within 30 m whose camera faces along the point's road (within 30°); bridge and freeway points excluded; each panorama cut into two side views. `--recrop-to <folder>` cuts the side views again, offline, from the committed panoramas | Mapillary token (`~/.config/computervision_sentinel/secrets.env`) |
+| `images.py` | Decision D1 at every CBD sample point: the newest Mapillary image from 2020 on within 30 m whose camera faces along the point's road (within 30°); bridge and freeway points excluded; each panorama cut into two side views. `--recrop-to <folder>` cuts the side views again, offline, from the committed panoramas | Mapillary token (`~/.config/cpted_vision/secrets.env`) |
 | `models.py` | Mask2Former (Swin-L, Mapillary Vistas, panoptic, pinned revision) for class shares and object counts, and CLIP for land-use type and cues, on every side view; per-segment indicators. The camera car of the 2023 panoramas is left out of every share | the two models (downloaded once into `~/.cache/huggingface/`, ~0.9 GB and ~0.6 GB); ~11 min on an Apple GPU |
 | `validation.py` | `sample`: draws the 150 side views for blind labelling (30 shared with a second coder) by a fixed rule; `score`: precision, recall, F1 per cue and kappa between coders, once the sheets are filled in | nothing |
 

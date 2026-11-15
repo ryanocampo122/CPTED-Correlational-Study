@@ -1,7 +1,7 @@
 """
 _setup.py
 =========
-ComputerVision_Sentinel | Shared set-up for every notebook in Notebooks/
+CPTED Vision | Shared set-up for every notebook in Notebooks/
 
 Each notebook starts with `from _setup import *`. That gives it the same folders and the same
 project modules the scripts use, and one place to write anything it makes (Notebooks/_out/,

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# flight: the whole ComputerVision_Sentinel pipeline in one command.
+# flight: the whole CPTED Vision pipeline in one command.
 #
 #   ./flight --execute_flight             install -> collect (Reddit, Mapillary APIs) -> load CLIP + VADER -> results
 #   ./flight --execute_flight --offline   the same without API calls

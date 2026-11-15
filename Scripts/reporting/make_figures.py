@@ -2,7 +2,7 @@
 """
 make_figures.py
 ===============
-ComputerVision_Sentinel | Figures for the October 2026 update and the Docs/ pages
+CPTED Vision | Figures for the October 2026 update and the Docs/ pages
 
 Every number is read from Data/ (or Docs/verification/); nothing is typed in by
 hand except the workflow statuses in WORKFLOW, which mirror

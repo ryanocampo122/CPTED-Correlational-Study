@@ -1,7 +1,7 @@
 """
 02_corrected_analysis.py
 =========================
-ComputerVision_Sentinel | Corrected neighbourhood-level analysis
+CPTED Vision | Corrected neighbourhood-level analysis
 
 PURPOSE
 -------

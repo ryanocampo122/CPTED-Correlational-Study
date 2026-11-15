@@ -1,7 +1,7 @@
 2026-06-11 14:48:01,507 | INFO | PRAW initialized in read-only mode for r/saskatoon
 2026-06-11 14:48:01,516 | INFO | VADER sentiment analyzer initialized
 2026-06-11 14:48:01,516 | INFO | ======================================================================
-2026-06-11 14:48:01,516 | INFO | ComputerVision_Sentinel | Reddit Safety Perception Collection
+2026-06-11 14:48:01,516 | INFO | CPTED Vision | Reddit Safety Perception Collection
 2026-06-11 14:48:01,516 | INFO | Scope:  r/saskatoon
 2026-06-11 14:48:01,516 | INFO | Window: 2025-06-11 – 2026-06-11
 2026-06-11 14:48:01,516 | INFO | Seeds:  safety, safe, unsafe, danger, dangerous, sketchy, scary, afraid, nervous, worried, is it safe, feel safe

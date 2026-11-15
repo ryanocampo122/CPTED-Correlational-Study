@@ -31,7 +31,7 @@ What the flight never does:
 - regenerate the sample points (`pilot.py points` is never called; the 423 points are copied and read);
 - change `Scripts/reddit_analysis/manual_review/` (each analysis runs on a copy, so new other-city candidates stop at
   `pending` in the execution folder);
-- print a credential (keys come from the shell, then `~/.config/computervision_sentinel/secrets.env`, with a legacy
+- print a credential (keys come from the shell, then `~/.config/cpted_vision/secrets.env`, with a legacy
   repository `.env` read only as a WARN fallback; only key names are logged, and step 5 scans every output file for
   the values).
 

@@ -1,7 +1,7 @@
 """
 04_build_excel_workbook.py
 ============================
-ComputerVision_Sentinel | Companion workbook for the corrected tables
+CPTED Vision | Companion workbook for the corrected tables
 
 PURPOSE
 -------
@@ -20,7 +20,7 @@ INPUT
 
 OUTPUT
 ------
-  ComputerVision_Sentinel_DataTables_corrected.xlsx  (in the output root)
+  CPTED_Vision_DataTables_corrected.xlsx  (in the output root)
 
 USAGE
 -----
@@ -54,7 +54,7 @@ SHEETS = [
 ]
 
 README_LINES = [
-    ("ComputerVision_Sentinel - Corrected Reddit Analysis (October 2026)", 14, True),
+    ("CPTED Vision - Corrected Reddit Analysis (October 2026)", 14, True),
     ("", 10, False),
     ("Supersedes the August 2026 data tables. Method (October 2026 corrections, same for every collection):", 10, False),
     ("  1. Location tags: whole-word matching plus reviewed references to other cities removed (Location Tag Audit;", 10, False),
@@ -73,7 +73,7 @@ README_LINES = [
     ("    upper bound.", 10, False),
     ("  - small_sample = fewer than 30 mentions. Overlapping CIs mean no clear difference.", 10, False),
     ("", 10, False),
-    ("Produced by Scripts/reddit_analysis (run_all.sh). Prepared by: Ryan Ocampo, ComputerVision_Sentinel", 10, False),
+    ("Produced by Scripts/reddit_analysis (run_all.sh). Prepared by: Ryan Ocampo, CPTED Vision", 10, False),
 ]
 
 
@@ -114,7 +114,7 @@ def main() -> None:
         cell.font = Font(name=FONT, size=size, bold=bold, color=NAVY if size >= 14 else "000000")
     for name, path in SHEETS:
         write_df(wb.create_sheet(name), pd.read_csv(path))
-    out = c.out_dir() / "ComputerVision_Sentinel_DataTables_corrected.xlsx"
+    out = c.out_dir() / "CPTED_Vision_DataTables_corrected.xlsx"
     wb.save(out)
     print(f"Wrote {out}")
 

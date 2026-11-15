@@ -1,7 +1,7 @@
 """
 run_notebook.py
 ===============
-ComputerVision_Sentinel | Run one notebook top to bottom and save the run copy with its outputs
+CPTED Vision | Run one notebook top to bottom and save the run copy with its outputs
 
 The notebook runs in Notebooks/ (so `from _setup import *` works), in the Python that runs this
 script (.venv). The notebook in Notebooks/ is not changed; the copy with outputs goes to <out>.

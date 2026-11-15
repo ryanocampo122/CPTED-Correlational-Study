@@ -1,7 +1,7 @@
 """
 reddit_scraper.py
 =================
-ComputerVision_Sentinel | Reddit crime- and safety-narrative collector (r/saskatoon)
+CPTED Vision | Reddit crime- and safety-narrative collector (r/saskatoon)
 
 Project: A Privacy-Preserving GeoAI Framework for Urban CPTED Decision Support
 Co-Leads: Dr. Varuni Jayasooriya (SENS) & Dr. Timothy Kang (Sociology)
@@ -43,7 +43,7 @@ USAGE
 
 CREDENTIALS
 -----------
-PRAW_CLIENT_ID, PRAW_CLIENT_SECRET, PRAW_USER_AGENT and COMPUTERVISION_SENTINEL_HASH_SALT
+PRAW_CLIENT_ID, PRAW_CLIENT_SECRET, PRAW_USER_AGENT and CPTED_VISION_HASH_SALT
 are read from the environment, or from the `.env` file at the repository root
 (git-ignored, never committed). The salt keys the author hashes; keep it private
 and reuse it so hashes stay comparable across collections.
@@ -55,7 +55,7 @@ OUTPUTS (in --out)
   saskatoon_safety_metadata_<YYYYMMDD>.json  run parameters and counts
   saskatoon_safety_gis_<YYYYMMDD>.csv        one row per post x neighbourhood
   saskatoon_safety_summary_<YYYYMMDD>.txt    human-readable summary
-  computervision_sentinel_scraper.log                  run log
+  cpted_vision_scraper.log                  run log
   collection_code/                           exact copies of this script and
                                              common.py used for the run
 
@@ -113,7 +113,7 @@ SCRAPER_VERSION = "2026-10"
 LOCAL_TZ = ZoneInfo(common.LOCAL_TZ)
 REPO_ROOT = HERE.parents[1]
 
-logger = logging.getLogger("ComputerVision_Sentinel")
+logger = logging.getLogger("CPTED Vision")
 
 
 # ---------------------------------------------------------------------------
@@ -434,7 +434,7 @@ class SaskatoonSafetyCollector:
 
     @staticmethod
     def _anonymize(df: pd.DataFrame, author_col: str) -> pd.DataFrame:
-        salt = os.environ["COMPUTERVISION_SENTINEL_HASH_SALT"].encode()
+        salt = os.environ["CPTED_VISION_HASH_SALT"].encode()
         df["author_hash"] = df[author_col].apply(
             lambda a: hmac.new(salt, str(a).encode(), hashlib.sha256).hexdigest()[:16])
         return df.drop(columns=[author_col])
@@ -535,7 +535,7 @@ class SaskatoonSafetyCollector:
 
     def _write_summary(self, posts_df, comments_df, stamp: str) -> None:
         path = self.config.output_dir / f"saskatoon_safety_summary_{stamp}.txt"
-        lines = ["=" * 70, "ComputerVision_Sentinel | Reddit Crime & Safety Narrative Collection",
+        lines = ["=" * 70, "CPTED Vision | Reddit Crime & Safety Narrative Collection",
                  f"r/{self.config.subreddit} | {self.config.start_local} – {self.config.end_local} "
                  f"(local time) | scraper {SCRAPER_VERSION}", "=" * 70, ""]
         if posts_df.empty:
@@ -568,7 +568,7 @@ class SaskatoonSafetyCollector:
 REQUIRED_ENV = {
     "PRAW_CLIENT_ID": "Reddit app client ID",
     "PRAW_CLIENT_SECRET": "Reddit app client secret",
-    "COMPUTERVISION_SENTINEL_HASH_SALT": "private random string used to key author hashes",
+    "CPTED_VISION_HASH_SALT": "private random string used to key author hashes",
 }
 
 
@@ -586,7 +586,7 @@ def load_env_file(path: Path) -> None:
 def setup_logging(out_dir: Path | None) -> None:
     handlers: list[logging.Handler] = [logging.StreamHandler()]
     if out_dir is not None:
-        handlers.append(logging.FileHandler(out_dir / "computervision_sentinel_scraper.log"))
+        handlers.append(logging.FileHandler(out_dir / "cpted_vision_scraper.log"))
     logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s",
                         handlers=handlers, force=True)
 
@@ -611,7 +611,7 @@ def main(argv=None) -> None:
                          f"{REPO_ROOT / '.env'}):\n" + "\n".join(f"  {k}: {REQUIRED_ENV[k]}" for k in missing))
     creds = {"client_id": os.environ["PRAW_CLIENT_ID"],
              "client_secret": os.environ["PRAW_CLIENT_SECRET"],
-             "user_agent": os.getenv("PRAW_USER_AGENT", "ComputerVision_Sentinel/1.0 by /u/ocamporyan")}
+             "user_agent": os.getenv("PRAW_USER_AGENT", "CPTED_Vision/1.0 by /u/ocamporyan")}
 
     start, end = date.fromisoformat(args.start), date.fromisoformat(args.end)
     seed_sets = tuple(s.strip() for s in args.seed_sets.split(",") if s.strip())
@@ -633,7 +633,7 @@ def main(argv=None) -> None:
                            collect_comments=not args.no_comments, output_dir=out)
     collector = SaskatoonSafetyCollector(creds, config)
     logger.info("=" * 70)
-    logger.info("ComputerVision_Sentinel | r/%s | %s .. %s (local) | seed sets: %s | sorts: %s",
+    logger.info("CPTED Vision | r/%s | %s .. %s (local) | seed sets: %s | sorts: %s",
                 config.subreddit, start, end, ",".join(seed_sets), ",".join(config.search_sorts))
     logger.info("=" * 70)
     collector.collect()

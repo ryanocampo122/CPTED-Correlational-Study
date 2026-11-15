@@ -18,12 +18,12 @@ Full verification: `Docs/verification/october_2026_checks.md`. Method and limita
 
 | Folder | Contents | Made by |
 |---|---|---|
-| `01_raw_collection/` | posts, comments, GIS export, metadata, summary, search-query log, scraper log, and `collection_code/` (the exact scraper and `common.py` that ran) | the scraper; **never edit** (exceptions, 18–19 Oct 2026: folder-path strings in the metadata JSON and `collection_code/reddit_scraper.py` updated to the current layout, and the project's former name replaced by ComputerVision_Sentinel in `collection_code/`, the run summary and the run log, renamed `computervision_sentinel_scraper.log`; no data values changed) |
+| `01_raw_collection/` | posts, comments, GIS export, metadata, summary, search-query log, scraper log, and `collection_code/` (the exact scraper and `common.py` that ran) | the scraper; **never edit** (exceptions: on 18–19 Oct 2026, folder-path strings in the metadata JSON and `collection_code/reddit_scraper.py` updated to the current layout; on 18–19 Oct and again on 14 Nov 2026, the project's former names replaced by the current name, CPTED Vision, in `collection_code/`, the run summary and the run log, now `cpted_vision_scraper.log`; no data values changed) |
 | `02_derived_analysis/` | per-area summary, thread-inherited sensitivity, environmental cues by area, time of day, night contrasts, season and month tables | `run_all.sh` step 02 |
 | `03_extracted_comment_samples/` | candidate example comments (verbatim, re-identifiable: **do not quote outside the team**) | step 05 |
 | `04_cleaned_datasets/` | row-level posts and comments with every correction added as new columns; location and cue changelogs | step 01d |
 | `05_audits/` | tagging audits, cue precision, sentiment sensitivity, verification report | steps 01, 01c, 02b, 08 |
-| `charts/`, `ComputerVision_Sentinel_DataTables_corrected.xlsx` | report charts and a workbook of every table | steps 03, 04 |
+| `charts/`, `CPTED_Vision_DataTables_corrected.xlsx` | report charts and a workbook of every table | steps 03, 04 |
 
 Regenerate with `bash Scripts/reddit_analysis/run_all.sh reddit_2026-06-01_2026-08-31 --publish`.
 Column definitions for the cleaned files are in `Data/reddit_2025-06-11_2026-06-11/README.md` (same pipeline);

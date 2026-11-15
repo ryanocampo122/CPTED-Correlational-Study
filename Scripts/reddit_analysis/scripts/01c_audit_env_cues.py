@@ -1,7 +1,7 @@
 """
 01c_audit_env_cues.py
 =====================
-ComputerVision_Sentinel | Audit of the environmental-cue tagger
+CPTED Vision | Audit of the environmental-cue tagger
 
 PURPOSE
 -------

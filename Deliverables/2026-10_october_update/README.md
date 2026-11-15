@@ -7,7 +7,7 @@
 
 The report's base is generated, not hand-typed: every number comes from `Data/` through
 `Scripts/reporting/report_numbers.py`, and the figures come from `Scripts/reporting/make_figures.py`.
-A rebuild writes `ComputerVision_Sentinel_October2026_Progress_Report.docx` (the generated base); it neither
+A rebuild writes `CPTED_Vision_October2026_Progress_Report.docx` (the generated base); it neither
 reproduces nor overwrites the hand-edited `CPTED_ComputerVis_2026.docx`.
 
 To rebuild everything, including this report, into a fresh `RESULTS_FINAL/EXECUTION-<n>/` folder without touching
@@ -22,7 +22,7 @@ the published files: `./flight --execute_flight` (repository root). To rebuild o
 
 The detailed documentation behind the report is in `Docs/` (start at `Docs/README.md`).
 
-**Edited after sending (19 Oct 2026).** In `CPTED_ComputerVis_2026.docx` the project name in the running header, one sentence in section 3.3 and the document properties was changed to ComputerVision_Sentinel; nothing else was changed. `CPTED_ComputerVis_2026.pdf` was re-exported from it (same 8 pages). The earlier generated PDF, superseded by these, was removed.
+**Edited after sending (19 Oct 2026).** In `CPTED_ComputerVis_2026.docx` the project name in the running header, one sentence in section 3.3 and the document properties was changed to the then-current project name, and on 14 Nov 2026 to CPTED Vision, when "Sentinel" in the title was also corrected to "Sentiment"; nothing else was changed. `CPTED_ComputerVis_2026.pdf` was re-exported from it (same 8 pages). The earlier generated PDF, superseded by these, was removed.
 
 **Correction (25 Oct 2026), not applied to the files as sent.** Figure 1 of the report marks the Reddit tag check
 "Tags checked by hand (30 examples per topic)" as done. That check (the 30-per-cue precision sample, and the

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 # make_handoff.sh: build a shareable copy of the research folder (no credentials, no private text).
 #
-#   bash Scripts/make_handoff.sh            -> ~/Desktop/ComputerVision_Sentinel_research_<date>.zip
+#   bash Scripts/make_handoff.sh            -> ~/Desktop/CPTED_Vision_research_<date>.zip
 #
 # Leaves out: .env (credentials), .venv, .git, node_modules, OS/editor clutter, caches,
 # scratch pipeline output, flight runs (RESULTS_FINAL/), and every _local_audit_do_not_share/ folder
 # (Reddit user text).
-# Aborts if any credential value (from the shell or any key file: $COMPUTERVISION_SENTINEL_ENV_FILE,
-# ~/.config/computervision_sentinel/secrets.env, a legacy root .env) is found inside the zip.
+# Aborts if any credential value (from the shell or any key file: $CPTED_VISION_ENV_FILE,
+# ~/.config/cpted_vision/secrets.env, a legacy root .env) is found inside the zip.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ROOT="$PWD"
-NAME="ComputerVision_Sentinel_research_$(date +%Y-%m-%d)"
+NAME="CPTED_Vision_research_$(date +%Y-%m-%d)"
 OUT="$HOME/Desktop/$NAME.zip"
 PY="$ROOT/.venv/bin/python"; [[ -x "$PY" ]] || PY=python3
 
@@ -33,11 +33,11 @@ rm -f "$OUT"
 rm -rf "$TMP"
 
 # 3. refuse to hand over a zip that contains any credential
-"$PY" - "$OUT" "${COMPUTERVISION_SENTINEL_ENV_FILE:-}" "$HOME/.config/computervision_sentinel/secrets.env" "$ROOT/.env" <<'EOF'
+"$PY" - "$OUT" "${CPTED_VISION_ENV_FILE:-}" "$HOME/.config/cpted_vision/secrets.env" "$ROOT/.env" <<'EOF'
 import os, sys, zipfile, pathlib
 zpath = sys.argv[1]
 hints = ("SECRET", "TOKEN", "SALT", "CLIENT_ID", "PASSWORD", "KEY")
-secrets = [v for k, v in os.environ.items() if k.startswith(("PRAW_", "MAPILLARY_", "COMPUTERVISION_SENTINEL_"))
+secrets = [v for k, v in os.environ.items() if k.startswith(("PRAW_", "MAPILLARY_", "CPTED_VISION_"))
            and any(t in k.upper() for t in hints) and len(v) >= 8]
 for arg in sys.argv[2:]:
     envpath = pathlib.Path(arg) if arg else None
@@ -52,7 +52,7 @@ for arg in sys.argv[2:]:
                 secrets.append(v)
 if not secrets:
     pathlib.Path(zpath).unlink()
-    sys.exit("STOPPED: no credential values found to scan for (is ~/.config/computervision_sentinel/secrets.env "
+    sys.exit("STOPPED: no credential values found to scan for (is ~/.config/cpted_vision/secrets.env "
              "in place?). The zip could not be checked and was deleted.")
 bad = []
 with zipfile.ZipFile(zpath) as z:

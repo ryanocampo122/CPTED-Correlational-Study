@@ -1,6 +1,6 @@
 2026-10-16 15:07:23,879 | INFO | PRAW initialized in read-only mode for r/saskatoon
 2026-10-16 15:07:23,882 | INFO | ======================================================================
-2026-10-16 15:07:23,882 | INFO | ComputerVision_Sentinel | r/saskatoon | 2026-06-01 .. 2026-08-31 (local) | seed sets: safety,crime | sorts: relevance,new,top,comments
+2026-10-16 15:07:23,882 | INFO | CPTED Vision | r/saskatoon | 2026-06-01 .. 2026-08-31 (local) | seed sets: safety,crime | sorts: relevance,new,top,comments
 2026-10-16 15:07:23,882 | INFO | ======================================================================
 2026-10-16 15:07:23,882 | INFO | Window (local): 2026-06-01 .. 2026-08-31  |  UTC 2026-06-01 06:00:00+00:00 .. 2026-09-01 05:59:59+00:00
 2026-10-16 15:07:25,589 | INFO | Search safety   safety                 relevance ->  98 returned,  30 in window

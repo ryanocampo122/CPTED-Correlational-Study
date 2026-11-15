@@ -2,7 +2,7 @@
 """
 images.py
 =========
-ComputerVision_Sentinel | November 2026: the full street-image set (work plan step 2)
+CPTED Vision | November 2026: the full street-image set (work plan step 2)
 
 Applies Decision D1 (Docs/cv_pipeline.md) to every CBD sample point:
   * points on bridges or freeway-type roads are flagged and get no image (no frontage to measure);

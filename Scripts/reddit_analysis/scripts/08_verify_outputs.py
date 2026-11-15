@@ -1,7 +1,7 @@
 """
 08_verify_outputs.py
 ====================
-ComputerVision_Sentinel | Independent checks on the pipeline outputs
+CPTED Vision | Independent checks on the pipeline outputs
 
 PURPOSE
 -------

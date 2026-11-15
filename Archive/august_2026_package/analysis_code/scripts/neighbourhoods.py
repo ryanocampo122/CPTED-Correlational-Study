@@ -1,7 +1,7 @@
 """
 neighbourhoods.py
 =================
-ComputerVision_Sentinel | Shared neighbourhood vocabulary, matchers and inputs for the August 2026 analysis code
+CPTED Vision | Shared neighbourhood vocabulary, matchers and inputs for the August 2026 analysis code
 
 Scripts 01, 02, 03 and 05 in this folder, and data_pkg_august/04_cleaned_datasets/produce_cleaned_datasets.py,
 import from here, so each of these is defined once:

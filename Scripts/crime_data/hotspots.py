@@ -2,7 +2,7 @@
 """
 hotspots.py
 ===========
-ComputerVision_Sentinel | November 2026: recorded crime (Y1) on the CBD street segments
+CPTED Vision | November 2026: recorded crime (Y1) on the CBD street segments
 
 Places every study-category SPS record inside the CBD on the street segments the sample points sit on,
 then counts records per segment, by study category and by group (property; street-based personal,

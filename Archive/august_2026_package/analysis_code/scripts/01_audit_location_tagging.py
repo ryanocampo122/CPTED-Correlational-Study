@@ -1,7 +1,7 @@
 """
 01_audit_location_tagging.py
 =============================
-ComputerVision_Sentinel | Data quality audit of the neighbourhood tagger
+CPTED Vision | Data quality audit of the neighbourhood tagger
 
 PURPOSE
 -------

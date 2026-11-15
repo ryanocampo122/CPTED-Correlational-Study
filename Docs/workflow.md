@@ -79,7 +79,7 @@ copy of `manual_review/` inside the execution folder; the tracked review file is
 
 The flight runs all of these. To run one on its own, from the repository root, with the environment from
 `requirements.txt` (`python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`) and credentials in
-`~/.config/computervision_sentinel/secrets.env`, outside the repository (`data_ethics.md`) (`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`, `COMPUTERVISION_SENTINEL_HASH_SALT`, `MAPILLARY_TOKEN`):
+`~/.config/cpted_vision/secrets.env`, outside the repository (`data_ethics.md`) (`PRAW_CLIENT_ID`, `PRAW_CLIENT_SECRET`, `PRAW_USER_AGENT`, `CPTED_VISION_HASH_SALT`, `MAPILLARY_TOKEN`):
 
 ```bash
 # Reddit: collect (network), then analyse (offline; scratch first, then publish)
@@ -122,7 +122,7 @@ node Scripts/reporting/build_november_report.js
 .venv/bin/python Scripts/crime_data/tests/test_hotspots.py
 ```
 
-The report build writes the generated base, `Deliverables/2026-10_october_update/ComputerVision_Sentinel_October2026_Progress_Report.docx`. The report as sent, `CPTED_ComputerVis_2026.docx` (and its PDF), was edited by hand after that, so a rebuild neither reproduces nor overwrites it.
+The report build writes the generated base, `Deliverables/2026-10_october_update/CPTED_Vision_October2026_Progress_Report.docx`. The report as sent, `CPTED_ComputerVis_2026.docx` (and its PDF), was edited by hand after that, so a rebuild neither reproduces nor overwrites it.
 
 **Related data, outside this pipeline.** `Data/climate_2010_2025/` holds ECCC daily, monthly and yearly climate data (2010–2025; Saskatoon, Regina, Edmonton, Winnipeg) from an earlier climate–crime study, kept in case climate is added to this one; its download scripts are in `Scripts/climate_data/`. None of the commands above use it.
 
@@ -144,4 +144,4 @@ works.
 
 - **Every number in a deliverable comes from a script** (`Scripts/reporting/report_numbers.py`), never typed by hand.
 
-- **Version control:** work on a branch, one commit per logical step. The private repository holds verbatim Reddit text (raw and cleaned files, `03_extracted_comment_samples/`, `Scripts/reddit_analysis/manual_review/`) so the pipeline can be rebuilt; only the `_local_audit_do_not_share/` folders stay out of git. No Reddit text is quoted outside the team (`data_ethics.md`). Credentials are never committed: they live in `~/.config/computervision_sentinel/secrets.env` (`data_ethics.md`, "Credentials and sharing").
+- **Version control:** work on a branch, one commit per logical step. The private repository holds verbatim Reddit text (raw and cleaned files, `03_extracted_comment_samples/`, `Scripts/reddit_analysis/manual_review/`) so the pipeline can be rebuilt; only the `_local_audit_do_not_share/` folders stay out of git. No Reddit text is quoted outside the team (`data_ethics.md`). Credentials are never committed: they live in `~/.config/cpted_vision/secrets.env` (`data_ethics.md`, "Credentials and sharing").
