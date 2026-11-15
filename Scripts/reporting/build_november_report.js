@@ -38,7 +38,7 @@ const OUT = arg("--out", path.join(REPO, "Deliverables/2026-11_midpoint",
   "ComputerVision_Sentinel_November2026_Midpoint_Update.docx"));
 const MD = arg("--md", path.join(path.dirname(OUT), "README.md"));
 const N = JSON.parse(fs.readFileSync(NUMBERS, "utf8"));
-const I = N.images, M = N.models, V = N.validation, C = N.crime, J = N.join;
+const I = N.images, Y = N.image_years, M = N.models, V = N.validation, C = N.crime, J = N.join;
 
 // Sizes in half-points (Word's unit) for the formatting spec, the text width, and the table look
 const SIZE = { title: 24, heading: 23, body: 22, caption: 20, table: 16 };
@@ -63,6 +63,7 @@ const h1 = (text, newPage = true) => blocks.push({ t: "h1", text, newPage });
 const p = (text) => blocks.push({ t: "p", text });
 const bullets = (items) => blocks.push({ t: "bullets", items });
 const numbered = (items) => blocks.push({ t: "numbered", items });
+const refs = (items) => blocks.push({ t: "refs", items });
 const table = (caption, headers, rows, widths) => { tableNo += 1; blocks.push({ t: "table", n: tableNo, caption, headers, rows, widths }); };
 const figure = (file, widthIn, caption) => { figNo += 1; blocks.push({ t: "figure", n: figNo, file, widthIn, caption }); return figNo; };
 
@@ -110,6 +111,15 @@ p(`No open source has street-level images of Downtown from June to August 2026. 
   `images were taken from the cross street, so their side views looked down the wrong road; an image is now used only ` +
   `if the camera faced along the point's own street (within 30°). Points on bridges or the freeway have no building ` +
   `frontage and are left out. Each 360° image is cut into two side views, one facing each side of the street.`);
+p(`**Why not only 2023 images:** two ways of using the 2023 images were weighed: with the 2026 crime and Reddit data, ` +
+  `or with new 2023 crime and Reddit data so that the dates match. Both depend on 2023 coverage, which is thin. Within ` +
+  `30 m, 2023 images exist at ${Y["2023"].points} of the ${I.points} points, on ${Y["2023"].segments} of the ` +
+  `${I.segments} segments (${pct(Y["2023"].segments, I.segments)}%), against ${Y["2020"].points} points on ` +
+  `${Y["2020"].segments} segments (${pct(Y["2020"].segments, I.segments)}%) for 2020. Matching the dates would also ` +
+  `need a new SPS extract, although the SPS crime map warns against comparing its data across years, and a new ` +
+  `Reddit collection, which would be smaller: a count-only search with the same terms and settings found ` +
+  `${Y.reddit_posts_2023} posts for June–August 2023 against ${Y.reddit_posts_2026} for June–August 2026. The study ` +
+  `therefore takes the newest image from 2020 on at each point and keeps the 2026 crime and Reddit data.`);
 const fImg = figure("fig11_image_set.png", 3.0, `Which sample points have a usable image. The 2020 survey drove the ` +
   `avenues, so most east–west streets have no image facing along them.`);
 table("Image set at the sample points", ["Outcome", "Points"], [
@@ -135,12 +145,15 @@ bullets([
 // ---- 3. Image models ----
 h1("3. What the image models found");
 p(`Like Hipp et al. (2022), Zhou et al. (2021), Yue et al. (2022) and Su, Li and Qiu (2023), the study measures each ` +
-  `image by the share of the picture taken up by each kind of thing, using a semantic segmentation model; Yue et al. ` +
-  `(2022) also detect people. Those studies used PSPNet or DeepLab trained on the Cityscapes images; none used the ` +
-  `model chosen here, Mask2Former trained on Mapillary Vistas. Mapillary Vistas was chosen because its classes include ` +
-  `street lights, benches, trash cans and CCTV cameras, which Cityscapes does not have, so one model gives both the ` +
-  `segmentation and the street-furniture counts. CLIP, the model validated in October, scores the cues that are hard ` +
-  `to segment. Both models are pinned to fixed versions, and a repeat run gives identical results.`);
+  `image by the share of the picture taken up by each kind of thing, using a semantic segmentation model. Yue et al. ` +
+  `(2022) and Su, Li and Qiu (2023) also counted people and objects with a detection model (Faster R-CNN and Mask ` +
+  `R-CNN). Hipp et al. (2022) and Zhou et al. (2021) used DeepLabv3+ and PSPNet trained on the Cityscapes images; none ` +
+  `of the four used the model chosen here, Mask2Former trained on Mapillary Vistas. Mapillary Vistas was chosen because ` +
+  `its classes include street lights, benches, trash cans and CCTV cameras, which Cityscapes does not have, so one model ` +
+  `gives both the segmentation and the street-furniture counts. Su, Li and Qiu (2023) found that benches and street ` +
+  `lights near New York subway entrances were associated with lower crime density, which supports counting them here. ` +
+  `CLIP, the model validated in October, scores the cues that are hard to segment. Both models are pinned to fixed ` +
+  `versions, and a repeat run gives identical results.`);
 const s = M.surface_share_pct, ob = (k) => objects[k];
 table("What the models found across all side views", ["Measure", "Result"], [
   ["Side views scored", `${fmt(M.views)} (${fmt(M.points)} points, ${fmt(M.segments)} segments)`],
@@ -151,9 +164,18 @@ table("What the models found across all side views", ["Measure", "Result"], [
   ["Views with a person / a car (2020: one COVID-19 day)", `${fmt(ob("person").views_with_any)} / ${fmt(ob("car").views_with_any)}`],
   ["Views with a CCTV camera / a bike rack", `${fmt(ob("cctv_camera").views_with_any)} / ${fmt(ob("bike_rack").views_with_any)}`],
 ], [6060, 3300]);
+p(`**Tree crowns:** the segmentation model outlines each tree crown as one solid shape. In May, when most trees are ` +
+  `bare, that counted the sky and walls seen between the branches as vegetation. Inside each crown a pixel now stays ` +
+  `vegetation only if it looks like part of the tree (a trunk or limb, leaf-green, or dark like a shaded branch); ` +
+  `sky-coloured gaps become sky, and the rest take the class beside the tree, usually the building behind it. The ` +
+  `colour rules were set by eye on five views, so the vegetation and building shares are still unvalidated.`);
 p(`The 2023 images were taken from a car roof, which covers about ${one(M.camera_car_pct_2023_views)}% of each of ` +
-  `their side views; the camera car is left out of every share, so those streets are not made to look emptier.`);
-figure("fig12_segmentation_examples.png", 4.0, `Four side views and what the segmentation model labelled in them.`);
+  `their side views; the camera car is left out of every share, so those streets are not made to look emptier. ` +
+  `The roof's mirror-like paint reflects the scene above it, and in ${M.camera_roof_filled_in} of the ` +
+  `${M.views_2023} views the model labelled those reflections instead of the car. The roof sits in nearly the same ` +
+  `place in every view of one side, so its typical outline is used there and nothing found on it is counted.`);
+figure("fig12_segmentation_examples.png", 5.0, `Four side views and what the segmentation model labelled in them, ` +
+  `with tree crowns re-checked by colour. The legend names each colour.`);
 figure("fig13_indicator_maps.png", 6.3, `Three image measures per street segment, by quarter of their values. Street lights pass the label check; the ` +
   `building and vegetation shares are not covered by it.`);
 const typ = M.typology_counts;
@@ -232,25 +254,37 @@ bullets([
   `Code the Reddit posts by location, crime type and environmental cue (work plan, December to January).`,
 ]);
 
-// ---- How the results can be checked (end of section 6) ----
-p(`**How the results can be checked:** every number in this update comes from a script, not typed by hand. One command (./flight) rebuilds every output ` +
-  `from the committed data, including the October results, and compares it file by file with the published copy; the ` +
-  `image models can be left out of a quick run. The street images, the model outputs, the labelling sheet and the ` +
-  `crime tables are in the project repository with a README for each folder.`);
+// ---- References (the papers cited in Section 3; APA 7) ----
+h1("References", false);
+refs([
+  `Hipp, J. R., Lee, S., Ki, D., & Kim, J. H. (2022). Measuring the built environment with Google Street View and ` +
+  `machine learning: Consequences for crime on street segments. *Journal of Quantitative Criminology*, *38*, 537–565. ` +
+  `https://doi.org/10.1007/s10940-021-09506-9`,
+  `Su, N., Li, W., & Qiu, W. (2023). Measuring the associations between eye-level urban design quality and on-street ` +
+  `crime density around New York subway entrances. *Habitat International*, *131*, Article 102728. ` +
+  `https://doi.org/10.1016/j.habitatint.2022.102728`,
+  `Yue, H., Xie, H., Liu, L., & Chen, J. (2022). Detecting people on the street and the streetscape physical ` +
+  `environment from Baidu Street View images and their effects on community-level street crime in a Chinese city. ` +
+  `*ISPRS International Journal of Geo-Information*, *11*(3), Article 151. https://doi.org/10.3390/ijgi11030151`,
+  `Zhou, H., Liu, L., Lan, M., Zhu, W., Song, G., Jing, F., Zhong, Y., Su, Z., & Gu, X. (2021). Using Google Street ` +
+  `View imagery to capture micro built environment characteristics in drug places, compared with street robbery. ` +
+  `*Computers, Environment and Urban Systems*, *88*, Article 101631. https://doi.org/10.1016/j.compenvurbsys.2021.101631`,
+]);
 blocks.push({ t: "credits", text: `Images: Mapillary and contributors, CC BY-SA 4.0. Map data: © OpenStreetMap ` +
   `contributors (ODbL). Crime data: Saskatoon Police Service.` });
 
 // ----------------------------------------------------------------------------
 // Word rendering
 // ----------------------------------------------------------------------------
-// "plain **bold** plain" -> text runs at a given size
+// "plain **bold** plain *italic*" -> text runs at a given size
 function runs(text, base = {}) {
   const out = [];
-  const re = /(\*\*[^*]+\*\*)/g;
+  const re = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
   let last = 0, m;
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) out.push(new TextRun({ text: text.slice(last, m.index), ...base }));
-    out.push(new TextRun({ text: m[0].slice(2, -2), bold: true, ...base }));
+    const bold = m[0].startsWith("**");
+    out.push(new TextRun({ text: bold ? m[0].slice(2, -2) : m[0].slice(1, -1), ...(bold ? { bold: true } : { italics: true }), ...base }));
     last = m.index + m[0].length;
   }
   if (last < text.length) out.push(new TextRun({ text: text.slice(last), ...base }));
@@ -314,11 +348,18 @@ for (const b of blocks) {
   else if (b.t === "byline") body.push(new Paragraph({ spacing: { after: 40 }, children: runs(b.text, { size: SIZE.body }) }));
   else if (b.t === "rule") body.push(new Paragraph({ spacing: { after: 240 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: "000000", space: 6 } }, children: runs(b.text, { size: SIZE.body }) }));
   else if (b.t === "h1") body.push(new Paragraph({ heading: HeadingLevel.HEADING_1, pageBreakBefore: b.newPage, keepNext: true, keepLines: true, children: [new TextRun(b.text)] }));
-  else if (b.t === "p") body.push(new Paragraph({ children: runs(b.text, { size: SIZE.body }), spacing: { after: 120 }, widowControl: true }));
+  // A paragraph ending in a colon introduces a list, so it stays whole and on the same page as the list's first item
+  else if (b.t === "p") {
+    const intro = /:(\*\*)?$/.test(b.text.trim());
+    body.push(new Paragraph({ children: runs(b.text, { size: SIZE.body }), spacing: { after: 120 }, widowControl: true, keepNext: intro, keepLines: intro }));
+  }
   else if (b.t === "bullets") b.items.forEach((x) => body.push(new Paragraph({ numbering: { reference: "bullets", level: 0 }, children: runs(x, { size: SIZE.body }), spacing: { after: 60 }, widowControl: true })));
   else if (b.t === "numbered") b.items.forEach((x) => body.push(new Paragraph({ numbering: { reference: "decisions", level: 0 }, children: runs(x, { size: SIZE.body }), spacing: { after: 80 }, widowControl: true })));
   else if (b.t === "table") body.push(...wordTable(b));
   else if (b.t === "figure") body.push(...wordFigure(b));
+  // References: hanging indent, kept together on one page
+  else if (b.t === "refs") b.items.forEach((x, i) => body.push(new Paragraph({ children: runs(x, { size: SIZE.body }),
+    indent: { left: 360, hanging: 360 }, spacing: { after: 80 }, keepLines: true, keepNext: i < b.items.length - 1 })));
   else if (b.t === "credits") body.push(new Paragraph({ spacing: { before: 240 }, children: runs(b.text, { size: SIZE.caption, color: "52514E" }) }));
 }
 
@@ -362,6 +403,7 @@ for (const b of blocks) {
   else if (b.t === "p") md.push(b.text, "");
   else if (b.t === "bullets") md.push(...b.items.map((x) => `- ${x}`), "");
   else if (b.t === "numbered") md.push(...b.items.map((x, i) => `${i + 1}. ${x}`), "");
+  else if (b.t === "refs") b.items.forEach((x) => md.push(x, ""));
   else if (b.t === "table") md.push(`**Table ${b.n}.** ${b.caption}`, "", `| ${b.headers.join(" | ")} |`,
     `|${b.headers.map(() => "---").join("|")}|`, ...b.rows.map((r) => `| ${r.join(" | ")} |`), "");
   else if (b.t === "figure") md.push(`![Figure ${b.n}](${figRel}/${b.file})`, "", `**Figure ${b.n}.** ${b.caption}`, "");

@@ -11,6 +11,45 @@
     "Ego Vehicle",
     "Car Mount"
   ],
+  "tree_crown_check": {
+    "settings": {
+      "thin_px": 21,
+      "leaf_max_a": -4,
+      "leaf_min_b": -10,
+      "leaf_max_l": 92,
+      "wood_max_l": 38,
+      "blue_sky_max_b": -8,
+      "blue_sky_min_l": 50,
+      "white_sky_min_l": 82,
+      "white_sky_max_b": 4,
+      "white_sky_max_a": 6
+    },
+    "background_classes": [
+      "Building",
+      "Wall",
+      "Fence",
+      "Sky",
+      "Terrain",
+      "Water",
+      "Mountain",
+      "Bridge",
+      "Tunnel",
+      "Snow",
+      "Sand"
+    ],
+    "note": "set by eye on 5 views; not part of the label check"
+  },
+  "camera_roof_fill": {
+    "years": [
+      2023
+    ],
+    "min_own_roof_share": 0.02,
+    "typical_roof_share": {
+      "right": 0.323,
+      "left": 0.204
+    },
+    "views_filled_in": 11
+  },
   "object_classes": [
     "Street Light",
     "Pole",
@@ -40,8 +79,8 @@
   "views": 492,
   "points": 246,
   "segments": 121,
-  "seconds": 664,
+  "seconds": 781,
   "caveat": "not validated; no indicator is used until it passes the label check",
-  "git_commit": "34fd17d",
-  "created_utc": "2026-11-08T00:08:25+00:00"
+  "git_commit": "64ba0af",
+  "created_utc": "2026-11-14T17:51:06+00:00"
 }

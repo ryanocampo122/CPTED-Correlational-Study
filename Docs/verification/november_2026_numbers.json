@@ -20,24 +20,37 @@
     "excluded_bridge": 9,
     "excluded_freeway": 2
   },
+  "image_years": {
+    "2020": {
+      "points": 264,
+      "segments": 147
+    },
+    "2023": {
+      "points": 27,
+      "segments": 19
+    },
+    "points_with_both": 3,
+    "reddit_posts_2023": 122,
+    "reddit_posts_2026": 168
+  },
   "models": {
     "views": 492,
     "points": 246,
     "segments": 121,
     "device": "mps",
-    "minutes": 11.1,
+    "minutes": 13.0,
     "segmentation_model": "facebook/mask2former-swin-large-mapillary-vistas-panoptic",
     "segmentation_revision": "b9a3e9e",
     "clip_model": "openai/clip-vit-base-patch32",
     "clip_revision": "3d74acf",
     "surface_share_pct": {
-      "building": 21.4,
-      "vegetation": 16.0,
-      "sky": 19.1,
+      "building": 25.2,
+      "vegetation": 7.0,
+      "sky": 24.2,
       "road": 21.4,
       "sidewalk": 7.1,
-      "fence": 1.2,
-      "wall": 0.4
+      "fence": 1.3,
+      "wall": 0.5
     },
     "objects": {
       "street_light": {
@@ -46,7 +59,7 @@
       },
       "pole": {
         "views_with_any": 466,
-        "total": 2316
+        "total": 2314
       },
       "utility_pole": {
         "views_with_any": 101,
@@ -86,7 +99,7 @@
       },
       "billboard": {
         "views_with_any": 306,
-        "total": 688
+        "total": 686
       },
       "person": {
         "views_with_any": 57,
@@ -98,10 +111,12 @@
       },
       "car": {
         "views_with_any": 261,
-        "total": 937
+        "total": 935
       }
     },
-    "camera_car_pct_2023_views": 17.9,
+    "camera_car_pct_2023_views": 26.3,
+    "camera_roof_filled_in": 11,
+    "views_2023": 42,
     "typology_counts": {
       "surface_parking": 230,
       "transit_node": 70,

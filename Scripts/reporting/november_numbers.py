@@ -21,6 +21,7 @@ import pandas as pd
 # Data folders and the default output file
 REPO = Path(__file__).resolve().parents[2]
 STUDY = REPO / "Data" / "cv_study_2026-11"
+PILOT = REPO / "Data" / "cv_pilot_2026-10" / "cbd"
 CRIME = REPO / "Data" / "sps_crime_2026-06-01_2026-08-31" / "03_segments"
 OUT = REPO / "Docs" / "verification" / "november_2026_numbers.json"
 
@@ -51,6 +52,27 @@ def image_numbers() -> dict:
             "excluded_bridge": st.get("excluded_bridge", 0), "excluded_freeway": st.get("excluded_freeway", 0)}
 
 
+def image_year_numbers() -> dict:
+    """Why 2023 images alone were not used: points and segments with a 2020 or 2023 panorama, before any image rule.
+
+    :return: numbers for the update
+    """
+    # The October coverage check, one row per point, with each point's segment
+    cov = pd.read_csv(PILOT / "coverage_points.csv")
+    seg = pd.read_csv(PILOT / "sample_points.csv", usecols=["point_id", "segment_id"])
+    cov = cov.merge(seg, on="point_id", validate="one_to_one")
+    years = cov.years_pano.fillna("").astype(str).str.split(";")
+    out = {}
+    for year in ("2020", "2023"):
+        has = years.apply(lambda found, y=year: y in found)
+        out[year] = {"points": int(has.sum()), "segments": int(cov[has].segment_id.nunique())}
+    out["points_with_both"] = int(years.apply(lambda found: "2020" in found and "2023" in found).sum())
+    # The count-only Reddit search for 2023 (7 Nov 2026) kept no output file; its result is recorded in
+    # Decision D1 of Docs/cv_pipeline.md and copied here
+    out["reddit_posts_2023"], out["reddit_posts_2026"] = 122, 168
+    return out
+
+
 def model_numbers() -> dict:
     """What the models found across all side views (not yet validated).
 
@@ -67,14 +89,16 @@ def model_numbers() -> dict:
     # Views with at least one of each street-furniture object, and the total found
     objects = {c.removeprefix("count_"): {"views_with_any": int((counts[c] > 0).sum()), "total": int(counts[c].sum())}
                for c in counts.columns if c.startswith("count_")}
-    # The camera car's part of the picture in the 2023 views
+    # The camera car's part of the picture in the 2023 views, and the views where its typical roof stood in
     car_2023 = shares[shares.capture_year == 2023].camera_vehicle_share_of_picture
+    roof_filled = int(shares.camera_roof_filled_in.sum()) if "camera_roof_filled_in" in shares else None
     typology = clip.typology_top1.value_counts()
     return {"views": meta["views"], "points": meta["points"], "segments": meta["segments"], "device": meta["device"],
             "minutes": round(meta["seconds"] / 60, 1), "segmentation_model": meta["segmentation_model"],
             "segmentation_revision": meta["segmentation_revision"][:7], "clip_model": meta["clip_model"],
             "clip_revision": meta["clip_revision"][:7], "surface_share_pct": surfaces, "objects": objects,
             "camera_car_pct_2023_views": round(100 * float(car_2023.mean()), 1) if len(car_2023) else None,
+            "camera_roof_filled_in": roof_filled, "views_2023": int(len(car_2023)),
             "typology_counts": {k: int(v) for k, v in typology.items()},
             "typology_low_confidence": int(clip.typology_low_confidence.sum())}
 
@@ -147,7 +171,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", default=str(OUT), help="output JSON (default Docs/verification/november_2026_numbers.json)")
     out = Path(ap.parse_args().out)
-    numbers = {"images": image_numbers(), "models": model_numbers(), "validation": validation_numbers(),
+    numbers = {"images": image_numbers(), "image_years": image_year_numbers(), "models": model_numbers(),
+               "validation": validation_numbers(),
                "crime": crime_numbers(), "join": join_numbers()}
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(numbers, indent=2, ensure_ascii=False))

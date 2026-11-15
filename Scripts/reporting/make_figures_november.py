@@ -31,6 +31,7 @@ import pandas as pd  # noqa: E402
 from matplotlib import patheffects  # noqa: E402
 from matplotlib.colors import LinearSegmentedColormap, PowerNorm  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
+from matplotlib.patches import Patch  # noqa: E402
 from PIL import Image  # noqa: E402
 
 # The October figure module (palette, base map) and the hot-spot script (segment lines)
@@ -251,40 +252,77 @@ def fig_image_set(out: Path) -> None:
 
 
 def fig_segmentation_examples(out: Path) -> None:
-    """fig12: four side views next to what the segmentation model labelled in them."""
-    from models import CAMERA_VEHICLE_CLASSES, PanopticModel, pick_device
+    """fig12: four side views next to what the segmentation model labelled in them, after the tree-crown check,
+    with a legend naming every colour."""
+    from models import (CAMERA_CAR_YEARS, CAMERA_VEHICLE_CLASSES, PanopticModel, class_map, fill_roof, pick_device,
+                        refine_crowns, typical_roofs)
     # Four views spread through the sample: the 1st, 4th, 7th and 10th point in the manifest's spread
     man = pd.read_csv(STUDY / "image_manifest.csv")
     picks = man.iloc[np.linspace(0, len(man) - 1, 4).round().astype(int)]
     model = PanopticModel(pick_device())
-    # A fixed colour per class, so the same class looks the same in every panel
+    # The camera car's typical roof on each side of the car-roof images, found the same way as for the shares
+    roof_views = pd.concat([man.assign(side=s, view_file=man[f"view_{s}"]) for s in ("right", "left")])
+    roofs, _ = typical_roofs(model, roof_views, STUDY)
+    # A fixed colour per class, so the same class looks the same in every panel: easy-to-tell-apart colours for the
+    # classes that fill most street views, muted colours for the rest, and white where no class was given
     rng = np.random.default_rng(7)
-    palette = rng.integers(40, 230, size=(len(model.labels) + 1, 3))
+    palette = rng.integers(120, 200, size=(len(model.labels) + 1, 3))
+    main_colours = {"Building": (230, 159, 0), "Vegetation": (0, 158, 115), "Sky": (86, 180, 233),
+                    "Road": (110, 110, 110), "Sidewalk": (204, 121, 167), "Pedestrian Area": (240, 190, 215),
+                    "Car": (213, 94, 0), "Pole": (0, 114, 178), "Street Light": (240, 228, 66),
+                    "Terrain": (170, 205, 95), "Fence": (140, 90, 50), "Wall": (185, 160, 135),
+                    "Ego Vehicle": (45, 45, 45), "Curb": (150, 150, 200), "Water": (40, 90, 200)}
+    # Put the fixed colours in their places
+    for name, colour in main_colours.items():
+        # Only classes this model has
+        if name in model.labels:
+            palette[model.labels.index(name)] = colour
+    palette[len(model.labels)] = (255, 255, 255)
     # Capture dates in Saskatoon local time, the way the docs give them
     local = pd.to_datetime(picks.captured_at, utc=True, format="ISO8601").dt.tz_convert("America/Regina").dt.date
     picks = picks.assign(local_date=local.astype(str))
-    fig, axes = plt.subplots(4, 2, figsize=(6.7, 10.3))
+    # The figure, and the classes that are big enough in any panel to go in the legend
+    fig, axes = plt.subplots(4, 2, figsize=(6.7, 10.9))
+    in_legend = {}
     # Each picked view: the photo on the left, the labelled classes on the right
     for row, r in zip(axes, picks.itertuples()):
+        # The photo, the model's segments, and every pixel's class as in the shares: the typical roof where the model
+        # missed the camera car, then the tree crowns re-checked
         im = Image.open(STUDY / r.view_right).convert("RGB")
         seg_map, segments = model.run(im)
-        label_map = np.full(seg_map.shape, len(model.labels))
-        for s in segments:
-            label_map[seg_map == s["id"]] = s["label_id"]
+        roof = roofs.get("right") if r.capture_year in CAMERA_CAR_YEARS else None
+        label_map, _ = fill_roof(class_map(seg_map, segments), roof, model.labels)
+        label_map = refine_crowns(np.asarray(im, dtype=float) / 255, label_map, model.labels)
+        label_map = np.where(label_map >= 0, label_map, len(model.labels))
+        # The photo with the class colours laid over it
         overlay = (0.45 * np.asarray(im) + 0.55 * palette[label_map]).astype(np.uint8)
         row[0].imshow(im)
         row[1].imshow(overlay)
-        # Name the three biggest classes in the panel title, leaving out the camera's own car
+        # Pixels per class, biggest first
         ids, n = np.unique(label_map[label_map < len(model.labels)], return_counts=True)
-        named = [model.labels[i] for i in ids[np.argsort(-n)] if model.labels[i] not in CAMERA_VEHICLE_CLASSES]
+        order = np.argsort(-n)
+        # Name the three biggest classes in the panel title, leaving out the camera's own car
+        named = [model.labels[i] for i in ids[order] if model.labels[i] not in CAMERA_VEHICLE_CLASSES]
         top = ", ".join(named[:3])
         row[0].set_title(f"{r.point_id}, {r.road_name}, {r.local_date}", loc="left", fontsize=7)
         row[1].set_title(f"model: mostly {top}", loc="left", fontsize=7)
+        # Every class covering at least 1% of this panel goes in the legend, with its largest share seen
+        for i, k in zip(ids, n):
+            # Only classes big enough to see
+            if k >= 0.01 * label_map.size:
+                in_legend[model.labels[i]] = max(in_legend.get(model.labels[i], 0), k)
+        # No axis ticks or grid on the pictures
         for a in row:
             a.set_xticks([]), a.set_yticks([]), a.grid(False)
-    fig.text(0.995, 0.06, "Images: Mapillary contributors (CC BY-SA 4.0). Segmentation: Mask2Former (Mapillary Vistas)",
-             ha="right", fontsize=5.8, color=F.INK_2)
-    fig.subplots_adjust(left=0.01, right=0.99, top=0.97, bottom=0.07, hspace=0.12, wspace=0.03)
+    # One legend for all four panels, biggest classes first; the camera's own car is named as such
+    handles = [Patch(facecolor=palette[model.labels.index(name)] / 255, edgecolor="none",
+                     label="camera's own car" if name == "Ego Vehicle" else name)
+               for name in sorted(in_legend, key=lambda c: -in_legend[c])]
+    fig.legend(handles=handles, loc="lower center", ncol=5, fontsize=8, frameon=False, handlelength=1.2,
+               columnspacing=1.0, bbox_to_anchor=(0.5, 0.02))
+    fig.text(0.995, 0.004, "Images: Mapillary contributors (CC BY-SA 4.0). Segmentation: Mask2Former (Mapillary Vistas), "
+             "tree crowns re-checked by colour", ha="right", fontsize=5.8, color=F.INK_2)
+    fig.subplots_adjust(left=0.01, right=0.99, top=0.97, bottom=0.10, hspace=0.12, wspace=0.03)
     save(fig, "fig12_segmentation_examples.png", out)
 
 

@@ -42,6 +42,49 @@ def test_describe_leaves_out_the_camera_car():
     assert counts["count_street_light"] == 2 and counts["count_person"] == 0
 
 
+def test_crown_check_gives_gaps_back_to_sky_and_building():
+    """A filled crown over a wall and the sky keeps its leaves and trunk; the gaps become Building and Sky."""
+    # Class names, and a 60 x 80 picture: a light brick wall on the left half, blue sky on the right half
+    labels = ["Vegetation", "Sky", "Building", "Ego Vehicle", "Car Mount"]
+    rgb = np.zeros((60, 80, 3))
+    rgb[:, :40] = [0.75, 0.45, 0.35]
+    rgb[:, 40:] = [0.45, 0.65, 0.95]
+    # A green leaf patch inside the crown, and a grey trunk under it
+    rgb[20:28, 30:38] = [0.2, 0.6, 0.2]
+    rgb[45:, 39:41] = [0.5, 0.5, 0.5]
+    # What the model said: building and sky, with one solid crown and its trunk on top
+    pixel_class = np.where(np.arange(80) < 40, 2, 1)[None, :].repeat(60, 0)
+    pixel_class[5:45, 10:70] = 0
+    pixel_class[45:, 39:41] = 0
+    refined = models.refine_crowns(rgb, pixel_class, labels)
+    # Leaves and trunk stay Vegetation; a gap over the wall becomes Building and a gap over the sky becomes Sky
+    assert (refined[20:28, 30:38] == 0).all() and (refined[45:, 39:41] == 0).all()
+    assert refined[10, 20] == 2 and refined[10, 60] == 1
+    # Through describe, only the leaf patch and the trunk are counted as vegetation
+    seg_map = pixel_class + 1
+    segments = [{"id": i + 1, "label_id": i} for i in range(3)]
+    shares, _ = models.describe(seg_map, segments, labels, rgb)
+    assert shares["share_vegetation"] == round((8 * 8 + 15 * 2) / (60 * 80), 4)
+
+
+def test_missed_camera_roof_is_filled_in_and_its_reflections_not_counted():
+    """When the model calls the camera car's roof a Car, the typical roof replaces it and no car is counted."""
+    # A 10 x 10 picture: building on the top 6 rows, the roof (labelled Car by the model) on the bottom 4
+    labels = ["Building", "Ego Vehicle", "Car", "Car Mount"]
+    seg_map = np.ones((10, 10), dtype=int)
+    seg_map[6:] = 2
+    segments = [{"id": 1, "label_id": 0}, {"id": 2, "label_id": 2}]
+    roof = np.zeros((10, 10), dtype=bool)
+    roof[6:] = True
+    shares, counts = models.describe(seg_map, segments, labels, roof=roof)
+    # The street scene is all building, the roof is 40% of the picture, and the reflected car is not counted
+    assert shares["share_building"] == 1.0 and shares["camera_vehicle_share_of_picture"] == 0.4
+    assert shares["camera_roof_filled_in"] == 1 and counts["count_car"] == 0
+    # Without a roof (an image not taken from a car) nothing changes: the car is counted
+    shares, counts = models.describe(seg_map, segments, labels)
+    assert shares["camera_roof_filled_in"] == 0 and counts["count_car"] == 1
+
+
 def test_segment_indicators_average_sides_then_points():
     """Shares are averaged over the two sides and then the points; objects are added across the two sides."""
     # Two points on one segment, two sides each
