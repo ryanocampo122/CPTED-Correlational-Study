@@ -71,6 +71,18 @@ The segmentation model labels every pixel of a side view with what it shows. The
 
 ![Four side views and what the segmentation model labelled in them](Docs/figures/mid_point_november/fig12_segmentation_examples.png)
 
+### What the image models found
+
+The segmentation model also counts street furniture in each side view. The example below shows the four views with the most street lights, benches, people and trash cans, with a box around every object the model counted. Checked against the labelled sample of 150 views, its street-light counts agree well with the labels (F1 0.92) and its bench counts work as a measure of seating (F1 0.72), so both pass the label check. Its person counts do not (F1 0.46).
+
+![Four views with each counted object boxed](Docs/figures/model_details/detection_examples.png)
+
+CLIP was meant to score the CPTED cues that have no segmentation class, such as graffiti, boarded windows and active storefronts, and to name each street's land use. On Downtown's streets it does not work. It marks boarded windows in 405 of the 492 views, although the labels find them in only 1 of 150, and its land-use label matches the labels in only 39% of views; its most common mistake is calling a shopping street surface parking. No CLIP output passes the label check, so none is used. The example below sets CLIP's answers beside the labels for four labelled views.
+
+![Four labelled views with CLIP's answers](Docs/figures/model_details/clip_examples.png)
+
+The full counts and every check are in [steps 3 to 5 of the pipeline document](Docs/cv_pipeline.md#steps-3-to-5-the-image-models), which also has galleries of all 492 segmented views and all 150 labelled views.
+
 ## Where it stands
 
 ![Workflow status, November 2026](Docs/figures/mid_point_november/fig14_workflow_status.png)

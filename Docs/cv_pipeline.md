@@ -329,10 +329,79 @@ poles in 466, benches in 92, trash cans in 182, people in 57 and cars in 261 (`o
 camera car's roof are not counted. Street lights are counted here rather than scored by CLIP, because CLIP is weak at
 spotting thin objects. People and cars in the 2020 photos are flagged because they show a single COVID-19 day.
 
+<!-- detection details: start (written by Scripts/reporting/embed_model_details.py) -->
+
+The table gives the full counts. A view counts once for a class if the model found at least one object of that class in it. The last column is the label check from step 7, which exists for street lights, benches (as seating) and people; a check passes at an F1 of 0.7 or more.
+
+| Object | Views with at least one (of 492) | 2020 views (of 450) | 2023 views (of 42) | Objects counted | Most in one view | Label check (F1) |
+|---|---|---|---|---|---|---|
+| pole | 466 (95%) | 426 | 40 | 2314 | 21 | not checked |
+| billboard | 306 (62%) | 272 | 34 | 686 | 8 | not checked |
+| street light | 274 (56%) | 246 | 28 | 472 | 7 | 0.92 for street lights (passes) |
+| car | 261 (53%) | 223 | 38 | 935 | 20 | not checked |
+| trash can | 182 (37%) | 178 | 4 | 237 | 6 | not checked |
+| traffic light | 132 (27%) | 110 | 22 | 301 | 7 | not checked |
+| utility pole | 101 (21%) | 81 | 20 | 189 | 7 | not checked |
+| bench | 92 (19%) | 91 | 1 | 136 | 4 | 0.72 for seating (passes) |
+| fire hydrant | 65 (13%) | 60 | 5 | 74 | 5 | not checked |
+| person | 57 (12%) | 53 | 4 | 71 | 4 | 0.46 for people (fails) |
+| bike rack | 24 (5%) | 24 | 0 | 29 | 3 | not checked |
+| CCTV camera | 4 (1%) | 4 | 0 | 4 | 1 | not checked |
+| mailbox | 1 (0%) | 1 | 0 | 1 | 1 | not checked |
+| bicyclist | 1 (0%) | 1 | 0 | 1 | 1 | not checked |
+| phone booth | 0 (0%) | 0 | 0 | 0 | 0 | not checked |
+
+Street lights pass with an F1 of 0.92: of the views where the model found a street light, 91% had one in the labels, and it found 93% of the views that had one. Benches pass as a measure of seating (0.72, precision 0.63, recall 0.85). People do not pass (0.46): the model finds 67% of the views with people, but only 35% of the views where it finds a person have one in the labels.
+
+![Four views with each counted object boxed](figures/model_details/detection_examples.png)
+
+*The views with the most street lights, benches, people and trash cans, picked by that rule; each box is one object the model counted, and the box counts match `object_counts.csv`.*
+
+<!-- detection details: end -->
+
 **Step 5, CLIP scoring.** CLIP is a model that compares a photo with written descriptions and scores how well each one
 fits. It covers what the segmentation model has no class for: the land-use type of the street, and nine CPTED cues such
 as graffiti, litter, boarded windows and active storefronts (`clip_scores.csv`). Its land-use label looks unreliable.
 It calls 230 of the 492 views surface parking and only 8 a commercial street, and 109 of its labels are low-confidence.
+
+<!-- clip details: start (written by Scripts/reporting/embed_model_details.py) -->
+
+CLIP gives each view a probability for each of the eight land-use types, and a score from 0 to 1 for each cue. The tables give its results on all 492 views and, for the 150 labelled views, how often it agrees with the labels. A land-use label is low-confidence when CLIP's top probability is under 0.40 or less than 0.10 ahead of the second.
+
+| Land-use type | CLIP's label (of 492) | Of those, low-confidence | Labels say (of 150) | CLIP agrees |
+|---|---|---|---|---|
+| surface parking | 230 | 43 | 26 | 19 |
+| transit node | 70 | 21 | 2 | 2 |
+| park open space | 62 | 15 | 13 | 12 |
+| road corridor | 48 | 13 | 16 | 11 |
+| institutional | 42 | 8 | 22 | 7 |
+| residential | 18 | 2 | 17 | 3 |
+| riverfront walkway | 14 | 6 | 2 | 2 |
+| commercial street | 8 | 1 | 51 | 2 |
+
+On the labelled views CLIP's land-use label matches 39% of the time. Of its 91 mistakes, 49 are on the 51 views labelled commercial street: it calls 30 of them surface parking and 12 transit node, and gets 2 right.
+
+A cue counts as present when its score is 0.5 or more, the rule fixed before the label check.
+
+| Cue | CLIP marks present (of 492) | Median score | Present in labels (of 150) | Precision | Recall | F1 |
+|---|---|---|---|---|---|---|
+| graffiti | 1 | 0.06 | 4 | – | 0.00 | – |
+| litter | 157 | 0.34 | 4 | 0.04 | 0.50 | 0.07 |
+| boarded windows | 405 | 0.68 | 1 | 0.01 | 1.00 | 0.02 |
+| vacant lot | 366 | 0.73 | 11 | 0.10 | 1.00 | 0.18 |
+| active storefront | 9 | 0.03 | 44 | 0.33 | 0.02 | 0.04 |
+| windows overlook the street | 31 | 0.26 | 95 | 1.00 | 0.10 | 0.19 |
+| people present | 100 | 0.23 | 9 | 0.09 | 0.22 | 0.12 |
+| fences or barriers | 3 | 0.09 | 31 | 0.00 | 0.00 | – |
+| seating | 279 | 0.55 | 26 | 0.24 | 0.81 | 0.36 |
+
+By that rule CLIP marks boarded windows in 405 of the 492 views and a vacant lot in 366, far more than the labels show (1 and 11 of 150). It almost never marks active storefronts (9 views) or windows overlooking the street (31), which the labels find in 44 and 95 of 150. Its scores do not follow these cues on Downtown's streets, so no cue passes the check and none is used.
+
+![Four labelled views with CLIP's answers](figures/model_details/clip_examples.png)
+
+*Four labelled views picked by fixed rules: where CLIP is most sure and right about land use, the two most common land-use mistakes (each where CLIP is most sure), and where CLIP is most sure of boarded windows that the label does not show.*
+
+<!-- clip details: end -->
 
 ## Step 6: CPTED indicators per segment
 
