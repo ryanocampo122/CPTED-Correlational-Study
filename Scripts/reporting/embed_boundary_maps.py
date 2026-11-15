@@ -42,17 +42,12 @@ START = "<!-- boundary maps: start (written by Scripts/reporting/embed_boundary_
 END = "<!-- boundary maps: end -->"
 
 # The README's map rows, top to bottom, each with one or two cells side by side. A map cell is
-# ("map", file name, caption above the map, sentence under it or None); a picture cell is
-# ("picture", line above the picture, its README path, its alt text)
+# ("map", file name, caption above the map); a picture cell is ("picture", its README path, its alt text)
 ROWS = [
-    [("map", "central_business_district_osm.geojson", "Study area: the Central Business District", None),
-     ("map", "osm_roads_downtown_context.geojson", "Street segments",
-      "The street segments. X is measured from photos at points on these roads, and "
-      "`Scripts/crime_data/hotspots.py` rebuilds the same 218 segments from this file to place each crime record "
-      "(Y1), so X and Y1 share one unit.")],
-    [("map", "osm_water_downtown_context.geojson", "South Saskatchewan River", None),
-     ("picture", "The same river in red, with the Downtown roads and the CBD outline:", RIVER_LINK,
-      "South Saskatchewan River in red")],
+    [("map", "central_business_district_osm.geojson", "Study area: the Central Business District"),
+     ("map", "osm_roads_downtown_context.geojson", "Street segments")],
+    [("map", "osm_water_downtown_context.geojson", "South Saskatchewan River"),
+     ("picture", RIVER_LINK, "South Saskatchewan River in red, with the Downtown roads and the CBD outline")],
 ]
 
 
@@ -86,22 +81,20 @@ def draw_red_river() -> None:
 
 def cell(spec: tuple) -> str:
     """
-    The Markdown for one cell: a caption, a ```geojson block holding the whole file and an optional sentence, or a
-    line and a picture.
+    The Markdown for one cell: a caption and a ```geojson block holding the whole file, or a picture.
 
     :param spec: a map or picture cell from ROWS
     :return: the cell's Markdown
     """
     if spec[0] == "picture":
-        _, line, path, alt = spec
-        return f"{line}\n\n![{alt}]({path})"
+        _, path, alt = spec
+        return f"![{alt}]({path})"
 
     # The file's features, written without spaces so the README stays as small as it can
-    _, name, caption, note = spec
+    _, name, caption = spec
     data = json.loads((BND / name).read_text())
     text = json.dumps(data, separators=(",", ":"), ensure_ascii=False)
-    md = f"**{caption}** ([`{name}`](Data/boundaries/{name}))\n\n```geojson\n{text}\n```"
-    return f"{md}\n\n{note}" if note else md
+    return f"**{caption}** ([`{name}`](Data/boundaries/{name}))\n\n```geojson\n{text}\n```"
 
 
 def row(cells: list[tuple]) -> str:
