@@ -11,7 +11,7 @@ between the two markers below, so re-running it after a boundary file changes ke
 README in step.
 
 GitHub's maps ignore colours set in the file, so the river is also drawn in red as a
-picture (Docs/figures/downtown_river_red.png) and placed under its map.
+picture (Docs/figures/downtown_river_red.png) and placed beside its map. Maps sit in rows of two (ROWS).
 
 USAGE (repository root):  .venv/bin/python Scripts/reporting/embed_boundary_maps.py
 """
@@ -41,11 +41,18 @@ RED = "#d03b3b"
 START = "<!-- boundary maps: start (written by Scripts/reporting/embed_boundary_maps.py) -->"
 END = "<!-- boundary maps: end -->"
 
-# Each file, the caption above its map, and the picture under it (None for no picture). The roads file has no map
-# of its own; its roads show in the river picture
-MAPS = [
-    ("central_business_district_osm.geojson", "Study area: the Central Business District", None),
-    ("osm_water_downtown_context.geojson", "South Saskatchewan River", RIVER_LINK),
+# The README's map rows, top to bottom, each with one or two cells side by side. A map cell is
+# ("map", file name, caption above the map, sentence under it or None); a picture cell is
+# ("picture", line above the picture, its README path, its alt text)
+ROWS = [
+    [("map", "central_business_district_osm.geojson", "Study area: the Central Business District", None),
+     ("map", "osm_roads_downtown_context.geojson", "Street segments",
+      "The street segments. X is measured from photos at points on these roads, and "
+      "`Scripts/crime_data/hotspots.py` rebuilds the same 218 segments from this file to place each crime record "
+      "(Y1), so X and Y1 share one unit.")],
+    [("map", "osm_water_downtown_context.geojson", "South Saskatchewan River", None),
+     ("picture", "The same river in red, with the Downtown roads and the CBD outline:", RIVER_LINK,
+      "South Saskatchewan River in red")],
 ]
 
 
@@ -77,28 +84,38 @@ def draw_red_river() -> None:
     print("wrote", RIVER_PNG)
 
 
-def block(name: str, caption: str, picture: str | None) -> str:
+def cell(spec: tuple) -> str:
     """
-    One caption line, one ```geojson block holding the whole file, and an optional picture.
+    The Markdown for one cell: a caption, a ```geojson block holding the whole file and an optional sentence, or a
+    line and a picture.
 
-    :param name: file name inside Data/boundaries/
-    :param caption: short title shown above the map
-    :param picture: README path of a picture shown beside the map, or None
-    :return: the Markdown for this map
+    :param spec: a map or picture cell from ROWS
+    :return: the cell's Markdown
     """
+    if spec[0] == "picture":
+        _, line, path, alt = spec
+        return f"{line}\n\n![{alt}]({path})"
+
     # The file's features, written without spaces so the README stays as small as it can
+    _, name, caption, note = spec
     data = json.loads((BND / name).read_text())
     text = json.dumps(data, separators=(",", ":"), ensure_ascii=False)
-    title = f"**{caption}** ([`{name}`](Data/boundaries/{name}))"
-    geo = f"```geojson\n{text}\n```"
-    if not picture:
-        return f"{title}\n\n{geo}\n"
+    md = f"**{caption}** ([`{name}`](Data/boundaries/{name}))\n\n```geojson\n{text}\n```"
+    return f"{md}\n\n{note}" if note else md
 
-    # With a picture, the map and the picture sit side by side in a two-column table. The blank lines inside each
-    # cell let GitHub read the cell as Markdown, so the map is still drawn
-    return (f'<table><tr><td width="50%" valign="top">\n\n{title}\n\n{geo}\n\n</td>'
-            f'<td width="50%" valign="top">\n\nThe same river in red, with the Downtown roads and the CBD outline:\n\n'
-            f"![{caption} in red]({picture})\n\n</td></tr></table>\n")
+
+def row(cells: list[tuple]) -> str:
+    """
+    One row of the README's maps. Two cells sit side by side in a two-column table; the blank lines inside each
+    cell let GitHub read it as Markdown, so the maps are still drawn.
+
+    :param cells: one or two cells from ROWS
+    :return: the row's Markdown
+    """
+    if len(cells) == 1:
+        return cell(cells[0]) + "\n"
+    tds = "".join(f'<td width="50%" valign="top">\n\n{cell(c)}\n\n</td>' for c in cells)
+    return f"<table><tr>{tds}</tr></table>\n"
 
 
 def main() -> None:
@@ -110,10 +127,10 @@ def main() -> None:
     before, rest = readme.split(START, 1)
     _, after = rest.split(END, 1)
 
-    # The new maps, separated by blank lines
-    maps = "\n".join(block(name, caption, picture) for name, caption, picture in MAPS)
+    # The new map rows, separated by blank lines
+    maps = "\n".join(row(cells) for cells in ROWS)
     README.write_text(f"{before}{START}\n\n{maps}\n{END}{after}")
-    print("wrote", len(MAPS), "maps into", README)
+    print("wrote", sum(c[0] == "map" for cells in ROWS for c in cells), "maps into", README)
 
 
 # Write the maps only when the file is run, not when it is imported
