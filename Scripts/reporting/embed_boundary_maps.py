@@ -83,20 +83,22 @@ def block(name: str, caption: str, picture: str | None) -> str:
 
     :param name: file name inside Data/boundaries/
     :param caption: short title shown above the map
-    :param picture: README path of a picture shown under the map, or None
+    :param picture: README path of a picture shown beside the map, or None
     :return: the Markdown for this map
     """
     # The file's features, written without spaces so the README stays as small as it can
     data = json.loads((BND / name).read_text())
     text = json.dumps(data, separators=(",", ":"), ensure_ascii=False)
-    md = f"**{caption}** ([`{name}`](Data/boundaries/{name}))\n\n```geojson\n{text}\n```\n"
+    title = f"**{caption}** ([`{name}`](Data/boundaries/{name}))"
+    geo = f"```geojson\n{text}\n```"
+    if not picture:
+        return f"{title}\n\n{geo}\n"
 
-    # The picture goes under the map, with a line saying why it is there
-    if picture:
-        # A short line and the picture itself
-        md += (f"\nThe same river in red, with the Downtown roads and the CBD outline:\n\n"
-               f"![{caption} in red]({picture})\n")
-    return md
+    # With a picture, the map and the picture sit side by side in a two-column table. The blank lines inside each
+    # cell let GitHub read the cell as Markdown, so the map is still drawn
+    return (f'<table><tr><td width="50%" valign="top">\n\n{title}\n\n{geo}\n\n</td>'
+            f'<td width="50%" valign="top">\n\nThe same river in red, with the Downtown roads and the CBD outline:\n\n'
+            f"![{caption} in red]({picture})\n\n</td></tr></table>\n")
 
 
 def main() -> None:
