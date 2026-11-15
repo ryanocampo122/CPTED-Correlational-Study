@@ -43,13 +43,14 @@ CUES = {"human_graffiti_0_1": "graffiti", "human_litter_0_1": "litter", "human_b
         "human_streetlight_visible_0_1": "street light"}
 
 
-def thumbnail(src: Path) -> Path:
-    """Save a small copy of one side view in THUMBS, under the same file name.
+def thumbnail(src: Path, name: str) -> Path:
+    """Save a small copy of one side view in THUMBS.
 
     :param src: the full side view
+    :param name: the small copy's file name
     :return: the small copy
     """
-    out = THUMBS / src.name
+    out = THUMBS / name
     with Image.open(src) as im:
         h = round(im.height * THUMB_W / im.width)
         im.convert("RGB").resize((THUMB_W, h), Image.LANCZOS).save(out, "JPEG", quality=QUALITY, optimize=True)
@@ -79,21 +80,16 @@ def gallery(sheet: pd.DataFrame) -> str:
         group = group.sort_values(["point_id", "side"])
         cells = []
         for _, r in group.iterrows():
-            # The small copy links to the full side view; both paths are relative to Docs/
-            full = (VALIDATION / r.image_file).resolve().relative_to(REPO)
-            small = thumbnail(REPO / full).relative_to(REPO / "Docs")
-            cells.append(f'<td width="20%" valign="top"><a href="../{full}"><img src="{small}" width="160" '
-                         f'alt="{r.point_id} {r.side}"></a><br><sub>{caption(r)}</sub></td>')
+            # The small copy, its path relative to Docs/ (kept short: GitHub shows only the first ~500 KB of a page)
+            small = thumbnail((VALIDATION / r.image_file).resolve(), f"{r.point_id}_{r.side}.jpg").relative_to(REPO / "Docs")
+            cells.append(f'<td valign="top"><img src="{small}" width="160"><br><sub>{caption(r)}</sub></td>')
         rows = ["<tr>" + "".join(cells[i:i + PER_ROW]) + "</tr>" for i in range(0, len(cells), PER_ROW)]
         name = label.replace("_", " ").capitalize()
         plural = "" if len(group) == 1 else "s"
         parts.append(f"**{name}** ({len(group)} view{plural})\n\n<table>\n" + "\n".join(rows) + "\n</table>\n")
-    # A coloured tip box above the section, and the section's title as a heading, so the closed gallery is easy to see
-    tip = (f"> [!TIP]\n> **All {len(sheet)} labelled views are in the section below.** Click its heading to open it. "
-           f"They are grouped by land-use label, with the cues marked present under each; click a picture for the "
-           f"full view.\n\n")
-    summary = f"<summary><h3>Click to open: all {len(sheet)} labelled views</h3></summary>"
-    return f"{tip}<details>\n{summary}\n\n" + "\n".join(parts) + "\n</details>\n"
+    # The drop-down title
+    summary = "<summary><h3>Drop down for all photos</h3></summary>"
+    return f"<details>\n{summary}\n\n" + "\n".join(parts) + "\n</details>\n"
 
 
 def main() -> None:

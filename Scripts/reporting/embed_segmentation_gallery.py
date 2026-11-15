@@ -139,19 +139,15 @@ def gallery(rows: list[tuple[pd.Series, str, str]], legend_path: Path) -> str:
     :return: the gallery's Markdown
     """
     parts = [f"![Colours]({legend_path.relative_to(DOC.parent)})\n"]
-    # One table per photo year, in year order; each small picture links to the full side view
+    # One table per photo year, in year order (kept short: GitHub shows only the first ~500 KB of a page)
     for year in sorted({v.capture_year for v, _, _ in rows}):
-        cells = [f'<td width="33%" valign="top"><a href="../Data/cv_study_2026-11/{v.view_file}"><img src="{small}" '
-                 f'width="250" alt="{v.point_id} {v.side}"></a><br><sub>{text}</sub></td>'
+        cells = [f'<td valign="top"><img src="{small}" width="250"><br><sub>{text}</sub></td>'
                  for v, small, text in rows if v.capture_year == year]
         lines = ["<tr>" + "".join(cells[i:i + PER_ROW]) + "</tr>" for i in range(0, len(cells), PER_ROW)]
         parts.append(f"**{year} photos** ({len(cells)} side views)\n\n<table>\n" + "\n".join(lines) + "\n</table>\n")
-    # A coloured tip box above the section, and the section's title as a heading, so the closed gallery is easy to see
-    tip = (f"> [!TIP]\n> **All {len(rows)} segmented side views are in the section below.** Click its heading to open "
-           f"it. Each shows the photo on the left and the model's classes on the right, with the three biggest shares "
-           f"underneath; click a picture for the full view.\n\n")
-    summary = f"<summary><h3>Click to open: all {len(rows)} segmented side views</h3></summary>"
-    return f"{tip}<details>\n{summary}\n\n" + "\n".join(parts) + "\n</details>\n"
+    # The drop-down title
+    summary = "<summary><h3>Drop down for all photos</h3></summary>"
+    return f"<details>\n{summary}\n\n" + "\n".join(parts) + "\n</details>\n"
 
 
 def write_doc(rows: list[tuple[pd.Series, str, str]], legend_path: Path) -> None:
@@ -173,7 +169,7 @@ def text_only() -> None:
     rows = []
     for v in views().itertuples():
         # Every small picture must already exist
-        path = OUT / Path(v.view_file).name
+        path = OUT / f"{v.point_id}_{v.side}.jpg"
         if not path.exists():
             sys.exit(f"no small picture for {v.point_id} {v.side}; run without --text-only")
         view = pd.Series(v._asdict())
@@ -208,7 +204,7 @@ def main() -> None:
         # The photo with the class colours laid over it, as in fig12
         coloured = palette[np.where(label_map >= 0, label_map, len(model.labels))]
         overlay = (0.45 * np.asarray(im) + 0.55 * coloured).astype(np.uint8)
-        path = OUT / Path(v.view_file).name
+        path = OUT / f"{v.point_id}_{v.side}.jpg"
         small_picture(im, overlay, path)
         view = pd.Series(v._asdict())
         rows.append((view, str(path.relative_to(DOC.parent)), caption(view, published)))
