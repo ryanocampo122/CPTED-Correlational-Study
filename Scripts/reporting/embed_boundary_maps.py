@@ -41,10 +41,10 @@ RED = "#d03b3b"
 START = "<!-- boundary maps: start (written by Scripts/reporting/embed_boundary_maps.py) -->"
 END = "<!-- boundary maps: end -->"
 
-# Each file, the caption above its map, and the picture under it (None for no picture)
+# Each file, the caption above its map, and the picture under it (None for no picture). The roads file has no map
+# of its own; its roads show in the river picture
 MAPS = [
     ("central_business_district_osm.geojson", "Study area: the Central Business District", None),
-    ("osm_roads_downtown_context.geojson", "Road centrelines around Downtown", None),
     ("osm_water_downtown_context.geojson", "South Saskatchewan River", RIVER_LINK),
 ]
 
