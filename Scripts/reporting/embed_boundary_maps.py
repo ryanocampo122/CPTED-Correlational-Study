@@ -4,126 +4,59 @@ embed_boundary_maps.py
 ======================
 CPTED Vision | Interactive boundary maps in the main README
 
-Copies the three files in Data/boundaries/ into README.md as ```geojson blocks. GitHub draws
-each block as the same interactive map it shows when the file itself is opened (drag to pan,
-scroll to zoom, click a feature for its properties). The script replaces only the text
-between the two markers below, so re-running it after a boundary file changes keeps the
-README in step.
-
-GitHub's maps ignore colours set in the file, so the river is also drawn in red as a
-picture (Docs/figures/downtown_river_red.png) and placed beside its map. Maps sit in rows of two (ROWS).
+Copies the three files in Data/boundaries/ into README.md as ```geojson blocks, one under another. GitHub draws
+each block as the same interactive map it shows when the file itself is opened (drag to pan, scroll to zoom, click
+a feature for its properties). The script replaces only the text between the two markers below, so re-running it
+after a boundary file changes keeps the README in step.
 
 USAGE (repository root):  .venv/bin/python Scripts/reporting/embed_boundary_maps.py
 """
-# Lets type hints name classes before they are defined
-from __future__ import annotations
-
 # Reading the GeoJSON files and finding the repository root
 import json
 from pathlib import Path
-
-# Plotting, the river's shape, and the shared base map and palette from make_figures.py
-import matplotlib.pyplot as plt
-from shapely.geometry import shape
-from make_figures import DPI, INK_2, _draw_base, _geo
 
 # The repository root, the README it edits and the folder holding the three files
 REPO = Path(__file__).resolve().parents[2]
 README = REPO / "README.md"
 BND = REPO / "Data" / "boundaries"
 
-# The red river picture, its path inside the README, and the red (the palette's "decision needed" red)
-RIVER_PNG = REPO / "Docs" / "figures" / "downtown_river_red.png"
-RIVER_LINK = "Docs/figures/downtown_river_red.png"
-RED = "#d03b3b"
-
 # The README text between these two markers is rewritten on every run
 START = "<!-- boundary maps: start (written by Scripts/reporting/embed_boundary_maps.py) -->"
 END = "<!-- boundary maps: end -->"
 
-# The README's map rows, top to bottom, each with one or two cells side by side. A map cell is
-# ("map", file name, caption above the map); a picture cell is ("picture", its README path, its alt text)
-ROWS = [
-    [("map", "central_business_district_osm.geojson", "Study area: the Central Business District"),
-     ("map", "osm_roads_downtown_context.geojson", "Street segments")],
-    [("map", "osm_water_downtown_context.geojson", "South Saskatchewan River"),
-     ("picture", RIVER_LINK, "South Saskatchewan River in red, with the Downtown roads and the CBD outline")],
+# The maps, top to bottom: each file and the caption above its map
+MAPS = [
+    ("central_business_district_osm.geojson", "Study area: the Central Business District"),
+    ("osm_water_downtown_context.geojson", "South Saskatchewan River"),
+    ("osm_roads_downtown_context.geojson", "Street segments"),
 ]
 
 
-def draw_red_river() -> None:
-    """Draw the river in red over the Downtown roads and the CBD outline, and save it to RIVER_PNG."""
-    # Road centrelines, the river and the CBD polygon, read from Data/boundaries/
-    roads, water, cbd = _geo()
-
-    # The river was clipped to the Downtown map extent, so its bounds are the map's bounds
-    river = shape(water)
-    extent = river.bounds
-
-    # Roads, CBD outline and a 500 m scale bar, with the river first drawn in the usual pale blue
-    fig, ax = plt.subplots(figsize=(6.2, 4.6))
-    _draw_base(ax, roads, water, cbd, extent)
-
-    # Each piece of the river filled red on top of the blue, but under the roads
-    for part in getattr(river, "geoms", [river]):
-        # The outline of this piece, as x (longitude) and y (latitude) lists
-        xs, ys = part.exterior.xy
-        ax.fill(xs, ys, color=RED, lw=0, zorder=0.5)
-
-    # OpenStreetMap data must carry its licence notice
-    ax.text(0.995, 0.005, "Map data © OpenStreetMap contributors (ODbL)", transform=ax.transAxes,
-            ha="right", va="bottom", fontsize=6, color=INK_2)
-
-    fig.savefig(RIVER_PNG, dpi=DPI, bbox_inches="tight", pad_inches=0.06)
-    plt.close(fig)
-    print("wrote", RIVER_PNG)
-
-
-def cell(spec: tuple) -> str:
+def block(name: str, caption: str) -> str:
     """
-    The Markdown for one cell: a caption and a ```geojson block holding the whole file, or a picture.
+    One caption line and one ```geojson block holding the whole file.
 
-    :param spec: a map or picture cell from ROWS
-    :return: the cell's Markdown
+    :param name: file name inside Data/boundaries/
+    :param caption: short title shown above the map
+    :return: the Markdown for this map
     """
-    if spec[0] == "picture":
-        _, path, alt = spec
-        return f"![{alt}]({path})"
-
     # The file's features, written without spaces so the README stays as small as it can
-    _, name, caption = spec
     data = json.loads((BND / name).read_text())
     text = json.dumps(data, separators=(",", ":"), ensure_ascii=False)
-    return f"**{caption}** ([`{name}`](Data/boundaries/{name}))\n\n```geojson\n{text}\n```"
-
-
-def row(cells: list[tuple]) -> str:
-    """
-    One row of the README's maps. Two cells sit side by side in a two-column table; the blank lines inside each
-    cell let GitHub read it as Markdown, so the maps are still drawn.
-
-    :param cells: one or two cells from ROWS
-    :return: the row's Markdown
-    """
-    if len(cells) == 1:
-        return cell(cells[0]) + "\n"
-    tds = "".join(f'<td width="50%" valign="top">\n\n{cell(c)}\n\n</td>' for c in cells)
-    return f"<table><tr>{tds}</tr></table>\n"
+    return f"**{caption}** ([`{name}`](Data/boundaries/{name}))\n\n```geojson\n{text}\n```\n"
 
 
 def main() -> None:
-    """Draw the red river picture, then rewrite the part of README.md between START and END."""
-    draw_red_river()
-
+    """Rewrite the part of README.md between START and END."""
     # The README split into the part before the maps, the maps and the part after
     readme = README.read_text()
     before, rest = readme.split(START, 1)
     _, after = rest.split(END, 1)
 
-    # The new map rows, separated by blank lines
-    maps = "\n".join(row(cells) for cells in ROWS)
+    # The new maps, separated by blank lines
+    maps = "\n".join(block(name, caption) for name, caption in MAPS)
     README.write_text(f"{before}{START}\n\n{maps}\n{END}{after}")
-    print("wrote", sum(c[0] == "map" for cells in ROWS for c in cells), "maps into", README)
+    print("wrote", len(MAPS), "maps into", README)
 
 
 # Write the maps only when the file is run, not when it is imported
