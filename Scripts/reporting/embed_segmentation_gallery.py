@@ -10,9 +10,10 @@ on the left, the model's classes laid over it on the right, in the colours of fi
 Docs/cv_pipeline.md, with the three biggest shares from segmentation_shares.csv under each picture, and stops if the
 pictures and the published shares disagree. Only the text between the two markers below is replaced.
 
-About 15 minutes on the Mac's GPU (the model runs once per view).
+About 15 minutes on the Mac's GPU (the model runs once per view). With --text-only it rewrites only the gallery
+text from the small pictures already saved, in a few seconds.
 
-USAGE (repository root):  .venv/bin/python Scripts/reporting/embed_segmentation_gallery.py
+USAGE (repository root):  .venv/bin/python Scripts/reporting/embed_segmentation_gallery.py [--text-only]
 """
 # Command-line paths
 import sys
@@ -145,13 +146,46 @@ def gallery(rows: list[tuple[pd.Series, str, str]], legend_path: Path) -> str:
                  for v, small, text in rows if v.capture_year == year]
         lines = ["<tr>" + "".join(cells[i:i + PER_ROW]) + "</tr>" for i in range(0, len(cells), PER_ROW)]
         parts.append(f"**{year} photos** ({len(cells)} side views)\n\n<table>\n" + "\n".join(lines) + "\n</table>\n")
-    summary = (f"<summary><b>Show all {len(rows)} segmented side views</b> (photo on the left, the model's classes "
-               f"on the right; the three biggest shares under each)</summary>")
-    return f"<details>\n{summary}\n\n" + "\n".join(parts) + "\n</details>\n"
+    # A coloured tip box above the section, and the section's title as a heading, so the closed gallery is easy to see
+    tip = (f"> [!TIP]\n> **All {len(rows)} segmented side views are in the section below.** Click its heading to open "
+           f"it. Each shows the photo on the left and the model's classes on the right, with the three biggest shares "
+           f"underneath; click a picture for the full view.\n\n")
+    summary = f"<summary><h3>Click to open: all {len(rows)} segmented side views</h3></summary>"
+    return f"{tip}<details>\n{summary}\n\n" + "\n".join(parts) + "\n</details>\n"
+
+
+def write_doc(rows: list[tuple[pd.Series, str, str]], legend_path: Path) -> None:
+    """Rewrite the part of the doc between START and END.
+
+    :param rows: (side view, small picture path from Docs/, caption) for every view
+    :param legend_path: the legend picture
+    """
+    doc = DOC.read_text()
+    before, rest = doc.split(START, 1)
+    _, after = rest.split(END, 1)
+    DOC.write_text(f"{before}{START}\n\n{gallery(rows, legend_path)}\n{END}{after}")
+    print("wrote", len(rows), "segmented views into", DOC)
+
+
+def text_only() -> None:
+    """Rewrite only the gallery text from the small pictures already saved, without running the model."""
+    shares = pd.read_csv(STUDY / "segmentation_shares.csv").set_index(["point_id", "side"])
+    rows = []
+    for v in views().itertuples():
+        # Every small picture must already exist
+        path = OUT / Path(v.view_file).name
+        if not path.exists():
+            sys.exit(f"no small picture for {v.point_id} {v.side}; run without --text-only")
+        view = pd.Series(v._asdict())
+        rows.append((view, str(path.relative_to(DOC.parent)), caption(view, shares.loc[(v.point_id, v.side)])))
+    write_doc(rows, OUT / "legend.png")
 
 
 def main() -> None:
     """Segment every side view, save the small pictures, check them against the shares, and write the gallery."""
+    if "--text-only" in sys.argv:
+        text_only()
+        return
     OUT.mkdir(parents=True, exist_ok=True)
     allv = views()
     shares = pd.read_csv(STUDY / "segmentation_shares.csv").set_index(["point_id", "side"])
@@ -184,12 +218,8 @@ def main() -> None:
     if worst > TOLERANCE:
         sys.exit("the pictures do not match segmentation_shares.csv; re-run models.py first")
 
-    # The doc split into the part before the gallery, the gallery and the part after
-    doc = DOC.read_text()
-    before, rest = doc.split(START, 1)
-    _, after = rest.split(END, 1)
-    DOC.write_text(f"{before}{START}\n\n{gallery(rows, legend(model.labels, palette))}\n{END}{after}")
-    print("wrote", len(rows), "segmented views into", DOC)
+    # The gallery, with a fresh legend
+    write_doc(rows, legend(model.labels, palette))
 
 
 # Write the gallery only when the file is run, not when it is imported

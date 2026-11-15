@@ -138,8 +138,11 @@ The figure above shows four examples. Every one of the 492 side views is below, 
 
 <!-- segmentation gallery: start (written by Scripts/reporting/embed_segmentation_gallery.py) -->
 
+> [!TIP]
+> **All 492 segmented side views are in the section below.** Click its heading to open it. Each shows the photo on the left and the model's classes on the right, with the three biggest shares underneath; click a picture for the full view.
+
 <details>
-<summary><b>Show all 492 segmented side views</b> (photo on the left, the model's classes on the right; the three biggest shares under each)</summary>
+<summary><h3>Click to open: all 492 segmented side views</h3></summary>
 
 ![Colours](figures/segmentation_all/legend.png)
 
@@ -363,8 +366,11 @@ All 150 labelled views are below, grouped by their land-use label, with the cues
 
 <!-- label gallery: start (written by Scripts/reporting/embed_label_gallery.py) -->
 
+> [!TIP]
+> **All 150 labelled views are in the section below.** Click its heading to open it. They are grouped by land-use label, with the cues marked present under each; click a picture for the full view.
+
 <details>
-<summary><b>Show all 150 labelled views</b> (grouped by land-use label; click a picture for the full view)</summary>
+<summary><h3>Click to open: all 150 labelled views</h3></summary>
 
 **Commercial street** (51 views)
 

@@ -86,10 +86,14 @@ def gallery(sheet: pd.DataFrame) -> str:
                          f'alt="{r.point_id} {r.side}"></a><br><sub>{caption(r)}</sub></td>')
         rows = ["<tr>" + "".join(cells[i:i + PER_ROW]) + "</tr>" for i in range(0, len(cells), PER_ROW)]
         name = label.replace("_", " ").capitalize()
-        parts.append(f"**{name}** ({len(group)} view{'' if len(group) == 1 else 's'})\n\n<table>\n" + "\n".join(rows) + "\n</table>\n")
-    summary = (f"<summary><b>Show all {len(sheet)} labelled views</b> (grouped by land-use label; click a picture "
-               f"for the full view)</summary>")
-    return f"<details>\n{summary}\n\n" + "\n".join(parts) + "\n</details>\n"
+        plural = "" if len(group) == 1 else "s"
+        parts.append(f"**{name}** ({len(group)} view{plural})\n\n<table>\n" + "\n".join(rows) + "\n</table>\n")
+    # A coloured tip box above the section, and the section's title as a heading, so the closed gallery is easy to see
+    tip = (f"> [!TIP]\n> **All {len(sheet)} labelled views are in the section below.** Click its heading to open it. "
+           f"They are grouped by land-use label, with the cues marked present under each; click a picture for the "
+           f"full view.\n\n")
+    summary = f"<summary><h3>Click to open: all {len(sheet)} labelled views</h3></summary>"
+    return f"{tip}<details>\n{summary}\n\n" + "\n".join(parts) + "\n</details>\n"
 
 
 def main() -> None:
