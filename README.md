@@ -21,7 +21,7 @@ Three public data sources:
 
 | What is measured | Where it comes from | How |
 |---|---|---|
-| What the streets look like | street photos on Mapillary (a crowd-sourced site like Street View) | image models measure buildings, trees, sky, street lights, people and signs of disorder in each photo |
+| What the streets look like | street photos on Mapillary | image models measure buildings, trees, sky, street lights, people and signs of disorder in each photo |
 | Where crime is recorded | Saskatoon Police Service (SPS) records | each record is placed on the street it names |
 | How safe people feel | posts and comments on Reddit's r/saskatoon | posts are tagged by place and scored for tone (negative, neutral, positive) |
 
