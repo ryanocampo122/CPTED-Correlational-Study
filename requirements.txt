@@ -25,9 +25,11 @@ transformers==4.57.6
 pillow==12.3.0
 huggingface_hub==0.36.2
 
-# Statistics (requested Oct 2026; first needed by the retired 2010-2025 climate-crime script)
+# Statistics (requested Oct 2026; first needed by the retired 2010-2025 climate-crime script); scikit-learn for
+# the CLIP check in Scripts/reporting/november_numbers.py
 scipy==1.18.1
 statsmodels==0.15.0
+scikit-learn==1.9.1
 
 # Notebooks (Notebooks/): the kernel, running them headless (Scripts/flight/run_notebook.py), and the git
 # filter that keeps their outputs out of commits (nbstripout --install, once per clone)

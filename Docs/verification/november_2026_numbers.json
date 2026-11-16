@@ -261,6 +261,121 @@
     ],
     "checks_passing": 2
   },
+  "clip_check": {
+    "cues": [
+      {
+        "cue": "graffiti",
+        "present": 4,
+        "n": 150,
+        "auc": null,
+        "f1_at_half": null,
+        "f1_fitted": null,
+        "stand_in": null,
+        "stand_in_auc": null
+      },
+      {
+        "cue": "litter",
+        "present": 4,
+        "n": 150,
+        "auc": null,
+        "f1_at_half": 0.07,
+        "f1_fitted": null,
+        "stand_in": null,
+        "stand_in_auc": null
+      },
+      {
+        "cue": "boarded windows",
+        "present": 1,
+        "n": 150,
+        "auc": null,
+        "f1_at_half": 0.02,
+        "f1_fitted": null,
+        "stand_in": null,
+        "stand_in_auc": null
+      },
+      {
+        "cue": "vacant lot",
+        "present": 11,
+        "n": 150,
+        "auc": 0.84,
+        "f1_at_half": 0.18,
+        "f1_fitted": 0.33,
+        "stand_in": null,
+        "stand_in_auc": null
+      },
+      {
+        "cue": "active storefront",
+        "present": 44,
+        "n": 150,
+        "auc": 0.82,
+        "f1_at_half": 0.04,
+        "f1_fitted": 0.58,
+        "stand_in": null,
+        "stand_in_auc": null
+      },
+      {
+        "cue": "windows overlook",
+        "present": 95,
+        "n": 150,
+        "auc": 0.71,
+        "f1_at_half": 0.19,
+        "f1_fitted": 0.78,
+        "stand_in": "building share",
+        "stand_in_auc": 0.87
+      },
+      {
+        "cue": "people present",
+        "present": 9,
+        "n": 150,
+        "auc": 0.71,
+        "f1_at_half": 0.12,
+        "f1_fitted": null,
+        "stand_in": "person count",
+        "stand_in_auc": 0.79
+      },
+      {
+        "cue": "fences",
+        "present": 31,
+        "n": 150,
+        "auc": 0.56,
+        "f1_at_half": null,
+        "f1_fitted": 0.32,
+        "stand_in": "fence and wall share",
+        "stand_in_auc": 0.86
+      },
+      {
+        "cue": "seating",
+        "present": 26,
+        "n": 150,
+        "auc": 0.65,
+        "f1_at_half": 0.36,
+        "f1_fitted": 0.34,
+        "stand_in": "bench count",
+        "stand_in_auc": 0.88
+      }
+    ],
+    "min_for_auc": 5,
+    "min_for_cutoff": 10,
+    "vacant_vs_building": -0.58,
+    "land_use_types": 8,
+    "parking_mean_prob": 0.372,
+    "commercial_mean_prob": 0.04,
+    "negatives": 9,
+    "negatives_with_no": 6,
+    "vacant_prompts": [
+      "an empty vacant lot or an abandoned building",
+      "a well-used, occupied building"
+    ],
+    "graffiti_negative": "a clean wall with no graffiti",
+    "view_px": [
+      1024,
+      768
+    ],
+    "crops": 3,
+    "crop_px": 768,
+    "clip_px": 224,
+    "score_at_gap_0_01": 0.73
+  },
   "crime": {
     "records": 257,
     "placed": 255,

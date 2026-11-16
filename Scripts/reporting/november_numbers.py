@@ -15,15 +15,51 @@ import json
 import sys
 from pathlib import Path
 
-# Tables
+# Tables, arrays and the side-view size
+import numpy as np
 import pandas as pd
+from PIL import Image
 
-# Data folders and the default output file
+# The CLIP check: how well a score separates views (AUC), F1, and the folds for testing a fitted cut-off
+from sklearn.metrics import f1_score, roc_auc_score
+from sklearn.model_selection import StratifiedKFold
+
+# Data folders, the CLIP prompts and the default output file
 REPO = Path(__file__).resolve().parents[2]
 STUDY = REPO / "Data" / "cv_study_2026-11"
 PILOT = REPO / "Data" / "cv_pilot_2026-10" / "cbd"
 CRIME = REPO / "Data" / "sps_crime_2026-06-01_2026-08-31" / "03_segments"
+PROMPTS = REPO / "Scripts" / "cv_pilot" / "clip_prompts.json"
 OUT = REPO / "Docs" / "verification" / "november_2026_numbers.json"
+
+# How CLIP sees a side view (Scripts/cv_pilot/pilot_lib.py): three square crops, each shrunk to 224 x 224 pixels
+# (CLIP ViT-B/32's input size), and a cue score made from the two prompt matches times CLIP's scale of 100
+CLIP_CROPS = 3
+CLIP_INPUT_PX = 224
+CLIP_SCALE = 100
+
+# The CLIP cues: the words in the report, the labelling-sheet column and the CLIP score column
+CLIP_CUES = [("graffiti", "human_graffiti_0_1", "cue_graffiti_mean"),
+             ("litter", "human_litter_0_1", "cue_litter_mean"),
+             ("boarded windows", "human_boarded_windows_0_1", "cue_boarded_windows_mean"),
+             ("vacant lot", "human_vacant_lot_0_1", "cue_vacant_lot_mean"),
+             ("active storefront", "human_active_storefront_0_1", "cue_active_storefront_mean"),
+             ("windows overlook", "human_windows_overlook_0_1", "cue_windows_overlook_street_mean"),
+             ("people present", "human_people_present_0_1", "cue_people_present_mean"),
+             ("fences", "human_fences_0_1", "cue_fences_barriers_mean"),
+             ("seating", "human_seating_0_1", "cue_seating_mean")]
+
+# The segmentation measure that covers the same thing as a CLIP cue: its words and the columns added together
+STAND_INS = {"windows overlook": ("building share", ["share_building"]),
+             "people present": ("person count", ["count_person"]),
+             "fences": ("fence and wall share", ["share_fence", "share_wall"]),
+             "seating": ("bench count", ["count_bench"])}
+
+# Fewest labelled views with a cue before its AUC is reported, and before a fitted cut-off is tested;
+# the folds and repeats for testing a cut-off on views it was not fitted on
+MIN_FOR_AUC = 5
+MIN_FOR_CUTOFF = 10
+FOLDS, REPEATS = 5, 20
 
 
 def read_json(path: Path) -> dict:
@@ -131,6 +167,81 @@ def validation_numbers() -> dict:
             "checks_passing": sum(c["passes"] for c in checks)}
 
 
+def fitted_cutoff_f1(y: np.ndarray, s: np.ndarray) -> float:
+    """F1 of a cut-off chosen on four-fifths of the labelled views and applied to the other fifth, averaged over
+    REPEATS different splits, so the cut-off is always tested on views it was not chosen on.
+
+    :param y: 1 where the labels show the cue, else 0
+    :param s: the score for each view
+    :return: the average F1
+    """
+    out = []
+    for r in range(REPEATS):
+        pred = np.zeros_like(y)
+        for train, test in StratifiedKFold(FOLDS, shuffle=True, random_state=r).split(s, y):
+            # The cut-off with the best F1 on the training views, used on the test views
+            cut = max(np.unique(s[train]), key=lambda c, tr=train: f1_score(y[tr], s[tr] >= c))
+            pred[test] = s[test] >= cut
+        out.append(f1_score(y, pred))
+    return round(float(np.mean(out)), 2)
+
+
+def clip_check_numbers() -> dict:
+    """Why the CLIP cues fail the label check: how well each score separates the labelled views with and without the
+    cue (AUC), what a fitted cut-off would give, the segmentation measures for the same cues, and the land-use bias.
+
+    :return: numbers for the update
+    """
+    # The labelled views with their CLIP scores, segmentation shares and object counts (score columns only, so the
+    # merge has no duplicate columns)
+    k = ["point_id", "side"]
+    clip = pd.read_csv(STUDY / "clip_scores.csv")
+    shares = pd.read_csv(STUDY / "segmentation_shares.csv")
+    counts = pd.read_csv(STUDY / "object_counts.csv")
+    pick = lambda df, start: df[k + [c for c in df.columns if c.startswith(start)]]  # noqa: E731
+    lab = (pd.read_csv(STUDY / "validation" / "validation_blind.csv")
+           .merge(pick(clip, ("cue_", "typ_")), on=k).merge(pick(shares, "share_"), on=k).merge(pick(counts, "count_"), on=k))
+    # The F1 at the fixed cut-off of 0.5, as scored by validation.py
+    res = pd.read_csv(STUDY / "validation" / "validation_results.csv").set_index("prediction")
+
+    # Each cue: views with it in the labels, CLIP's AUC and F1s, and the segmentation measure's AUC
+    cues = []
+    for word, label, score in CLIP_CUES:
+        d = lab.dropna(subset=[label])
+        y, s = d[label].astype(int).to_numpy(), d[score].to_numpy()
+        present = int(y.sum())
+        row = {"cue": word, "present": present, "n": int(len(y)),
+               "auc": round(float(roc_auc_score(y, s)), 2) if present >= MIN_FOR_AUC else None,
+               "f1_at_half": round(float(res.loc[score, "f1"]), 2) if pd.notna(res.loc[score, "f1"]) else None,
+               "f1_fitted": fitted_cutoff_f1(y, s) if present >= MIN_FOR_CUTOFF else None,
+               "stand_in": None, "stand_in_auc": None}
+        if word in STAND_INS:
+            name, cols = STAND_INS[word]
+            row["stand_in"] = name
+            row["stand_in_auc"] = round(float(roc_auc_score(y, d[cols].sum(axis=1).to_numpy())), 2)
+        cues.append(row)
+
+    # Across all side views: the vacant-lot score against the building share, and the average land-use probabilities
+    views = clip.merge(pick(shares, "share_"), on=k)
+    types = [c for c in clip.columns if c.startswith("typ_")]
+    # The prompt wording: how many "absent" prompts say "no", and the side-view size that the crops are cut from
+    prompts = json.loads(PROMPTS.read_text())["cues"]
+    negatives = [p for v in prompts.values() for p in v["negative"]]
+    first = pd.read_csv(STUDY / "image_manifest.csv").view_left.iloc[0]
+    with Image.open(STUDY / first) as im:
+        width, height = im.size
+    return {"cues": cues, "min_for_auc": MIN_FOR_AUC, "min_for_cutoff": MIN_FOR_CUTOFF,
+            "vacant_vs_building": round(float(views.cue_vacant_lot_mean.corr(views.share_building, method="spearman")), 2),
+            "land_use_types": len(types),
+            "parking_mean_prob": round(float(clip.typ_surface_parking.mean()), 3),
+            "commercial_mean_prob": round(float(clip.typ_commercial_street.mean()), 3),
+            "negatives": len(negatives), "negatives_with_no": sum(" no " in f" {p} " for p in negatives),
+            "vacant_prompts": [prompts["vacant_lot"]["positive"][0], prompts["vacant_lot"]["negative"][0]],
+            "graffiti_negative": prompts["graffiti"]["negative"][0],
+            "view_px": [width, height], "crops": CLIP_CROPS, "crop_px": height, "clip_px": CLIP_INPUT_PX,
+            "score_at_gap_0_01": round(1 / (1 + np.exp(-CLIP_SCALE * 0.01)), 2)}
+
+
 def crime_numbers() -> dict:
     """Recorded crime on the street segments: placement, totals and hot spots.
 
@@ -172,7 +283,7 @@ def main() -> int:
     ap.add_argument("--out", default=str(OUT), help="output JSON (default Docs/verification/november_2026_numbers.json)")
     out = Path(ap.parse_args().out)
     numbers = {"images": image_numbers(), "image_years": image_year_numbers(), "models": model_numbers(),
-               "validation": validation_numbers(),
+               "validation": validation_numbers(), "clip_check": clip_check_numbers(),
                "crime": crime_numbers(), "join": join_numbers()}
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(numbers, indent=2, ensure_ascii=False))

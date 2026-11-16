@@ -5,10 +5,12 @@
  *
  * Inputs : Docs/verification/november_2026_numbers.json   (Scripts/reporting/november_numbers.py)
  *          Docs/figures/mid_point_november/*.png           (Scripts/reporting/make_figures_november.py)
+ *          Docs/figures/model_details/*.png                (Scripts/reporting/embed_model_details.py)
  * Output : Deliverables/2026-11_midpoint/CPTED_Vision_November2026_Midpoint_Update.docx
  *          Deliverables/2026-11_midpoint/README.md (same text as Markdown)
  *          Both are kept local (git-ignored) until the update is sent; ./flight rebuilds them in RESULTS_FINAL.
- * Each can be redirected (./flight does): --numbers <json> --figures <folder> --out <docx> --md <md>
+ * Each can be redirected (./flight does): --numbers <json> --figures <folder> --detail-figures <folder>
+ * --out <docx> --md <md>
  *
  * Both files are written from one list of blocks, so the Word report and the Markdown page always say the same.
  * Layout: Times New Roman; title 12 pt bold, headings 11.5 pt, body 11 pt, captions 10 pt, table text 8 pt;
@@ -25,6 +27,8 @@ const {
   Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, WidthType, AlignmentType,
   HeadingLevel, BorderStyle, ShadingType, LevelFormat, Header, Footer, PageNumber, VerticalAlign,
 } = require("docx");
+// The zip library that docx itself uses, to rewrite the finished file without empty folder entries
+const JSZip = require("jszip");
 
 // Input and output locations, each overridable on the command line
 const REPO = path.resolve(__dirname, "..", "..");
@@ -34,11 +38,12 @@ const arg = (name, dflt) => {
 };
 const NUMBERS = arg("--numbers", path.join(REPO, "Docs/verification/november_2026_numbers.json"));
 const FIG_DIR = arg("--figures", path.join(REPO, "Docs/figures/mid_point_november"));
+const DETAIL_DIR = arg("--detail-figures", path.join(REPO, "Docs/figures/model_details"));
 const OUT = arg("--out", path.join(REPO, "Deliverables/2026-11_midpoint",
   "CPTED_Vision_November2026_Midpoint_Update.docx"));
 const MD = arg("--md", path.join(path.dirname(OUT), "README.md"));
 const N = JSON.parse(fs.readFileSync(NUMBERS, "utf8"));
-const I = N.images, Y = N.image_years, M = N.models, V = N.validation, C = N.crime, J = N.join;
+const I = N.images, Y = N.image_years, M = N.models, V = N.validation, C = N.crime, J = N.join, K = N.clip_check;
 
 // Sizes in half-points (Word's unit) for the formatting spec, the text width, and the table look
 const SIZE = { title: 24, heading: 23, body: 22, caption: 20, table: 16 };
@@ -48,24 +53,30 @@ const HEAD_FILL = "000000";
 const BORDER = { style: BorderStyle.SINGLE, size: 4, color: "8C8A84" };
 const HEADER_TEXT = "CPTED Vision  ·  November 2026 midpoint update";
 
-// Number helpers: thousands separators, percent of a total, one decimal
+// Number helpers: thousands separators, percent of a total, one decimal, small numbers as words (capitalised to
+// start a sentence), a list joined with "and"
 const fmt = (n) => Number(n).toLocaleString("en-CA");
 const pct = (a, b) => Math.round((100 * a) / b);
 const one = (n) => Number(n).toFixed(1).replace(/\.0$/, "");
+const WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const word = (n) => (n >= 0 && n <= 10 ? WORDS[n] : String(n));
+const Cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+const listed = (xs) => (xs.length > 1 ? `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}` : xs.join(""));
 
 // ----------------------------------------------------------------------------
 // Content: one list of blocks, rendered to both Word and Markdown below
 // ----------------------------------------------------------------------------
 const blocks = [];
 let figNo = 0, tableNo = 0;
-// Block makers: heading, paragraph, bullet list, numbered list, table with caption, figure with caption
+// Block makers: heading, paragraph, bullet list, numbered list, table with caption, figure with caption (from the
+// November figures unless another folder is given); tables and figures return their number
 const h1 = (text, newPage = true) => blocks.push({ t: "h1", text, newPage });
 const p = (text) => blocks.push({ t: "p", text });
 const bullets = (items) => blocks.push({ t: "bullets", items });
 const numbered = (items) => blocks.push({ t: "numbered", items });
 const refs = (items) => blocks.push({ t: "refs", items });
-const table = (caption, headers, rows, widths) => { tableNo += 1; blocks.push({ t: "table", n: tableNo, caption, headers, rows, widths }); };
-const figure = (file, widthIn, caption) => { figNo += 1; blocks.push({ t: "figure", n: figNo, file, widthIn, caption }); return figNo; };
+const table = (caption, headers, rows, widths) => { tableNo += 1; blocks.push({ t: "table", n: tableNo, caption, headers, rows, widths }); return tableNo; };
+const figure = (file, widthIn, caption, dir = FIG_DIR) => { figNo += 1; blocks.push({ t: "figure", n: figNo, file, widthIn, caption, dir }); return figNo; };
 
 const objects = M.objects;
 const yrs = I.years;
@@ -73,15 +84,17 @@ const g = C.records_by_group;
 const cat = C.records_by_category;
 
 // ---- Title and 1. Summary ----
-blocks.push({ t: "title", text: "CPTED Vision" });
-blocks.push({ t: "subtitle", text: "November 2026 midpoint update: street images, image models and crime hot spots" });
+blocks.push({ t: "title", text: "Street Design, Crime and Perceived Safety in Downtown Saskatoon: A Computer-Vision " +
+  "Study of CPTED Using Street-Level Imagery" });
+blocks.push({ t: "subtitle", text: "CPTED Vision  ·  November 2026 midpoint update: street images, image models and " +
+  "crime hot spots" });
 blocks.push({ t: "byline", text: "Prepared by Ryan Ocampo" });
 blocks.push({ t: "rule", text: "November 2026  ·  revised work plan (October 2026)  ·  study period 1 June – 31 August 2026" });
 h1("1. Summary", false);
 p(`The November tasks in the revised work plan are to run the segmentation, detection and CLIP steps, to check their ` +
-  `accuracy against labelled images, and to map crime hot spots by category. Two are done; for the third, the images ` +
-  `are labelled and the scoring is next. The street images follow the image decision taken in November: the newest Mapillary image at ` +
-  `each sample point (2020 or 2023), used with the 2026 crime and Reddit data, with the date gap stated as a limitation.`);
+  `accuracy against labelled images, and to map crime hot spots by category. All three are done. The street images ` +
+  `follow the image decision taken in November: the newest Mapillary image at each sample point (2020 or 2023), used ` +
+  `with the 2026 crime and Reddit data, with the date gap stated as a limitation.`);
 bullets([
   `**Street images:** ${I.points_with_image} of the ${I.points} sample points have a usable image, on ` +
   `${I.segments_with_image} of the ${I.segments} street segments (${pct(I.segments_with_image, I.segments)}%). ` +
@@ -91,7 +104,9 @@ bullets([
   `scored land-use type and nine CPTED cues.`,
   `**Label check:** all ${V.n_labelled} side views drawn blind are labelled and scored. ${V.checks_passing} of the ` +
   `${V.checks.length} checks pass: street lights and seating, both from the object counts. No CLIP cue passes, and ` +
-  `CLIP's land-use label matches the labels for ${Math.round(100 * V.typology_accuracy)}% of views.`,
+  `CLIP's land-use label matches the labels for ${Math.round(100 * V.typology_accuracy)}% of views. CLIP's scores ` +
+  `do put the views in a sensible order, but the fixed cut-off of 0.5 turns them into wrong yes-or-no answers, and ` +
+  `the segmentation model separates four of the cues better (Section 4).`,
   `**Crime hot spots:** ${C.placed} of the ${C.records} study-category crimes recorded in the CBD were placed on the ` +
   `street segments; half of them lie on just ${C.hotspot_segments.all_study_crime} of the ${C.segments} segments.`,
 ]);
@@ -176,6 +191,8 @@ p(`The 2023 images were taken from a car roof, which covers about ${one(M.camera
   `place in every view of one side, so its typical outline is used there and nothing found on it is counted.`);
 figure("fig12_segmentation_examples.png", 5.0, `Four side views and what the segmentation model labelled in them, ` +
   `with tree crowns re-checked by colour. The legend names each colour.`);
+figure("detection_examples.png", 5.0, `The side views with the most street lights, benches, people and trash cans. ` +
+  `Each box is one object the segmentation model counted, in the colour of its class.`, DETAIL_DIR);
 figure("fig13_indicator_maps.png", 6.3, `Three image measures per street segment, by quarter of their values. Street lights pass the label check; the ` +
   `building and vegetation shares are not covered by it.`);
 const typ = M.typology_counts;
@@ -207,6 +224,52 @@ p(`**Result:** ${V.checks_passing} of the ${V.checks.length} checks pass, both f
   `${Math.round(100 * V.typology_accuracy)}% of views, so CLIP is not used for land use or cues. Graffiti, litter and ` +
   `boarded windows appear in only a few labelled views, so their scores rest on very few cases. The ` +
   `${V.n_second_coder} second-coder views are not labelled yet, so agreement between coders is not yet measured.`);
+
+// Why the CLIP cues fail: the cues by name, and each one's row of the separation table
+const kc = Object.fromEntries(K.cues.map((c) => [c.cue, c]));
+const win = kc["windows overlook"], shop = kc["active storefront"], vac = kc["vacant lot"];
+const few = K.cues.filter((c) => c.auc === null).map((c) => c.cue);
+const personCheck = V.checks.find((c) => c.model === "object" && c.cue === "people_present");
+p(`**Why the CLIP cues fail:** CLIP scores a cue by comparing the view with two sentences, one describing the cue ` +
+  `and one describing its absence, and turning the difference into a score from 0 to 1. Because CLIP multiplies ` +
+  `that difference by 100, a difference of only 0.01 in how well the photo matches the two sentences already gives ` +
+  `a score of ${K.score_at_gap_0_01} (or ${f2(1 - K.score_at_gap_0_01)}), so small changes in the picture move a ` +
+  `view across the fixed cut-off of 0.5. The scores still put the views in a sensible order. Table ${tableNo + 1} ` +
+  `measures this with the AUC, the chance that a view with the cue scores higher than one without it, where 0.5 is ` +
+  `chance and 1 is perfect: active storefronts reach ${f2(shop.auc)} and vacant lots ${f2(vac.auc)}. A cut-off ` +
+  `chosen on four-fifths of the labelled views and tested on the other fifth, over 20 different splits, would raise ` +
+  `the F1 for windows overlooking the street from ${f2(win.f1_at_half)} to ${f2(win.f1_fitted)}, and for active ` +
+  `storefronts from ${f2(shop.f1_at_half)} to ${f2(shop.f1_fitted)}. These fitted cut-offs have only been tested ` +
+  `within the ${V.n_labelled} labelled views, so they do not change the result above.`);
+table("How well each score separates the labelled views with and without each cue",
+  ["Cue", "In labels", "CLIP: AUC", "CLIP: F1 at 0.5", "CLIP: F1, fitted cut-off", "Segmentation measure", "Its AUC"],
+  K.cues.map((c) => [c.cue, `${c.present}`, f2(c.auc), f2(c.f1_at_half), f2(c.f1_fitted), c.stand_in || "–",
+    f2(c.stand_in_auc)]), [2000, 900, 1000, 1100, 1300, 1860, 1200]);
+p(`Three other things hold CLIP back. The paired sentences describe different scenes rather than the same scene ` +
+  `with and without the cue: the vacant-lot pair sets "${K.vacant_prompts[0]}" against "${K.vacant_prompts[1]}", ` +
+  `so a view with little building in it scores as vacant, and across all ${fmt(M.views)} views the vacant-lot ` +
+  `score falls as the building share rises (rank correlation ${K.vacant_vs_building.toFixed(2).replace("-", "−")}). ` +
+  `${Cap(word(K.negatives_with_no))} of the ${word(K.negatives)} "absent" sentences also use the word "no", as in ` +
+  `"${K.graffiti_negative}", so they still name the thing they are meant to rule out. Next, each side view ` +
+  `(${fmt(K.view_px[0])} × ${K.view_px[1]} pixels) is cut into ${word(K.crops)} squares of ${K.crop_px} pixels, ` +
+  `and CLIP shrinks each square to ${K.clip_px} × ${K.clip_px}, keeping about ` +
+  `${pct(K.clip_px * K.clip_px, K.crop_px * K.crop_px)}% of its pixels, so small details such as graffiti, litter ` +
+  `and boarded windows are hard to see. Finally, CLIP's land-use label leans towards surface parking: across all ` +
+  `views it gives surface parking an average probability of ${Math.round(100 * K.parking_mean_prob)}%, about ` +
+  `${word(Math.round(K.parking_mean_prob * K.land_use_types))} times the ${one(100 / K.land_use_types)}% it would ` +
+  `get by chance among ${word(K.land_use_types)} types, and commercial street ` +
+  `${Math.round(100 * K.commercial_mean_prob)}%.`);
+p(`For four cues, the segmentation model already separates the views better than CLIP: the building share for ` +
+  `windows overlooking the street (AUC ${f2(win.stand_in_auc)} against ${f2(win.auc)}), the person count for people ` +
+  `(${f2(kc["people present"].stand_in_auc)} against ${f2(kc["people present"].auc)}, although counting one ` +
+  `person or more still fails its check with an F1 of ${f2(personCheck.f1)}), the fence and wall share for fences ` +
+  `(${f2(kc.fences.stand_in_auc)} against ${f2(kc.fences.auc)}) and the bench count ` +
+  `for seating (${f2(kc.seating.stand_in_auc)} against ${f2(kc.seating.auc)}). The table gives no AUC for ` +
+  `${listed(few)}, which have fewer than ${word(K.min_for_auc)} labelled views with the cue. All of these numbers ` +
+  `rest on one coder's labels.`);
+figure("clip_examples.png", 6.3, `Four labelled views picked by fixed rules: where CLIP is most sure and right about ` +
+  `land use, its two most common land-use mistakes (each where it is most sure), and where it is most sure of ` +
+  `boarded windows that the labels do not show. Under each view are the labels and CLIP's answer.`, DETAIL_DIR);
 
 // ---- 5. Crime ----
 h1("5. Recorded crime per street segment");
@@ -326,7 +389,7 @@ function wordTable(b) {
 
 // A figure kept on the same page as its caption
 function wordFigure(b) {
-  const full = path.join(FIG_DIR, b.file);
+  const full = path.join(b.dir, b.file);
   const { w, h } = pngSize(full);
   const wpx = Math.round(b.widthIn * 96);
   return [
@@ -390,9 +453,9 @@ const doc = new Document({
 });
 
 // ----------------------------------------------------------------------------
-// Markdown rendering (same blocks), figures linked from Docs/figures/mid_point_november/
+// Markdown rendering (same blocks), each figure linked from its own folder
 // ----------------------------------------------------------------------------
-const figRel = path.relative(path.dirname(MD), FIG_DIR).split(path.sep).join("/");
+const figRel = (dir) => path.relative(path.dirname(MD), dir).split(path.sep).join("/");
 const md = [];
 // Go through the blocks in order
 for (const b of blocks) {
@@ -406,13 +469,23 @@ for (const b of blocks) {
   else if (b.t === "refs") b.items.forEach((x) => md.push(x, ""));
   else if (b.t === "table") md.push(`**Table ${b.n}.** ${b.caption}`, "", `| ${b.headers.join(" | ")} |`,
     `|${b.headers.map(() => "---").join("|")}|`, ...b.rows.map((r) => `| ${r.join(" | ")} |`), "");
-  else if (b.t === "figure") md.push(`![Figure ${b.n}](${figRel}/${b.file})`, "", `**Figure ${b.n}.** ${b.caption}`, "");
+  else if (b.t === "figure") md.push(`![Figure ${b.n}](${figRel(b.dir)}/${b.file})`, "", `**Figure ${b.n}.** ${b.caption}`, "");
   else if (b.t === "credits") md.push(`*${b.text}*`, "");
+}
+
+// The packed file copied without its empty folder entries, which can stop it opening through OneDrive or Google Drive
+async function withoutFolders(buf) {
+  const src = await JSZip.loadAsync(buf);
+  const out = new JSZip();
+  for (const [name, entry] of Object.entries(src.files)) {
+    if (!entry.dir) out.file(name, await entry.async("nodebuffer"), { createFolders: false });
+  }
+  return out.generateAsync({ type: "nodebuffer", compression: "DEFLATE" });
 }
 
 // Write both files
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
-Packer.toBuffer(doc).then((buf) => {
+Packer.toBuffer(doc).then(withoutFolders).then((buf) => {
   fs.writeFileSync(OUT, buf);
   fs.writeFileSync(MD, md.join("\n"));
   console.log(`wrote ${OUT}\nwrote ${MD}`);
