@@ -115,30 +115,40 @@ def box(ax, x, y, w, h, status, text, fs=7.0):
     ax.text(x + 5.2, y + h / 2, text, ha="left", va="center", fontsize=fs, color=INK, linespacing=1.3)
 
 
-def draw_workflow(workflow: list, decide_note: str | None = None, partial_label: str = "Started (pilot)"):
+def draw_workflow(workflow: list, decide_note: str | None = None, partial_label: str = "Started (pilot)",
+                  labels: list = ROWS):
     """Draw the workflow figure: one row per data source and one column per stage, then the compare and share rows.
 
-    :param workflow: status and text of every box, laid out like WORKFLOW
+    :param workflow: status and text of every box, laid out like WORKFLOW; a cell can also be a list of boxes,
+        stacked top to bottom in the row's height
     :param decide_note: a "to decide" line for the compare row, or None for no such line
     :param partial_label: the legend word for the half-done status
+    :param labels: name and description of each data-source row, in the order of workflow
     :return: the figure
     """
-    fig, ax = plt.subplots(figsize=(6.6, 4.6))
-    fig.subplots_adjust(left=0.005, right=0.995, top=0.995, bottom=0.08)
-    ax.set_xlim(0, 100), ax.set_ylim(0, 76), ax.axis("off")
+    # Fewer than four data-source rows makes the figure shorter at the same scale
+    rh, rgap, ytop, sgap = 9.6, 1.4, 70.5, 0.8
+    cut = (len(ROWS) - len(workflow)) * (rh + rgap)
+    height = 4.6 - cut * 4.6 * (0.995 - 0.08) / 76
+    fig, ax = plt.subplots(figsize=(6.6, height))
+    fig.subplots_adjust(left=0.005, right=0.995, top=1 - 0.005 * 4.6 / height, bottom=0.08 * 4.6 / height)
+    ax.set_xlim(0, 100), ax.set_ylim(cut, 76), ax.axis("off")
     x0, gap = 17.0, 0.8
     cw = (100 - x0 - 2 * gap) / 3
-    rh, rgap, ytop = 9.6, 1.4, 70.5
     for j, c in enumerate(COLS):
         ax.text(x0 + j * (cw + gap) + cw / 2, ytop + 1.4, c, ha="center", va="bottom", fontsize=7.4,
                 weight="bold", color=INK)
-    for i, (name, sub) in enumerate(ROWS):
+    for i, ((name, sub), row) in enumerate(zip(labels, workflow)):
         y = ytop - (i + 1) * rh - i * rgap
         ax.text(0.3, y + rh / 2 + 1.5, name, ha="left", va="center", fontsize=7.6, weight="bold")
         ax.text(0.3, y + rh / 2 - 1.9, sub, ha="left", va="center", fontsize=6.7, color=INK_2)
-        for j, (st, txt) in enumerate(workflow[i]):
-            box(ax, x0 + j * (cw + gap), y, cw, rh, st, txt)
-    ygrid = ytop - 4 * rh - 3 * rgap
+        for j, cell in enumerate(row):
+            # One box fills the row; a list of boxes shares the row's height, top to bottom
+            stack = cell if isinstance(cell, list) else [cell]
+            bh = (rh - (len(stack) - 1) * sgap) / len(stack)
+            for k, (st, txt) in enumerate(stack):
+                box(ax, x0 + j * (cw + gap), y + rh - (k + 1) * bh - k * sgap, cw, bh, st, txt)
+    ygrid = ytop - len(workflow) * rh - (len(workflow) - 1) * rgap
     ax.annotate("", xy=(x0 + (100 - x0) / 2, ygrid - 3.2), xytext=(x0 + (100 - x0) / 2, ygrid - 0.3),
                 arrowprops=dict(arrowstyle="-|>", color=INK_2, lw=0.9, mutation_scale=8))
     # integration row
@@ -158,7 +168,8 @@ def draw_workflow(workflow: list, decide_note: str | None = None, partial_label:
     ax.text(0.3, yo + ho / 2 - 1.9, "Apr \u2013 May 2027", ha="left", va="center", fontsize=6.7, color=INK_2)
     # Legend: the statuses in the boxes, "planned" for the compare and share rows, and "decision needed" only with
     # a "to decide" line; the half-done status can carry its own word
-    used = {st for row in workflow for st, _ in row} | {"planned"} | ({"blocked"} if decide_note else set())
+    cells = [b for row in workflow for cell in row for b in (cell if isinstance(cell, list) else [cell])]
+    used = {st for st, _ in cells} | {"planned"} | ({"blocked"} if decide_note else set())
     words = {**{k: lab for k, (_, _, lab) in STATUS.items()}, "partial": partial_label}
     handles = [Patch(fc=tint(c), ec=c, label=f"{i}  {words[k]}") for k, (c, i, _) in STATUS.items() if k in used]
     ax.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.0, 0.0), ncol=4, frameon=False,

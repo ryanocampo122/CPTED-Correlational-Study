@@ -371,39 +371,28 @@ def fig_indicator_maps(out: Path) -> None:
 
 
 def fig_workflow(out: Path) -> None:
-    """fig14: the October workflow figure with the street-image and crime rows moved on to November.
+    """fig14: the October workflow figure with the street-image and crime rows moved on to November, without the
+    background-data row.
 
     :param out: folder
     """
     # What the image, model, labelling and crime scripts recorded about their runs
     meta = json.loads((STUDY / "run_meta.json").read_text())
     models = json.loads((STUDY / "models_meta.json").read_text())
-    strata = json.loads((STUDY / "validation" / "sample_strata.json").read_text())
-    # Views on the first labelling sheet with at least one label filled in
-    sheet = pd.read_csv(STUDY / "validation" / "validation_blind.csv", dtype=str)
-    n_labelled = int(sheet[[c for c in sheet.columns if c.startswith("human_") and c != "human_notes"]].notna()
-                     .any(axis=1).sum())
-    # The label check's result, once scored: which cues pass, in plain words
-    scores = json.loads((STUDY / "validation" / "validation_results.json").read_text())
-    plain = {"streetlight_visible": "street lights", "seating": "seating", "people_present": "people"}
-    passing = sorted((plain.get(c, c.replace("_", " ")) for c in scores.get("cues_passing_f1", [])), reverse=True)
     crime = json.loads((CRIME / "hotspot_summary.json").read_text())
     n_segments = pd.read_csv(STUDY / "points.csv").segment_id.nunique()
-    # The October boxes, with the street-image row and the crime row's middle box updated
+    # The October boxes, with the street-image row and the crime row updated; the street-image check stage holds
+    # two started boxes, one above the other, and the crime-location check is started
     rows = [list(r) for r in F.WORKFLOW]
     rows[1] = [("done", f"{meta['points_with_image']} of {meta['points']} points imaged\n"
                         f"on {meta['segments_with_image']} of {n_segments} segments;\nnewest 2020/2023 image"),
                ("done", f"Segmentation, objects and\nCLIP run on all {models['views']}\nside views"),
-               ("done", f"{n_labelled} views labelled and\nscored: " + ("\n".join([f"{passing[0]} and", f"{passing[1]} pass; CLIP fails"])
-                                                                 if len(passing) == 2 else
-                                                                 f"{len(passing)} checks\npass; CLIP fails"))
-               if scores["status"] == "scored" else
-               ("done" if n_labelled == strata["n_sample"] else "partial",
-                f"{n_labelled} of {strata['n_sample']} views labelled\n(blind sample, {len(strata['strata'])} groups);\n"
-                f"ready to score")]
+               [("partial", "Produce initial model results"), ("partial", "Fine tuning models")]]
     rows[2][1] = ("done", f"{crime['placed']} of {crime['records']} records placed\non streets; half of them on\n"
                           f"{crime['hotspot_segments']['all_study_crime']} segments")
-    save(F.draw_workflow(rows, partial_label="Started"), "fig14_workflow_status.png", out)
+    rows[2][2] = ("partial", rows[2][2][1])
+    # The background-data row is left out of this figure
+    save(F.draw_workflow(rows[:3], partial_label="Started", labels=F.ROWS[:3]), "fig14_workflow_status.png", out)
 
 
 # Figure names and the functions that draw them
